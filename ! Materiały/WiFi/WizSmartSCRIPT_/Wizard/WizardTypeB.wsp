@@ -1,0 +1,24 @@
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "ATB=@TypeBBaud,8,N,1")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 30)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+Sleep(100)
+SerialPortClose(@COM)
+Sleep(1000)
+
+ifFALSE SerialPortOpen(@COM, @TypeBBaud, 0)
+{
+	UXConsoleText(2, "[SerialPortOpen Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+SerialStartMonitor(@COM)
+
+Sleep(100)
+

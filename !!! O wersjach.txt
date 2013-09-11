@@ -1,0 +1,40 @@
+v1.5  (11.09.2013)	
+        - Usuniêcie problemu z wieloma obiektami wysy³anymi na www.
+v1.4  (20.06.2013)	
+        - Zmienne specjalne od alarmu
+v1.3  (04.06.2013)
+        - Tryb Master-Slave
+	- Poprawa interpretacji typów szyfrowania has³a w WIFi
+        - Poprawa wywo³añ zapisu do pamiêci Flash
+        - Poprawa wyœwietlania wskaŸnika aktywnego ogrzewania w przypadku ustawienia aktora jako zmiennej.
+        - Poprawa wyœwietlania wy³adowanej baterii w termostacie. Do tej pory napis temperatury zamazywa³ linie boczne.
+        - Usuniêcie efektu na³o¿enia starego obrazu na logo pod³¹czenia komputera podczasz podpinania USB
+	- Zablokowanie przepisywania wartoœci analogowej w procedurze GetReg w przypadku wartoœci niewiarygodnej 
+        - Zdalne ustawianie adresu ID
+        - Dodanie podgl¹du transmisji HTML przez USB
+        - Informacja o wyczerpanej baterii uzupe³niona o opis wêz³a
+        - Kasowanie sygna³u przy usuniêciu modu³u
+        - Mo¿liwoœæ odczytu wersji softu modu³u
+        - Ramki wysy³ane do jednego modu³u s¹ grupowane w kolejkê - wczeœniej uk³ad by³ losowy. Zmiana konieczna do pracy sterownika w trybie Slave
+	- Poprawa wpisywania stringów (czyszczenie liter za napisem)  	
+        - Poprawa b³êdu nadpisania pamiêci przy przepisywaniu ustawieñ WiFi	
+	- Dodanie informacji "Czekaj" w podgl¹dzie Stany IO wêz³a dopuki dane s¹ niewiarygodne
+	- Dodanie informacji "Czekaj" w podgl¹dzie rejestrów analogowych wêz³a dopuki dane s¹ niewiarygodne
+        - Dodanie podgl¹du zmiennych w podmenu "Opcje"
+	- Dodanie podgl¹du rejestrów analogowych wêz³a	
+	- Poprawa zmainy numeru zmiennej w termostacie (by³o tylko maksymalnie b35 zamiast b99)	
+	- Informacja o module (wersja i typ)
+	- [TESTER] - Tester modu³ów
+	- [ADMINISTRATOR] - Zmiana ID
+v1.2  (21.01.2013)
+	- Ci¹g³e wysy³anie stanów wyjœæ na modu³y typu pilot
+        - Dodanie bezpiecznika restartuj¹cego sterownik przy zablokowaniu DMA USARTa  komunikuj¹cego siê modu³em WiFi              
+	- Dodanie bezpiecznika restartuj¹cego sterownik przy przekroczeniu maksymalnej iloœci po³¹czeñ. Drugie zabezpieczenie przed zablokowaniem WiFi.
+	- Zmiana symbolu rejestru (u¿ywanego przy transmisji internet) z "s" na "r"
+	- Dodanie zmiennej specjalnej C4x - informuj¹cej o za³¹czeniu elementu wykonawczego termostatu
+v1.1  (01.01.2013)	
+	- Dodanie bezpiecznika restartuj¹cego modu³ WiFi po przekroczeniu dopuszczalnej liczby po³¹czeñ. Zabezpieczenie przed zablokowaniem WiFi.
+	- Dodanie podgl¹du stanów we/wy wêz³ów,
+ 	- Dodanie podgl¹du transmisji z modu³ami,
+v1.0  (30.10.2012)	
+	- Pierwsza wersja stabilna 

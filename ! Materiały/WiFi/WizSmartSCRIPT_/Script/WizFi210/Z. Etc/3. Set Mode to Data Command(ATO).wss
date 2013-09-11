@@ -1,0 +1,39 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+UXMessageText(1, "Working...")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+ifFALSE SerialPortOpen(@COM, @BAUD, 0)
+{
+	UXConsoleText(2, "[SerialPortOpen Error]", 0, 1, 1)
+	goto TEST-ERROR
+}
+SerialStartMonitor(@COM)
+
+Sleep(500)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "ATO")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 5)
+{
+	goto DATACOMMAND-MODE
+}
+Sleep(500)
+
+
+:DATACOMMAND-MODE
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+:TEST-OK
+UXMessageText(1, "OK")
+goto TEST-END
+
+:TEST-ERROR
+UXMessageText(2, "Error")
+
+:TEST-END
+Sleep(10)
+SerialPortClose(@COM)
+Sleep(10)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

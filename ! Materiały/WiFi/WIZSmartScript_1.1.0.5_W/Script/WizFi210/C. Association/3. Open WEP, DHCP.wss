@@ -1,0 +1,117 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+UXMessageText(1, "Working...")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+ifFALSE SerialPortOpen(@COM, @BAUD, 0)
+{
+	UXConsoleText(2, "[SerialPortOpen Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+SerialStartMonitor(@COM)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+WD")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+WM=0")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+WWEP1=@KEY")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+WAUTH=1")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+NDHCP=1")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+WA=@SSID")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 200)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+	IncreaseString(#SParam4, "", "")
+}
+Sleep(1)
+
+;SerialClearBuffer(@COM)
+;MakeString(#SParam11, "AT+WEBPROV=admin,admin")
+;SerialSendString(@COM, #SParam11, 2)
+;ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+;{
+;	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+;	;goto TEST-ERROR
+;}
+;Sleep(1)
+
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+NSTAT=?")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 30)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+;SerialClearBuffer(@COM)
+;MakeString(#SParam11, "AT+PING=222.98.173.254,3")
+;SerialSendString(@COM, #SParam11, 2)
+;ifFALSE SerialFindString(@COM, "OK", "", 100, 50)
+;{
+;	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+;	goto TEST-ERROR
+;}
+;Sleep(1)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+:TEST-OK
+UXMessageText(1, "OK")
+goto TEST-END
+
+:TEST-ERROR
+UXMessageText(2, "Error")
+
+:TEST-END
+Sleep(10)
+SerialPortClose(@COM)
+Sleep(10)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

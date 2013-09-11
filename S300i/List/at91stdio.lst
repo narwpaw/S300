@@ -1,0 +1,152 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           04/Jun/2013  20:18:31 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\core\at91stdio.c                              #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\core\at91stdio.c" -D AT91SAM7S256 -D          #
+#                    AT91SAM7SEK -D iH -D __ALARM -D __WIFI_MODULE -D S300i   #
+#                    -lC "D:\Zeuron\Projekty\S300\S300-program v1.3 -         #
+#                    04.06.2013\S300i\List\" --diag_suppress Pa082 -o         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\S300i\Obj\" --debug --endian little --cpu     #
+#                    ARM7TDMI -e --fpu None --dlib_config "C:\Program Files   #
+#                    (x86)\IAR Systems\Embedded Workbench                     #
+#                    5.0\ARM\INC\DLib_Config_Normal.h" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\lib\AT91SAM7S256\" -I                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.3 - 04.06.2013\cdc\" -I "D:\Zeuron\Projekty\S300\S300 #
+#                    -program v1.3 - 04.06.2013\core\" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\startup\" -I "D:\Zeuron\Projekty\S300\S300-pr #
+#                    ogram v1.3 - 04.06.2013\Framework\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\Framework\Configuration\" -I "C:\Program      #
+#                    Files (x86)\IAR Systems\Embedded Workbench               #
+#                    5.0\ARM\INC\" --section .text=Debug.txt --interwork      #
+#                    --cpu_mode thumb -Oh                                     #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\S300i\List\at91stdio.lst                      #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\S300i\Obj\at91stdio.o                         #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v1.3 - 04.06.2013\core\at91stdio.c
+      1          /* ----------------------------------------------------------------------------
+      2           *         ATMEL Microcontroller Software Support  -  ROUSSET  -
+      3           * ----------------------------------------------------------------------------
+      4           * Copyright (c) 2006, Atmel Corporation
+      5          
+      6           * All rights reserved.
+      7           *
+      8           * Redistribution and use in source and binary forms, with or without
+      9           * modification, are permitted provided that the following conditions are met:
+     10           *
+     11           * - Redistributions of source code must retain the above copyright notice,
+     12           * this list of conditions and the disclaiimer below.
+     13           *
+     14           * - Redistributions in binary form must reproduce the above copyright notice,
+     15           * this list of conditions and the disclaimer below in the documentation and/or
+     16           * other materials provided with the distribution.
+     17           *
+     18           * Atmel's name may not be used to endorse or promote products derived from
+     19           * this software without specific prior written permission.
+     20           *
+     21           * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR
+     22           * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     23           * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+     24           * DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,
+     25           * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+     26           * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+     27           * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+     28           * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     29           * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+     30           * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     31           * ----------------------------------------------------------------------------
+     32           */
+     33          
+     34          /*
+     35          $Id: at91stdio.c,v 1.1.2.1 2006/12/05 08:33:25 danielru Exp $
+     36          */
+     37          
+     38          //------------------------------------------------------------------------------
+     39          //      Includes
+     40          //------------------------------------------------------------------------------
+     41          
+     42          #include <stdio.h>
+     43          #include "common.h"
+     44          #include "device.h"
+     45          
+     46          //------------------------------------------------------------------------------
+     47          //      Exported functions
+     48          //------------------------------------------------------------------------------
+     49          //------------------------------------------------------------------------------
+     50          // \brief  Outputs a character on the DBGU.
+     51          //
+     52          //         The output pipe must be stdout, otherwise this function does nothing.
+     53          //         The data is buffered until the buffer is full or a \n character is
+     54          //         received, at which point the PDC starts the actual transfer.
+     55          // \param out The character to send
+     56          // \param f   Output pipe
+     57          // \return The character sent if successful, EOF otherwise.
+     58          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     59          int putchar(int out)
+     60          {
+   \                     putchar:
+   \   00000000   01B5               PUSH     {R0,LR}
+   \   00000002   0221               MOVS     R1,#+2
+   \   00000004   054A               LDR      R2,??putchar_0   ;; 0xfffff214
+     61          
+     62                    while (!AT91F_US_TxReady((AT91PS_USART)AT91C_BASE_DBGU));
+   \                     ??putchar_1:
+   \   00000006   1368               LDR      R3,[R2, #+0]
+   \   00000008   0B42               TST      R3,R1
+   \   0000000A   FCD0               BEQ      ??putchar_1
+     63                    AT91F_US_PutChar((AT91PS_USART)AT91C_BASE_DBGU, (char)out);
+   \   0000000C   0449               LDR      R1,??putchar_0+0x4  ;; 0xfffff21c
+   \   0000000E   0206               LSLS     R2,R0,#+24
+   \   00000010   120E               LSRS     R2,R2,#+24
+   \   00000012   0A60               STR      R2,[R1, #+0]
+     64                                                                                                                                                                                                                                                                                                                                                        
+     65              return out;
+   \   00000014   08BC               POP      {R3}
+   \   00000016   02BC               POP      {R1}
+   \   00000018   0847               BX       R1               ;; return
+   \   0000001A   C046               Nop      
+   \                     ??putchar_0:
+   \   0000001C   14F2FFFF           DC32     0xfffff214
+   \   00000020   1CF2FFFF           DC32     0xfffff21c
+     66          }
+
+   Maximum stack usage in bytes:
+
+     Function .cstack
+     -------- -------
+     putchar       8
+
+
+   Section sizes:
+
+     Function/Label Bytes
+     -------------- -----
+     putchar          36
+
+ 
+ 36 bytes in section Debug.txt
+ 
+ 36 bytes of CODE memory
+
+Errors: none
+Warnings: none

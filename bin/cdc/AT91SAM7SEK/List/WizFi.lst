@@ -1,0 +1,1305 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           23/Apr/2012  16:53:16 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v0.6 -              #
+#                    13.03.2012\Framework\WizFi.c                             #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    13.03.2012\Framework\WizFi.c" -D AT91SAM7S256 -D         #
+#                    AT91SAM7SEK -D iH -D __ALARM -lC                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    13.03.2012\bin\cdc\AT91SAM7SEK\List\" --diag_suppress    #
+#                    Pa082 -o "D:\Zeuron\Projekty\S300\S300-program v0.6 -    #
+#                    13.03.2012\bin\cdc\AT91SAM7SEK\Obj\" --no_unroll         #
+#                    --no_inline --no_tbaa --no_scheduling --debug --endian   #
+#                    little --cpu ARM7TDMI -e --fpu None --dlib_config        #
+#                    "C:\Program Files\IAR Systems\Embedded Workbench         #
+#                    5.0\ARM\INC\DLib_Config_Normal.h" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    13.03.2012\lib\AT91SAM7S256\" -I                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    13.03.2012\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    13.03.2012\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v0.6 - 13.03.2012\cdc\" -I "D:\Zeuron\Projekty\S300\S300 #
+#                    -program v0.6 - 13.03.2012\core\" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    13.03.2012\startup\" -I "D:\Zeuron\Projekty\S300\S300-pr #
+#                    ogram v0.6 - 13.03.2012\Framework\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    13.03.2012\Framework\Configuration\" -I "C:\Program      #
+#                    Files\IAR Systems\Embedded Workbench 5.0\ARM\INC\"       #
+#                    --section .text=Debug.txt --interwork --cpu_mode thumb   #
+#                    -Om                                                      #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v0.6 -              #
+#                    13.03.2012\bin\cdc\AT91SAM7SEK\List\WizFi.lst            #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v0.6 -              #
+#                    13.03.2012\bin\cdc\AT91SAM7SEK\Obj\WizFi.o               #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v0.6 - 13.03.2012\Framework\WizFi.c
+      1          //****************************************************************************//
+      2          //*--------------------------------------------------------------------------*//
+      3          //*                 CEURON                                                   *//
+      4          //*--------------------------------------------------------------------------*//
+      5          //*--------------------------------------------------------------------------*//
+      6          //*  Nazwa pliku                  : WizFi.c                                 *//
+      7          //*  Opis                         : Obs³uga modu³u WizFi                      *//
+      8          //*  Autor                        : Pawe³ Narwojsz                           *//
+      9          //*  Data utrzorzenia             : 31.01.2012                               *//
+     10          //*  Data ostatniej modyfikacji   : --.--.----                               *//
+     11          //*--------------------------------------------------------------------------*//
+     12          //*                                                                          *//
+     13          //*--------------------------------------------------------------------------*//
+     14          //* Rejestr zmian  (data - opis):                                            *//
+     15          //*                                                                          *//
+     16          //*                               Brak zmian                                 *//
+     17          //*                                                                          *//
+     18          //*__________________________________________________________________________*//
+     19          //****************************************************************************//
+     20          
+     21          #include "WizFi.h"
+
+                                                            
+                                                            ^
+"D:\Zeuron\Projekty\S300\S300-program v0.6 - 13.03.2012\Framework\Configuration\InterruptPriority.h",59  Warning[Pe001]: 
+          last line of file ends without a newline
+
+        
+        ^
+"D:\Zeuron\Projekty\S300\S300-program v0.6 - 13.03.2012\Framework\WizFi.h",143  Warning[Pe001]: 
+          last line of file ends without a newline
+     22          #include "Framework.h"
+     23          #include "core/device.h"                                                        //aduje bibliotreki dla odpowiedniego procesora
+     24          #include "main_H.h" 
+     25          #include "string.h"
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __intrinsic __code __interwork char *strstr(char const *, char const *)
+   \                     strstr:
+   \   00000000   01B5               PUSH     {R0,LR}
+   \   00000002   ........           BL       __iar_Strstr
+   \   00000006   08BC               POP      {R3}
+   \   00000008   02BC               POP      {R1}
+   \   0000000A   0847               BX       R1               ;; return
+     26          #include "WizFiCommand.h"
+     27          
+     28          
+     29          
+     30          
+     31          
+     32          /*
+     33            extern char Variables[]; 
+     34            extern BYTE Buff_TX_1[];
+     35            extern short int VariablesAnal[];
+     36            extern unsigned long long  g_counter;
+     37            long long WiFi_TimeOut_Counter;
+     38            
+     39            
+     40            
+     41                  
+     42           _WiFi WiFi;
+     43           _WiFiStatus  WiFiStat;
+     44           _HTTP  HTTP;
+     45           //_SSID   g_SSID_List[20];
+     46          */ 
+     47          
+     48          
+     49          extern unsigned long long  g_counter;                                              //globalny licznik milisekundowy od w³¹czenia/restartu sterownika
+     50          extern char Variables[];    //zmienne
+     51          extern short int VariablesAnal[];    //zmienne
+     52          
+     53          
+     54          
+     55          //funkcja CheckVarChangeHTTP --------------------------------
+     56          //funkcja sprawdza czy zmieni³y siê zmienne sprawdzane przez strone web. Je¿eli tak to wyœlij zmiany
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     57          void CheckVarChangeHTTP(char *SendBuff,  AT91PS_USART USART, _Net *Net)
+     58          {
+   \                     CheckVarChangeHTTP:
+   \   00000000   F7B5               PUSH     {R0-R2,R4-R7,LR}
+   \   00000002   1600               MOVS     R6,R2
+   \   00000004   7078               LDRB     R0,[R6, #+1]
+   \   00000006   0328               CMP      R0,#+3
+   \   00000008   5BD1               BNE      ??CheckVarChangeHTTP_0
+     59          
+     60            static long long AnalogPeriod;
+     61            
+     62            if (Net->Status.HostLink==CONNECTED)
+     63            {
+     64               char Zmiana=0;
+   \   0000000A   0022               MOVS     R2,#+0
+   \   0000000C   1300               MOVS     R3,R2
+     65               for (char IDX=0; IDX<Net->HTTP.VarSetCount; IDX++)
+   \   0000000E   1EE0               B        ??CheckVarChangeHTTP_1
+     66               {  
+     67                 switch (Net->HTTP.VarSet[IDX].VarType)
+     68                 {                  
+     69                    case 'b': 
+     70                         if (((Variables[Net->HTTP.VarSet[IDX].VarNr/8]>>(Net->HTTP.VarSet[IDX].VarNr%8))&0x1) != (Net->HTTP.VarSet[IDX].Value)) {Zmiana++;}
+     71                    break;
+     72                    case 'a': 
+     73                      if (AnalogPeriod<g_counter) {Zmiana++; AnalogPeriod=g_counter+30000;}
+   \                     ??CheckVarChangeHTTP_2:
+   \   00000010   6C46               MOV      R4,SP
+   \   00000012   ....               LDR      R0,??DataTable4  ;; g_counter
+   \   00000014   03C8               LDM      R0!,{R0,R1}
+   \   00000016   03C4               STM      R4!,{R0,R1}
+   \   00000018   2B4F               LDR      R7,??CheckVarChangeHTTP_3  ;; ??AnalogPeriod
+   \   0000001A   03CF               LDM      R7!,{R0,R1}
+   \   0000001C   083F               SUBS     R7,R7,#+8
+   \   0000001E   0400               MOVS     R4,R0
+   \   00000020   0D00               MOVS     R5,R1
+   \   00000022   6846               MOV      R0,SP
+   \   00000024   03C8               LDM      R0!,{R0,R1}
+   \   00000026   8D42               CMP      R5,R1
+   \   00000028   0ED8               BHI      ??CheckVarChangeHTTP_4
+   \   0000002A   01D3               BCC      ??CheckVarChangeHTTP_5
+   \   0000002C   8442               CMP      R4,R0
+   \   0000002E   0BD2               BCS      ??CheckVarChangeHTTP_4
+   \                     ??CheckVarChangeHTTP_5:
+   \   00000030   5B1C               ADDS     R3,R3,#+1
+   \   00000032   1B06               LSLS     R3,R3,#+24
+   \   00000034   1B0E               LSRS     R3,R3,#+24
+   \   00000036   6846               MOV      R0,SP
+   \   00000038   03C8               LDM      R0!,{R0,R1}
+   \   0000003A   0400               MOVS     R4,R0
+   \   0000003C   0D00               MOVS     R5,R1
+   \   0000003E   2348               LDR      R0,??CheckVarChangeHTTP_3+0x4  ;; 0x7530
+   \   00000040   0021               MOVS     R1,#+0
+   \   00000042   0019               ADDS     R0,R0,R4
+   \   00000044   6941               ADCS     R1,R1,R5
+   \   00000046   03C7               STM      R7!,{R0,R1}
+   \                     ??CheckVarChangeHTTP_4:
+   \   00000048   521C               ADDS     R2,R2,#+1
+   \   0000004A   1206               LSLS     R2,R2,#+24
+   \   0000004C   120E               LSRS     R2,R2,#+24
+   \                     ??CheckVarChangeHTTP_1:
+   \   0000004E   1000               MOVS     R0,R2
+   \   00000050   D321               MOVS     R1,#+211
+   \   00000052   715C               LDRB     R1,[R6, R1]
+   \   00000054   8842               CMP      R0,R1
+   \   00000056   1BD2               BCS      ??CheckVarChangeHTTP_6
+   \   00000058   8000               LSLS     R0,R0,#+2
+   \   0000005A   3018               ADDS     R0,R6,R0
+   \   0000005C   D630               ADDS     R0,R0,#+214
+   \   0000005E   0178               LDRB     R1,[R0, #+0]
+   \   00000060   6129               CMP      R1,#+97
+   \   00000062   D5D0               BEQ      ??CheckVarChangeHTTP_2
+   \   00000064   6229               CMP      R1,#+98
+   \   00000066   EFD1               BNE      ??CheckVarChangeHTTP_4
+   \   00000068   4178               LDRB     R1,[R0, #+1]
+   \   0000006A   C910               ASRS     R1,R1,#+3
+   \   0000006C   184C               LDR      R4,??CheckVarChangeHTTP_3+0x8  ;; Variables
+   \   0000006E   645C               LDRB     R4,[R4, R1]
+   \   00000070   4178               LDRB     R1,[R0, #+1]
+   \   00000072   0D00               MOVS     R5,R1
+   \   00000074   ED08               LSRS     R5,R5,#+3
+   \   00000076   ED00               LSLS     R5,R5,#+3
+   \   00000078   491B               SUBS     R1,R1,R5
+   \   0000007A   0C41               ASRS     R4,R4,R1
+   \   0000007C   0121               MOVS     R1,#+1
+   \   0000007E   2140               ANDS     R1,R1,R4
+   \   00000080   0224               MOVS     R4,#+2
+   \   00000082   005F               LDRSH    R0,[R0, R4]
+   \   00000084   8142               CMP      R1,R0
+   \   00000086   DFD0               BEQ      ??CheckVarChangeHTTP_4
+   \   00000088   5B1C               ADDS     R3,R3,#+1
+   \   0000008A   1B06               LSLS     R3,R3,#+24
+   \   0000008C   1B0E               LSRS     R3,R3,#+24
+   \   0000008E   DBE7               B        ??CheckVarChangeHTTP_4
+     74                    break;  
+     75                 }   
+     76               }
+     77             
+     78               if (Zmiana>0) 
+   \                     ??CheckVarChangeHTTP_6:
+   \   00000090   002B               CMP      R3,#+0
+   \   00000092   16D0               BEQ      ??CheckVarChangeHTTP_0
+     79               {
+     80                 if (Net->Status.HttpNextQueryTime>g_counter+100) Net->Status.HttpNextQueryTime=g_counter+100;  //przyœpieszenie wys³ania danych
+   \   00000094   6A46               MOV      R2,SP
+   \   00000096   ....               LDR      R0,??DataTable4  ;; g_counter
+   \   00000098   03C8               LDM      R0!,{R0,R1}
+   \   0000009A   03C2               STM      R2!,{R0,R1}
+   \   0000009C   6846               MOV      R0,SP
+   \   0000009E   03C8               LDM      R0!,{R0,R1}
+   \   000000A0   0022               MOVS     R2,#+0
+   \   000000A2   6430               ADDS     R0,R0,#+100
+   \   000000A4   5141               ADCS     R1,R1,R2
+   \   000000A6   3200               MOVS     R2,R6
+   \   000000A8   1832               ADDS     R2,R2,#+24
+   \   000000AA   0CCA               LDM      R2!,{R2,R3}
+   \   000000AC   9942               CMP      R1,R3
+   \   000000AE   05D8               BHI      ??CheckVarChangeHTTP_7
+   \   000000B0   01D3               BCC      ??CheckVarChangeHTTP_8
+   \   000000B2   9042               CMP      R0,R2
+   \   000000B4   02D2               BCS      ??CheckVarChangeHTTP_7
+   \                     ??CheckVarChangeHTTP_8:
+   \   000000B6   3200               MOVS     R2,R6
+   \   000000B8   1832               ADDS     R2,R2,#+24
+   \   000000BA   03C2               STM      R2!,{R0,R1}
+     81                 Net->Status.NextHttpOrder=HTTP_POST;
+   \                     ??CheckVarChangeHTTP_7:
+   \   000000BC   761C               ADDS     R6,R6,#+1
+   \   000000BE   0D20               MOVS     R0,#+13
+   \   000000C0   B070               STRB     R0,[R6, #+2]
+     82               }
+     83            }
+     84          
+     85          }
+   \                     ??CheckVarChangeHTTP_0:
+   \   000000C2   FEBC               POP      {R1-R7}
+   \   000000C4   01BC               POP      {R0}
+   \   000000C6   0047               BX       R0               ;; return
+   \                     ??CheckVarChangeHTTP_3:
+   \   000000C8   ........           DC32     ??AnalogPeriod
+   \   000000CC   30750000           DC32     0x7530
+   \   000000D0   ........           DC32     Variables
+
+   \                                 In section .bss, align 8
+   \                     ??AnalogPeriod:
+   \   00000000                      DS8 8
+     86          
+     87          
+     88          
+     89              
+     90              
+
+   \                                 In section .bss, align 4
+     91          char *pt1;    
+   \                     pt1:
+   \   00000000                      DS8 4
+     92          char *pt2;
+   \                     pt2:
+   \   00000004                      DS8 4
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     93          void InitWizFi(AT91PS_USART USART, _Net *Net)
+     94          {
+   \                     InitWizFi:
+   \   00000000   31B5               PUSH     {R0,R4,R5,LR}
+   \   00000002   0C00               MOVS     R4,R1
+     95            //Net->WiFi.HttpQueryPeriod=5000;    //[ms] okres odpytywania hosta
+     96            Net->Status.Timeout=g_counter + CRYTICAL_TIMEOUT;    //przed³u¿enie /restart timeoutu
+   \   00000004   2500               MOVS     R5,R4
+   \   00000006   2035               ADDS     R5,R5,#+32
+   \   00000008   ....               LDR      R0,??DataTable4  ;; g_counter
+   \   0000000A   0CC8               LDM      R0!,{R2,R3}
+   \   0000000C   ....               LDR      R0,??DataTable3  ;; 0x2710
+   \   0000000E   0021               MOVS     R1,#+0
+   \   00000010   8018               ADDS     R0,R0,R2
+   \   00000012   5941               ADCS     R1,R1,R3
+   \   00000014   03C5               STM      R5!,{R0,R1}
+     97               
+     98             pt1=(char*)&Net->WiFi;
+   \   00000016   0A48               LDR      R0,??InitWizFi_0  ;; pt1
+   \   00000018   3034               ADDS     R4,R4,#+48
+   \   0000001A   0460               STR      R4,[R0, #+0]
+     99             pt2=(char*)(&AT91C_IFLASH_MEM->Config.WiFi);
+   \   0000001C   0949               LDR      R1,??InitWizFi_0+0x4  ;; 0x13d8b8
+   \   0000001E   4160               STR      R1,[R0, #+4]
+    100            short size=sizeof(*Net);
+    101            for (short i=0; i<size; i++) pt1[i]=pt2[i];
+   \   00000020   0021               MOVS     R1,#+0
+   \   00000022   06E0               B        ??InitWizFi_1
+   \                     ??InitWizFi_2:
+   \   00000024   0268               LDR      R2,[R0, #+0]
+   \   00000026   4368               LDR      R3,[R0, #+4]
+   \   00000028   5B5C               LDRB     R3,[R3, R1]
+   \   0000002A   5354               STRB     R3,[R2, R1]
+   \   0000002C   491C               ADDS     R1,R1,#+1
+   \   0000002E   0904               LSLS     R1,R1,#+16
+   \   00000030   0914               ASRS     R1,R1,#+16
+   \                     ??InitWizFi_1:
+   \   00000032   9422               MOVS     R2,#+148
+   \   00000034   5200               LSLS     R2,R2,#+1        ;; #+296
+   \   00000036   9142               CMP      R1,R2
+   \   00000038   F4DB               BLT      ??InitWizFi_2
+    102            
+    103            /*
+    104            _WiFi *WiFi=&Net->WiFi; 
+    105            WiFi->Key[0]='0';
+    106            WiFi->Key[1]='1';
+    107            WiFi->Key[2]='5';
+    108            WiFi->Key[3]='8';
+    109            WiFi->Key[4]='0';
+    110            WiFi->Key[5]='0';
+    111            WiFi->Key[6]='0';
+    112            WiFi->Key[7]='0';
+    113            WiFi->Key[8]='0';
+    114            WiFi->Key[9]='0';
+    115            WiFi->Key[10]=0;
+    116            
+    117            
+    118            WiFi->SSID[0]='d';
+    119            WiFi->SSID[1]='e';
+    120            WiFi->SSID[2]='f';
+    121            WiFi->SSID[3]='a';
+    122            WiFi->SSID[4]='u';
+    123            WiFi->SSID[5]='l';
+    124            WiFi->SSID[6]='t';
+    125            WiFi->SSID[7]=0;
+    126          
+    127          /* 
+                 ^
+Warning[Pe009]: nested comment is not allowed
+    128            WiFi->Domena[0]='c';
+    129            WiFi->Domena[1]='e';
+    130            WiFi->Domena[2]='u';
+    131            WiFi->Domena[3]='r';
+    132            WiFi->Domena[4]='o';
+    133            WiFi->Domena[5]='n';
+    134            WiFi->Domena[6]='.';
+    135            WiFi->Domena[7]='p';
+    136            WiFi->Domena[8]='l';
+    137            WiFi->Domena[9]=0;
+    138                         
+    139          */
+    140           /* 
+    141            WiFi->Domena[0]='d';
+    142            WiFi->Domena[1]='o';
+    143            WiFi->Domena[2]='r';
+    144            WiFi->Domena[3]='y';
+    145            WiFi->Domena[4]='w';
+    146            WiFi->Domena[5]='c';
+    147            WiFi->Domena[6]='z';
+    148            WiFi->Domena[7]='a';
+    149            WiFi->Domena[8]='k';
+    150            WiFi->Domena[9]='.';
+    151            WiFi->Domena[10]='p';
+    152            WiFi->Domena[11]='l';
+    153           */
+    154          
+    155           /* 
+    156            //pawel.bcosmetisc.com
+    157            WiFi->Domena[0]='p';
+    158            WiFi->Domena[1]='a';
+    159            WiFi->Domena[2]='w';
+    160            WiFi->Domena[3]='e';
+    161            WiFi->Domena[4]='l';
+    162            WiFi->Domena[5]='.';
+    163            WiFi->Domena[6]='b';
+    164            WiFi->Domena[7]='c';
+    165            WiFi->Domena[8]='o';
+    166            WiFi->Domena[9]='s';
+    167            WiFi->Domena[10]='m';
+    168            WiFi->Domena[11]='e';
+    169            WiFi->Domena[12]='t';
+    170            WiFi->Domena[13]='i';
+    171            WiFi->Domena[14]='c';
+    172            WiFi->Domena[15]='s';
+    173            WiFi->Domena[16]='.';
+    174            WiFi->Domena[17]='c';
+    175            WiFi->Domena[18]='o';
+    176            WiFi->Domena[19]='m';
+    177            WiFi->Domena[20]=0; 
+    178          
+    179              
+    180            
+    181            WiFi->Path[0]='/';
+    182            WiFi->Path[1]='T'; 
+    183            WiFi->Path[2]='e'; 
+    184            WiFi->Path[3]='s';   
+    185            WiFi->Path[4]='t'; 
+    186            WiFi->Path[5]=0; 
+    187          
+    188            */
+    189            
+    190            
+    191          }   
+   \   0000003A   38BC               POP      {R3-R5}
+   \   0000003C   01BC               POP      {R0}
+   \   0000003E   0047               BX       R0               ;; return
+   \                     ??InitWizFi_0:
+   \   00000040   ........           DC32     pt1
+   \   00000044   B8D81300           DC32     0x13d8b8
+    192          
+    193          
+    194           
+    195          
+    196          //G³ówna funkcja WiFi
+    197          //Funkcja wywo³ywania ci¹gle w pêtli g³ównej programu
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    198          void WiFi(char *Buff_TX,  AT91PS_USART USART, _Net *Net)
+    199          {
+   \                     WiFi:
+   \   00000000   F1B5               PUSH     {R0,R4-R7,LR}
+   \   00000002   0600               MOVS     R6,R0
+   \   00000004   0C00               MOVS     R4,R1
+   \   00000006   1500               MOVS     R5,R2
+    200               //sprawdzenie Timeoutu
+    201               if ((Net->Status.FreezTime==0) || (Net->Status.FreezTime<g_counter))
+   \   00000008   ....               LDR      R0,??DataTable4  ;; g_counter
+   \   0000000A   0CC8               LDM      R0!,{R2,R3}
+   \   0000000C   2800               MOVS     R0,R5
+   \   0000000E   2830               ADDS     R0,R0,#+40
+   \   00000010   03C8               LDM      R0!,{R0,R1}
+   \   00000012   0029               CMP      R1,#+0
+   \   00000014   01D1               BNE      ??WiFi_0
+   \   00000016   0028               CMP      R0,#+0
+   \   00000018   07D0               BEQ      ??WiFi_1
+   \                     ??WiFi_0:
+   \   0000001A   2800               MOVS     R0,R5
+   \   0000001C   2830               ADDS     R0,R0,#+40
+   \   0000001E   03C8               LDM      R0!,{R0,R1}
+   \   00000020   9942               CMP      R1,R3
+   \   00000022   52D8               BHI      ??WiFi_2
+   \   00000024   01D3               BCC      ??WiFi_1
+   \   00000026   9042               CMP      R0,R2
+   \   00000028   4FD2               BCS      ??WiFi_2
+    202               {  
+    203                   if ((Net->Status.Timeout<g_counter) && (Net->Status.Timeout>0))
+   \                     ??WiFi_1:
+   \   0000002A   2800               MOVS     R0,R5
+   \   0000002C   2030               ADDS     R0,R0,#+32
+   \   0000002E   03C8               LDM      R0!,{R0,R1}
+   \   00000030   9942               CMP      R1,R3
+   \   00000032   25D8               BHI      ??WiFi_3
+   \   00000034   01D3               BCC      ??WiFi_4
+   \   00000036   9042               CMP      R0,R2
+   \   00000038   22D2               BCS      ??WiFi_3
+   \                     ??WiFi_4:
+   \   0000003A   2800               MOVS     R0,R5
+   \   0000003C   2030               ADDS     R0,R0,#+32
+   \   0000003E   03C8               LDM      R0!,{R0,R1}
+   \   00000040   0029               CMP      R1,#+0
+   \   00000042   01D1               BNE      ??WiFi_5
+   \   00000044   0028               CMP      R0,#+0
+   \   00000046   1BD0               BEQ      ??WiFi_3
+    204                   {//Timeout przekroczony
+    205                     
+    206                      Net->Status.CurrentOrder=WizFi_NC;
+   \                     ??WiFi_5:
+   \   00000048   0020               MOVS     R0,#+0
+   \   0000004A   A870               STRB     R0,[R5, #+2]
+    207                      Net->Status.RepeatOrder=0; 
+   \   0000004C   2871               STRB     R0,[R5, #+4]
+    208                     
+    209                      //je¿eli utracono po³¹czenie z hostem
+    210                      if (Net->Status.AccesPointAssociate==CONNECTED)                             //je¿eli brak po³¹czenia z serwerem hosta
+   \   0000004E   2978               LDRB     R1,[R5, #+0]
+   \   00000050   0329               CMP      R1,#+3
+   \   00000052   0AD1               BNE      ??WiFi_6
+    211                          {
+    212                             Net->Status.HostLink=DISCONNECTED;
+   \   00000054   6870               STRB     R0,[R5, #+1]
+    213                             Net->Status.Timeout=0;
+   \   00000056   0100               MOVS     R1,R0
+   \   00000058   2A00               MOVS     R2,R5
+   \   0000005A   2032               ADDS     R2,R2,#+32
+   \   0000005C   03C2               STM      R2!,{R0,R1}
+    214                             Net->Status.HttpNextQueryTime=0;
+   \   0000005E   2A00               MOVS     R2,R5
+   \   00000060   1832               ADDS     R2,R2,#+24
+   \   00000062   03C2               STM      R2!,{R0,R1}
+    215                             Net->Status.FreezTime=0;
+   \   00000064   2835               ADDS     R5,R5,#+40
+   \   00000066   03C5               STM      R5!,{R0,R1}
+   \   00000068   2FE0               B        ??WiFi_2
+    216                          }else{
+    217                             Net->Status.AccesPointAssociate=DISCONNECTED;
+   \                     ??WiFi_6:
+   \   0000006A   2870               STRB     R0,[R5, #+0]
+    218                             Net->Status.Timeout=0;
+   \   0000006C   0100               MOVS     R1,R0
+   \   0000006E   2A00               MOVS     R2,R5
+   \   00000070   2032               ADDS     R2,R2,#+32
+   \   00000072   03C2               STM      R2!,{R0,R1}
+    219                             Net->Status.HttpNextQueryTime=0;
+   \   00000074   2A00               MOVS     R2,R5
+   \   00000076   1832               ADDS     R2,R2,#+24
+   \   00000078   03C2               STM      R2!,{R0,R1}
+    220                             Net->Status.FreezTime=0;
+   \   0000007A   2835               ADDS     R5,R5,#+40
+   \   0000007C   03C5               STM      R5!,{R0,R1}
+   \   0000007E   24E0               B        ??WiFi_2
+    221                          }
+    222                   }else{
+    223                      if (Net->Status.AccesPointAssociate==DISCONNECTED)                      //je¿eli brak po³¹czenia z acces pointem to zainicjalizuj ³¹czenie
+   \                     ??WiFi_3:
+   \   00000080   2878               LDRB     R0,[R5, #+0]
+   \   00000082   0028               CMP      R0,#+0
+   \   00000084   0CD1               BNE      ??WiFi_7
+    224                      {
+    225                          Net->Status.AccesPointAssociate=CONNECTING;                         //zmiana statusu RouterAssociate na ³¹czenie 
+   \   00000086   0220               MOVS     R0,#+2
+   \   00000088   2870               STRB     R0,[R5, #+0]
+    226                          Net->Status.HostLink=DISCONNECTED;                                  //reset flagi stanu po³¹czenie z hostem
+   \   0000008A   0020               MOVS     R0,#+0
+   \   0000008C   6870               STRB     R0,[R5, #+1]
+    227                          Net->Status.CurrentOrder=WizFi_NC;                                  //reset flagi rozkazu
+   \   0000008E   A870               STRB     R0,[R5, #+2]
+    228                          Net->Status.RepeatOrder=0;
+   \   00000090   2871               STRB     R0,[R5, #+4]
+    229                          Net->Status.NextHttpOrder=WizFi_NC;                                 //reset flagi oczekuj¹cego rozkazu
+   \   00000092   E870               STRB     R0,[R5, #+3]
+    230                          
+    231                          AP_Associate(Buff_TX,USART,Net);                                    //inicjalizacja po³¹czenie z acces point'em                                                                                                         
+   \   00000094   2A00               MOVS     R2,R5
+   \   00000096   2100               MOVS     R1,R4
+   \   00000098   3000               MOVS     R0,R6
+   \   0000009A   ........           BL       AP_Associate
+   \   0000009E   14E0               B        ??WiFi_2
+    232                      }else if (Net->Status.AccesPointAssociate==CONNECTED) 
+   \                     ??WiFi_7:
+   \   000000A0   0328               CMP      R0,#+3
+   \   000000A2   12D1               BNE      ??WiFi_2
+    233                      {
+    234                        if (Net->Status.HostLink==DISCONNECTED)                               //je¿eli brak po³¹czenia z serwerem hosta
+   \   000000A4   6878               LDRB     R0,[R5, #+1]
+   \   000000A6   0028               CMP      R0,#+0
+   \   000000A8   05D1               BNE      ??WiFi_8
+    235                          {
+    236                             WizFiCommand_AT_NCTCP(Buff_TX,USART, Net); 
+                                    ^
+Warning[Pe223]: function "WizFiCommand_AT_NCTCP" declared implicitly
+   \   000000AA   2A00               MOVS     R2,R5
+   \   000000AC   2100               MOVS     R1,R4
+   \   000000AE   3000               MOVS     R0,R6
+   \   000000B0   ........           BL       WizFiCommand_AT_NCTCP
+   \   000000B4   09E0               B        ??WiFi_2
+    237                          }else if (Net->Status.HostLink==CONNECTED)                          //je¿eli po³¹czony z serwerem hosta
+   \                     ??WiFi_8:
+   \   000000B6   0328               CMP      R0,#+3
+   \   000000B8   07D1               BNE      ??WiFi_2
+    238                          {
+    239                             if( Net->Status.CurrentOrder==WizFi_NC)                          //je¿eli brak bierz¹cych zadañ
+   \   000000BA   A878               LDRB     R0,[R5, #+2]
+   \   000000BC   0028               CMP      R0,#+0
+   \   000000BE   04D1               BNE      ??WiFi_2
+    240                             {
+    241                               //if ((Net->Status.HttpNextQueryTime<g_counter) || (Net->Status.HttpNextQueryTime==0))   //je¿eli spe³niony wymagany czas pomiêdzy odpytywaniami
+    242                               //{
+    243                                                                                              //HTTP_CheckConnection(Buff_TX,  USART, Net);
+    244                                  HTTP_Task(Buff_TX,USART, Net);                                //wykonaj kolejne zadanie HTTP
+   \   000000C0   2A00               MOVS     R2,R5
+   \   000000C2   2100               MOVS     R1,R4
+   \   000000C4   3000               MOVS     R0,R6
+   \   000000C6   ........           BL       HTTP_Task
+    245                               //}
+    246                             }
+    247                          }
+    248                      }
+    249                     
+    250                   } //koniec: if ((Net->Status.Timeout<g_counter) && (Net->Status.Timeout>0))
+    251               } //koniec: if ((Net->Status.FreezTime==0) || (Net->Status.FreezTime<g_counter))
+    252            
+    253          }
+   \                     ??WiFi_2:
+   \   000000CA   F8BC               POP      {R3-R7}
+   \   000000CC   01BC               POP      {R0}
+   \   000000CE   0047               BX       R0               ;; return
+    254          
+    255          
+    256          
+    257                             
+    258          
+    259          //G³ówna funkcja interpretacji odpowiedzi
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    260          void WizFiResponseInterpreter(char *Buff_RX, char *Buff_TX,  AT91PS_USART USART, _Net *Net)
+    261          {
+   \                     WizFiResponseInterpreter:
+   \   00000000   F2B5               PUSH     {R1,R4-R7,LR}
+   \   00000002   0500               MOVS     R5,R0
+   \   00000004   1700               MOVS     R7,R2
+   \   00000006   1C00               MOVS     R4,R3
+   \   00000008   4B49               LDR      R1,??WizFiResponseInterpreter_0  ;; `?<Constant "[DISASSOCIATED]">`
+    262                char *pTxt;
+    263          
+    264                if (strstr(Buff_RX, "[DISASSOCIATED]")!=NULL)
+   \   0000000A   ........           BL       strstr
+   \   0000000E   0028               CMP      R0,#+0
+   \   00000010   0BD0               BEQ      ??WizFiResponseInterpreter_1
+    265                {
+    266                   Net->Status.AccesPointAssociate=DISCONNECTED;
+   \   00000012   0022               MOVS     R2,#+0
+   \   00000014   1000               MOVS     R0,R2
+   \   00000016   2070               STRB     R0,[R4, #+0]
+    267                   Net->Status.HostLink=DISCONNECTED; 
+   \   00000018   6070               STRB     R0,[R4, #+1]
+    268                   Net->Status.FreezTime=0;
+   \   0000001A   0100               MOVS     R1,R0
+   \   0000001C   2300               MOVS     R3,R4
+   \   0000001E   2833               ADDS     R3,R3,#+40
+   \   00000020   03C3               STM      R3!,{R0,R1}
+    269                   Net->Status.Timeout=0;
+   \   00000022   2300               MOVS     R3,R4
+   \   00000024   2033               ADDS     R3,R3,#+32
+   \   00000026   03C3               STM      R3!,{R0,R1}
+    270                   Net->Status.CurrentOrder=WizFi_NC;
+   \   00000028   A270               STRB     R2,[R4, #+2]
+    271                }
+    272                
+    273                if (strstr(Buff_RX, "[ERROR]")!=NULL)
+   \                     ??WizFiResponseInterpreter_1:
+   \   0000002A   4449               LDR      R1,??WizFiResponseInterpreter_0+0x4  ;; `?<Constant "[DISASSOCIATED]">` + 68
+   \   0000002C   2800               MOVS     R0,R5
+   \   0000002E   ........           BL       strstr
+   \   00000032   0028               CMP      R0,#+0
+   \   00000034   1AD0               BEQ      ??WizFiResponseInterpreter_2
+    274                {
+    275                   Net->Status.HostLink=DISCONNECTED; 
+   \   00000036   0022               MOVS     R2,#+0
+   \   00000038   1000               MOVS     R0,R2
+   \   0000003A   6070               STRB     R0,[R4, #+1]
+    276                   Net->Status.FreezTime=g_counter+1000;
+   \   0000003C   2300               MOVS     R3,R4
+   \   0000003E   2833               ADDS     R3,R3,#+40
+   \   00000040   3F48               LDR      R0,??WizFiResponseInterpreter_0+0x8  ;; g_counter
+   \   00000042   03C8               LDM      R0!,{R0,R1}
+   \   00000044   0500               MOVS     R5,R0
+   \   00000046   0E00               MOVS     R6,R1
+   \   00000048   FA20               MOVS     R0,#+250
+   \   0000004A   8000               LSLS     R0,R0,#+2        ;; #+1000
+   \   0000004C   1100               MOVS     R1,R2
+   \   0000004E   4019               ADDS     R0,R0,R5
+   \   00000050   7141               ADCS     R1,R1,R6
+   \   00000052   03C3               STM      R3!,{R0,R1}
+    277                   Net->Status.Timeout=0;
+   \   00000054   2300               MOVS     R3,R4
+   \   00000056   2033               ADDS     R3,R3,#+32
+   \   00000058   1000               MOVS     R0,R2
+   \   0000005A   0100               MOVS     R1,R0
+   \   0000005C   03C3               STM      R3!,{R0,R1}
+    278                   Net->Status.CurrentOrder=WizFi_NC;
+   \   0000005E   A270               STRB     R2,[R4, #+2]
+    279                   WizFiCommand_AT(Buff_TX,USART, Net);
+   \   00000060   2200               MOVS     R2,R4
+   \   00000062   3900               MOVS     R1,R7
+   \   00000064   0098               LDR      R0,[SP, #+0]
+   \   00000066   ........           BL       WizFiCommand_AT
+   \   0000006A   61E0               B        ??WizFiResponseInterpreter_3
+    280                }
+    281                /*
+    282                if ((strstr(Buff_RX, "[ERROR]")!=NULL) || (strstr(Buff_RX, "[DISASSOCIATED]")!=NULL))
+    283                {
+    284                   Net->Status.AccesPointAssociate=DISCONNECTED;
+    285                   Net->Status.HostLink=DISCONNECTED; 
+    286                   Net->Status.FreezTime=0;
+    287                   Net->Status.Timeout=0;
+    288                   Net->Status.CurrentOrder=WizFi_NC;
+    289                }
+    290                */
+    291                else if (Net->Status.AccesPointAssociate==CONNECTING)
+   \                     ??WizFiResponseInterpreter_2:
+   \   0000006C   2078               LDRB     R0,[R4, #+0]
+   \   0000006E   0228               CMP      R0,#+2
+   \   00000070   06D1               BNE      ??WizFiResponseInterpreter_4
+    292                {
+    293                   AP_AssociateResponseInterpreter(Buff_RX,Buff_TX,USART, Net);           //odpowiedz dla zadania 
+   \   00000072   2300               MOVS     R3,R4
+   \   00000074   3A00               MOVS     R2,R7
+   \   00000076   0099               LDR      R1,[SP, #+0]
+   \   00000078   2800               MOVS     R0,R5
+   \   0000007A   ........           BL       AP_AssociateResponseInterpreter
+   \   0000007E   57E0               B        ??WizFiResponseInterpreter_3
+    294                }else if (Net->Status.AccesPointAssociate==CONNECTED) 
+   \                     ??WizFiResponseInterpreter_4:
+   \   00000080   0328               CMP      R0,#+3
+   \   00000082   55D1               BNE      ??WizFiResponseInterpreter_3
+    295                {
+    296                    if (strstr(Buff_RX, "send() failed:")!=NULL)
+   \   00000084   2F49               LDR      R1,??WizFiResponseInterpreter_0+0xC  ;; `?<Constant "[DISASSOCIATED]">` + 52
+   \   00000086   2800               MOVS     R0,R5
+   \   00000088   ........           BL       strstr
+   \   0000008C   0028               CMP      R0,#+0
+   \   0000008E   0CD0               BEQ      ??WizFiResponseInterpreter_5
+    297                    {
+    298                      Net->Status.CurrentOrder=WizFi_NC;
+   \   00000090   0022               MOVS     R2,#+0
+   \   00000092   1000               MOVS     R0,R2
+   \   00000094   A070               STRB     R0,[R4, #+2]
+    299                      Net->Status.FreezTime=0;
+   \   00000096   0100               MOVS     R1,R0
+   \   00000098   2300               MOVS     R3,R4
+   \   0000009A   2833               ADDS     R3,R3,#+40
+   \   0000009C   03C3               STM      R3!,{R0,R1}
+    300                      Net->Status.Timeout=0;
+   \   0000009E   2300               MOVS     R3,R4
+   \   000000A0   2033               ADDS     R3,R3,#+32
+   \   000000A2   03C3               STM      R3!,{R0,R1}
+    301                      Net->Status.NextHttpOrder=0;
+                                                      ^
+Warning[Pe188]: enumerated type mixed with another type
+   \   000000A4   E070               STRB     R0,[R4, #+3]
+    302                      Net->Status.HostLink=DISCONNECTED; 
+   \   000000A6   6270               STRB     R2,[R4, #+1]
+   \   000000A8   42E0               B        ??WizFiResponseInterpreter_3
+    303                    }
+    304                    else if (Net->Status.HostLink==CONNECTING)                            //je¿eli ³¹czenie z hostem
+   \                     ??WizFiResponseInterpreter_5:
+   \   000000AA   6078               LDRB     R0,[R4, #+1]
+   \   000000AC   0228               CMP      R0,#+2
+   \   000000AE   06D1               BNE      ??WizFiResponseInterpreter_6
+    305                    {
+    306                      WizFiResponseCommand_AT_NCTCP(Buff_RX,Buff_TX,USART, Net);          //odpowiedz dla zadania 
+                             ^
+Warning[Pe223]: function "WizFiResponseCommand_AT_NCTCP" declared implicitly
+   \   000000B0   2300               MOVS     R3,R4
+   \   000000B2   3A00               MOVS     R2,R7
+   \   000000B4   0099               LDR      R1,[SP, #+0]
+   \   000000B6   2800               MOVS     R0,R5
+   \   000000B8   ........           BL       WizFiResponseCommand_AT_NCTCP
+   \   000000BC   38E0               B        ??WizFiResponseInterpreter_3
+    307                      
+    308                    }
+    309                    else if (Net->Status.HostLink==CONNECTED)                             //je¿eli po³¹czono z hostem
+   \                     ??WizFiResponseInterpreter_6:
+   \   000000BE   0328               CMP      R0,#+3
+   \   000000C0   2ED1               BNE      ??WizFiResponseInterpreter_7
+    310                    {
+    311                       pTxt=strstr(Buff_RX, "[DISCONNECT");                               //jê¿eli porzysz³a informacja o roz³¹czeniu
+   \   000000C2   2149               LDR      R1,??WizFiResponseInterpreter_0+0x10  ;; `?<Constant "[DISASSOCIATED]">` + 16
+   \   000000C4   2800               MOVS     R0,R5
+   \   000000C6   ........           BL       strstr
+    312                       if ((pTxt!=NULL) && (Net->Status.HostLink==CONNECTED))
+   \   000000CA   0028               CMP      R0,#+0
+   \   000000CC   10D0               BEQ      ??WizFiResponseInterpreter_8
+   \   000000CE   6178               LDRB     R1,[R4, #+1]
+   \   000000D0   0329               CMP      R1,#+3
+   \   000000D2   0DD1               BNE      ??WizFiResponseInterpreter_8
+    313                       {
+    314                          if(pTxt[12]==Net->Status.HostChannel) 
+   \   000000D4   007B               LDRB     R0,[R0, #+12]
+   \   000000D6   217D               LDRB     R1,[R4, #+20]
+   \   000000D8   8842               CMP      R0,R1
+   \   000000DA   09D1               BNE      ??WizFiResponseInterpreter_8
+    315                           {
+    316                             Net->Status.FreezTime=g_counter+FREEZ_TIME;
+   \   000000DC   2200               MOVS     R2,R4
+   \   000000DE   2832               ADDS     R2,R2,#+40
+   \   000000E0   1748               LDR      R0,??WizFiResponseInterpreter_0+0x8  ;; g_counter
+   \   000000E2   03C8               LDM      R0!,{R0,R1}
+   \   000000E4   0023               MOVS     R3,#+0
+   \   000000E6   3230               ADDS     R0,R0,#+50
+   \   000000E8   5941               ADCS     R1,R1,R3
+   \   000000EA   03C2               STM      R2!,{R0,R1}
+    317                             Net->Status.HostLink=DISCONNECTED;                           //Roz³¹czenie
+   \   000000EC   1800               MOVS     R0,R3
+   \   000000EE   6070               STRB     R0,[R4, #+1]
+    318                           }
+    319                        }
+    320                       
+    321                       
+    322                       if (strstr(Buff_RX, "[ERROR: INVALID INPUT]")!=NULL)        //jê¿eli porzysz³a informacja o b³edzie
+   \                     ??WizFiResponseInterpreter_8:
+   \   000000F0   1649               LDR      R1,??WizFiResponseInterpreter_0+0x14  ;; `?<Constant "[DISASSOCIATED]">` + 28
+   \   000000F2   2800               MOVS     R0,R5
+   \   000000F4   ........           BL       strstr
+   \   000000F8   0028               CMP      R0,#+0
+   \   000000FA   0AD0               BEQ      ??WizFiResponseInterpreter_9
+    323                        {
+    324                            Net->Status.FreezTime=g_counter+FREEZ_TIME;
+   \   000000FC   2200               MOVS     R2,R4
+   \   000000FE   2832               ADDS     R2,R2,#+40
+   \   00000100   0F48               LDR      R0,??WizFiResponseInterpreter_0+0x8  ;; g_counter
+   \   00000102   03C8               LDM      R0!,{R0,R1}
+   \   00000104   0023               MOVS     R3,#+0
+   \   00000106   3230               ADDS     R0,R0,#+50
+   \   00000108   5941               ADCS     R1,R1,R3
+   \   0000010A   03C2               STM      R2!,{R0,R1}
+    325                            Net->Status.HostLink=DISCONNECTED;                            //Roz³¹czenie
+   \   0000010C   1800               MOVS     R0,R3
+   \   0000010E   6070               STRB     R0,[R4, #+1]
+   \   00000110   0EE0               B        ??WizFiResponseInterpreter_3
+    326                        }
+    327                        else
+    328                        {
+    329                            HTTP_QueryResponse(Buff_RX,Buff_TX,USART, Net); 
+   \                     ??WizFiResponseInterpreter_9:
+   \   00000112   2300               MOVS     R3,R4
+   \   00000114   3A00               MOVS     R2,R7
+   \   00000116   0099               LDR      R1,[SP, #+0]
+   \   00000118   2800               MOVS     R0,R5
+   \   0000011A   ........           BL       HTTP_QueryResponse
+   \   0000011E   07E0               B        ??WizFiResponseInterpreter_3
+    330                        }
+    331                                                                                          //if (Net->Status.CurrentOrder==WizFi_AT_CID)
+    332                                                                                          //{
+    333                                                                                          //   HTTP_CheckConnectionResponse(Buff_RX,Buff_TX,USART, Net);         
+    334                                                                                          //}else{
+    335                                                                                          //     HTTP_QueryResponse(Buff_RX,Buff_TX,USART, Net); 
+    336                                                                                          //}
+    337                    }
+    338                    else if (Net->Status.HostLink==DISCONNECTING)
+   \                     ??WizFiResponseInterpreter_7:
+   \   00000120   0128               CMP      R0,#+1
+   \   00000122   05D1               BNE      ??WizFiResponseInterpreter_3
+    339                    {
+    340                       WizFiResponseCommand_AT_NCLOSEALL0(Buff_RX,Buff_TX,USART, Net);
+   \   00000124   2300               MOVS     R3,R4
+   \   00000126   3A00               MOVS     R2,R7
+   \   00000128   0099               LDR      R1,[SP, #+0]
+   \   0000012A   2800               MOVS     R0,R5
+   \   0000012C   ........           BL       WizFiResponseCommand_AT_NCLOSEALL0
+    341                    }
+    342                }                                                                         //koniec: else if (Net->Status.AccesPointAssociate==CONNECTED) 
+    343          }
+   \                     ??WizFiResponseInterpreter_3:
+   \   00000130   F8BC               POP      {R3-R7}
+   \   00000132   01BC               POP      {R0}
+   \   00000134   0047               BX       R0               ;; return
+   \   00000136   C046               Nop      
+   \                     ??WizFiResponseInterpreter_0:
+   \   00000138   ........           DC32     `?<Constant "[DISASSOCIATED]">`
+   \   0000013C   ........           DC32     `?<Constant "[DISASSOCIATED]">` + 68
+   \   00000140   ........           DC32     g_counter
+   \   00000144   ........           DC32     `?<Constant "[DISASSOCIATED]">` + 52
+   \   00000148   ........           DC32     `?<Constant "[DISASSOCIATED]">` + 16
+   \   0000014C   ........           DC32     `?<Constant "[DISASSOCIATED]">` + 28
+    344          
+    345          
+    346          
+    347          
+    348          
+    349          
+    350          
+    351          //funkcja ³¹czenia z acces point'em
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    352          void AP_Associate(char *Buff_TX,  AT91PS_USART USART, _Net *Net)
+    353          {
+   \                     AP_Associate:
+   \   00000000   10B5               PUSH     {R4,LR}
+    354                Net->Status.AccesPointAssociate=CONNECTING;                          //zmiana statusu RouterAssociate na ³¹czenie 
+   \   00000002   0223               MOVS     R3,#+2
+   \   00000004   1370               STRB     R3,[R2, #+0]
+    355                
+    356                
+    357                switch (Net->Status.CurrentOrder)
+   \   00000006   9378               LDRB     R3,[R2, #+2]
+   \   00000008   082B               CMP      R3,#+8
+   \   0000000A   1FD8               BHI      ??AP_Associate_1
+   \   0000000C   01A4               ADR      R4,??AP_Associate_0
+   \   0000000E   E45C               LDRB     R4,[R4, R3]
+   \   00000010   A744               ADD      PC,PC,R4
+   \   00000012   C046               Nop      
+   \                     ??AP_Associate_0:
+   \   00000014   0A0A1016           DC8      +10,+10,+16,+22
+   \   00000018   1C22282E           DC8      +28,+34,+40,+46
+   \   0000001C   3400               DC8      +52,+0
+    358                {
+    359                  case WizFi_NC:           WizFiCommand_AT(Buff_TX,USART, Net);   break;           //kolejny rozkaz
+   \                     ??AP_Associate_2:
+   \   0000001E   ........           BL       WizFiCommand_AT
+   \   00000022   13E0               B        ??AP_Associate_1
+    360                  case WizFi_AT:           WizFiCommand_AT(Buff_TX,USART, Net);   break;           //wyœlij rozkaz rozkaz
+    361                  case WizFi_AT_XDUM0:     WizFiCommand_AT_XDUM0(Buff_TX,USART, Net);   break;           //wyœlij rozkaz rozkaz
+   \                     ??AP_Associate_3:
+   \   00000024   ........           BL       WizFiCommand_AT_XDUM0
+   \   00000028   10E0               B        ??AP_Associate_1
+    362                  case WizFi_AT_WD:        WizFiCommand_AT_WD(Buff_TX,USART, Net);   break;           //wyœlij rozkaz rozkaz
+   \                     ??AP_Associate_4:
+   \   0000002A   ........           BL       WizFiCommand_AT_WD
+   \   0000002E   0DE0               B        ??AP_Associate_1
+    363                  case WizFi_AT_NDHCP_1:   WizFiCommand_AT_NDHCP_1(Buff_TX,USART, Net);   break;           //wyœlij rozkaz rozkaz
+   \                     ??AP_Associate_5:
+   \   00000030   ........           BL       WizFiCommand_AT_NDHCP_1
+   \   00000034   0AE0               B        ??AP_Associate_1
+    364                  case WizFi_AT_WWEP1:     WizFiCommand_AT_WWEP1(Buff_TX,USART, Net);   break;           //wyœlij rozkaz rozkaz
+   \                     ??AP_Associate_6:
+   \   00000036   ........           BL       WizFiCommand_AT_WWEP1
+   \   0000003A   07E0               B        ??AP_Associate_1
+    365                  case WizFi_AT_WWPA:      WizFiCommand_AT_WWPA(Buff_TX,USART, Net);   break;           //wyœlij rozkaz rozkaz
+   \                     ??AP_Associate_7:
+   \   0000003C   ........           BL       WizFiCommand_AT_WWPA
+   \   00000040   04E0               B        ??AP_Associate_1
+    366                  case WizFi_AT_WA:        WizFiCommand_AT_WA(Buff_TX,USART, Net);   break;           //wyœlij rozkaz rozkaz
+   \                     ??AP_Associate_8:
+   \   00000042   ........           BL       WizFiCommand_AT_WA
+   \   00000046   01E0               B        ??AP_Associate_1
+    367                  case WizFi_AT_DNSLOOKUP: WizFiCommand_AT_DNSLOOKUP(Buff_TX,USART, Net);   break;           //wyœlij rozkaz rozkaz
+   \                     ??AP_Associate_9:
+   \   00000048   ........           BL       WizFiCommand_AT_DNSLOOKUP
+    368                }
+    369                
+    370                
+    371          }
+   \                     ??AP_Associate_1:
+   \   0000004C   10BC               POP      {R4}
+   \   0000004E   01BC               POP      {R0}
+   \   00000050   0047               BX       R0               ;; return
+    372          
+    373                    
+    374          
+    375          
+    376          
+    377          
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    378          void AP_AssociateResponseInterpreter(char *Buff_RX, char *Buff_TX,  AT91PS_USART USART, _Net *Net)
+    379          {
+   \                     AP_AssociateResponseInterpreter:
+   \   00000000   F1B5               PUSH     {R0,R4-R7,LR}
+   \   00000002   0E00               MOVS     R6,R1
+   \   00000004   1700               MOVS     R7,R2
+   \   00000006   1C00               MOVS     R4,R3
+   \   00000008   2200               MOVS     R2,R4
+   \   0000000A   2832               ADDS     R2,R2,#+40
+   \   0000000C   4A48               LDR      R0,??AP_AssociateResponseInterpreter_1  ;; g_counter
+   \   0000000E   03C8               LDM      R0!,{R0,R1}
+   \   00000010   0023               MOVS     R3,#+0
+   \   00000012   3230               ADDS     R0,R0,#+50
+   \   00000014   5941               ADCS     R1,R1,R3
+   \   00000016   03C2               STM      R2!,{R0,R1}
+    380                Net->Status.FreezTime=g_counter+FREEZ_TIME;
+    381                char Odp=0;
+   \   00000018   1D00               MOVS     R5,R3
+   \   0000001A   2800               MOVS     R0,R5
+    382                switch (Net->Status.CurrentOrder)
+   \   0000001C   A178               LDRB     R1,[R4, #+2]
+   \   0000001E   491E               SUBS     R1,R1,#+1
+   \   00000020   0729               CMP      R1,#+7
+   \   00000022   3ED8               BHI      ??AP_AssociateResponseInterpreter_2
+   \   00000024   01A2               ADR      R2,??AP_AssociateResponseInterpreter_0
+   \   00000026   525C               LDRB     R2,[R2, R1]
+   \   00000028   9744               ADD      PC,PC,R2
+   \   0000002A   C046               Nop      
+   \                     ??AP_AssociateResponseInterpreter_0:
+   \   0000002C   08162432           DC8      +8,+22,+36,+50
+   \   00000030   404E5C6A           DC8      +64,+78,+92,+106
+    383                {
+    384                  case WizFi_AT:            Odp=WizFiResponseCommand_AT(Buff_RX,Buff_TX,USART, Net);   break;        //odpowiedz dla zadania 
+   \                     ??AP_AssociateResponseInterpreter_3:
+   \   00000034   2300               MOVS     R3,R4
+   \   00000036   3A00               MOVS     R2,R7
+   \   00000038   3100               MOVS     R1,R6
+   \   0000003A   0098               LDR      R0,[SP, #+0]
+   \   0000003C   ........           BL       WizFiResponseCommand_AT
+   \   00000040   2FE0               B        ??AP_AssociateResponseInterpreter_2
+    385                  case WizFi_AT_XDUM0:      Odp=WizFiResponseCommand_AT_XDUM0(Buff_RX,Buff_TX,USART, Net);   break;        //odpowiedz dla zadania 
+   \                     ??AP_AssociateResponseInterpreter_4:
+   \   00000042   2300               MOVS     R3,R4
+   \   00000044   3A00               MOVS     R2,R7
+   \   00000046   3100               MOVS     R1,R6
+   \   00000048   0098               LDR      R0,[SP, #+0]
+   \   0000004A   ........           BL       WizFiResponseCommand_AT_XDUM0
+   \   0000004E   28E0               B        ??AP_AssociateResponseInterpreter_2
+    386                  case WizFi_AT_WD:         Odp=WizFiResponseCommand_AT_WD(Buff_RX,Buff_TX,USART, Net);   break;     //odpowiedz dla zadania 
+   \                     ??AP_AssociateResponseInterpreter_5:
+   \   00000050   2300               MOVS     R3,R4
+   \   00000052   3A00               MOVS     R2,R7
+   \   00000054   3100               MOVS     R1,R6
+   \   00000056   0098               LDR      R0,[SP, #+0]
+   \   00000058   ........           BL       WizFiResponseCommand_AT_WD
+   \   0000005C   21E0               B        ??AP_AssociateResponseInterpreter_2
+    387                  case WizFi_AT_NDHCP_1:    Odp=WizFiResponseCommand_AT_NDHCP_1(Buff_RX,Buff_TX,USART, Net);   break;     //odpowiedz dla zadania 
+   \                     ??AP_AssociateResponseInterpreter_6:
+   \   0000005E   2300               MOVS     R3,R4
+   \   00000060   3A00               MOVS     R2,R7
+   \   00000062   3100               MOVS     R1,R6
+   \   00000064   0098               LDR      R0,[SP, #+0]
+   \   00000066   ........           BL       WizFiResponseCommand_AT_NDHCP_1
+   \   0000006A   1AE0               B        ??AP_AssociateResponseInterpreter_2
+    388                  case WizFi_AT_WWEP1:      Odp=WizFiResponseCommand_AT_WWEP1(Buff_RX,Buff_TX,USART, Net);   break;     //odpowiedz dla zadania 
+   \                     ??AP_AssociateResponseInterpreter_7:
+   \   0000006C   2300               MOVS     R3,R4
+   \   0000006E   3A00               MOVS     R2,R7
+   \   00000070   3100               MOVS     R1,R6
+   \   00000072   0098               LDR      R0,[SP, #+0]
+   \   00000074   ........           BL       WizFiResponseCommand_AT_WWEP1
+   \   00000078   13E0               B        ??AP_AssociateResponseInterpreter_2
+    389                  case WizFi_AT_WWPA:       Odp=WizFiResponseCommand_AT_WWPA(Buff_RX,Buff_TX,USART, Net);   break;     //odpowiedz dla zadania 
+   \                     ??AP_AssociateResponseInterpreter_8:
+   \   0000007A   2300               MOVS     R3,R4
+   \   0000007C   3A00               MOVS     R2,R7
+   \   0000007E   3100               MOVS     R1,R6
+   \   00000080   0098               LDR      R0,[SP, #+0]
+   \   00000082   ........           BL       WizFiResponseCommand_AT_WWPA
+   \   00000086   0CE0               B        ??AP_AssociateResponseInterpreter_2
+    390                  case WizFi_AT_WA:         Odp=WizFiResponseCommand_AT_WA(Buff_RX,Buff_TX,USART, Net);   break;     //odpowiedz dla zadania 
+   \                     ??AP_AssociateResponseInterpreter_9:
+   \   00000088   2300               MOVS     R3,R4
+   \   0000008A   3A00               MOVS     R2,R7
+   \   0000008C   3100               MOVS     R1,R6
+   \   0000008E   0098               LDR      R0,[SP, #+0]
+   \   00000090   ........           BL       WizFiResponseCommand_AT_WA
+   \   00000094   05E0               B        ??AP_AssociateResponseInterpreter_2
+    391                  case WizFi_AT_DNSLOOKUP:  Odp=WizFiResponseCommand_AT_DNSLOOKUP(Buff_RX,Buff_TX,USART, Net);   break;     //odpowiedz dla zadania 
+   \                     ??AP_AssociateResponseInterpreter_10:
+   \   00000096   2300               MOVS     R3,R4
+   \   00000098   3A00               MOVS     R2,R7
+   \   0000009A   3100               MOVS     R1,R6
+   \   0000009C   0098               LDR      R0,[SP, #+0]
+   \   0000009E   ........           BL       WizFiResponseCommand_AT_DNSLOOKUP
+    392                }
+    393                   
+    394                
+    395                //je¿eli poprawna odpowiedŸ 
+    396                if (Odp==1)
+   \                     ??AP_AssociateResponseInterpreter_2:
+   \   000000A2   0128               CMP      R0,#+1
+   \   000000A4   0DD1               BNE      ??AP_AssociateResponseInterpreter_11
+    397                {
+    398                  Net->Status.RepeatOrder=0;
+   \   000000A6   2571               STRB     R5,[R4, #+4]
+    399                  if ((Net->Status.CurrentOrder<WizFi_AT_DNSLOOKUP) && (Net->Status.CurrentOrder!=WizFi_NC))
+   \   000000A8   A078               LDRB     R0,[R4, #+2]
+   \   000000AA   0828               CMP      R0,#+8
+   \   000000AC   41D2               BCS      ??AP_AssociateResponseInterpreter_12
+   \   000000AE   0028               CMP      R0,#+0
+   \   000000B0   3FD0               BEQ      ??AP_AssociateResponseInterpreter_12
+    400                  {
+    401                     
+    402                     Net->Status.CurrentOrder++;
+   \   000000B2   401C               ADDS     R0,R0,#+1
+   \   000000B4   A070               STRB     R0,[R4, #+2]
+    403                     
+    404                     AP_Associate(Buff_TX,  USART, Net);
+   \   000000B6   2200               MOVS     R2,R4
+   \   000000B8   3900               MOVS     R1,R7
+   \   000000BA   3000               MOVS     R0,R6
+   \   000000BC   ........           BL       AP_Associate
+   \   000000C0   37E0               B        ??AP_AssociateResponseInterpreter_12
+    405                     
+    406                  }
+    407                }else{
+    408                  if(strstr(Buff_RX, "[ERROR")!=NULL)
+   \                     ??AP_AssociateResponseInterpreter_11:
+   \   000000C2   1E49               LDR      R1,??AP_AssociateResponseInterpreter_1+0x4  ;; `?<Constant "[ERROR">`
+   \   000000C4   0098               LDR      R0,[SP, #+0]
+   \   000000C6   ........           BL       strstr
+   \   000000CA   0028               CMP      R0,#+0
+   \   000000CC   31D0               BEQ      ??AP_AssociateResponseInterpreter_12
+    409                  {
+    410                      if (Net->Status.RepeatOrder<10)      //powtórz rozkaz
+   \   000000CE   2079               LDRB     R0,[R4, #+4]
+   \   000000D0   0A28               CMP      R0,#+10
+   \   000000D2   17D2               BCS      ??AP_AssociateResponseInterpreter_13
+    411                      {
+    412                         Net->Status.RepeatOrder++;
+   \   000000D4   401C               ADDS     R0,R0,#+1
+   \   000000D6   2071               STRB     R0,[R4, #+4]
+    413                         AP_Associate(Buff_TX,  USART, Net);
+   \   000000D8   2200               MOVS     R2,R4
+   \   000000DA   3900               MOVS     R1,R7
+   \   000000DC   3000               MOVS     R0,R6
+   \   000000DE   ........           BL       AP_Associate
+    414                         Net->Status.Timeout=g_counter + CRYTICAL_TIMEOUT;    //przed³u¿enie /restart timeoutu
+   \   000000E2   2500               MOVS     R5,R4
+   \   000000E4   2035               ADDS     R5,R5,#+32
+   \   000000E6   1448               LDR      R0,??AP_AssociateResponseInterpreter_1  ;; g_counter
+   \   000000E8   0CC8               LDM      R0!,{R2,R3}
+   \   000000EA   1548               LDR      R0,??AP_AssociateResponseInterpreter_1+0x8  ;; 0x2710
+   \   000000EC   0021               MOVS     R1,#+0
+   \   000000EE   8018               ADDS     R0,R0,R2
+   \   000000F0   5941               ADCS     R1,R1,R3
+   \   000000F2   03C5               STM      R5!,{R0,R1}
+    415                         Net->Status.FreezTime=g_counter+FREEZ_TIME;
+   \   000000F4   2834               ADDS     R4,R4,#+40
+   \   000000F6   1048               LDR      R0,??AP_AssociateResponseInterpreter_1  ;; g_counter
+   \   000000F8   03C8               LDM      R0!,{R0,R1}
+   \   000000FA   0022               MOVS     R2,#+0
+   \   000000FC   3230               ADDS     R0,R0,#+50
+   \   000000FE   5141               ADCS     R1,R1,R2
+   \   00000100   03C4               STM      R4!,{R0,R1}
+   \   00000102   16E0               B        ??AP_AssociateResponseInterpreter_12
+    416                      }else{
+    417                         //ponowne po³¹czenie
+    418                         Net->Status.FreezTime=g_counter+FREEZ_TIME;
+   \                     ??AP_AssociateResponseInterpreter_13:
+   \   00000104   2200               MOVS     R2,R4
+   \   00000106   2832               ADDS     R2,R2,#+40
+   \   00000108   0B48               LDR      R0,??AP_AssociateResponseInterpreter_1  ;; g_counter
+   \   0000010A   03C8               LDM      R0!,{R0,R1}
+   \   0000010C   0023               MOVS     R3,#+0
+   \   0000010E   3230               ADDS     R0,R0,#+50
+   \   00000110   5941               ADCS     R1,R1,R3
+   \   00000112   03C2               STM      R2!,{R0,R1}
+    419                         Net->Status.Timeout=g_counter + CRYTICAL_TIMEOUT;    //przed³u¿enie /restart timeoutu
+   \   00000114   2600               MOVS     R6,R4
+   \   00000116   2036               ADDS     R6,R6,#+32
+   \   00000118   0748               LDR      R0,??AP_AssociateResponseInterpreter_1  ;; g_counter
+   \   0000011A   0CC8               LDM      R0!,{R2,R3}
+   \   0000011C   0848               LDR      R0,??AP_AssociateResponseInterpreter_1+0x8  ;; 0x2710
+   \   0000011E   2900               MOVS     R1,R5
+   \   00000120   8018               ADDS     R0,R0,R2
+   \   00000122   5941               ADCS     R1,R1,R3
+   \   00000124   03C6               STM      R6!,{R0,R1}
+    420                         Net->Status.CurrentOrder=WizFi_NC;
+   \   00000126   2800               MOVS     R0,R5
+   \   00000128   A070               STRB     R0,[R4, #+2]
+    421                         Net->Status.NextHttpOrder=WizFi_NC;
+   \   0000012A   E070               STRB     R0,[R4, #+3]
+    422                         Net->Status.RepeatOrder=0;  
+   \   0000012C   2071               STRB     R0,[R4, #+4]
+    423                         Net->Status.HostLink=DISCONNECTED; 
+   \   0000012E   6070               STRB     R0,[R4, #+1]
+    424                         Net->Status.AccesPointAssociate=DISCONNECTED;
+   \   00000130   2570               STRB     R5,[R4, #+0]
+    425                      }
+    426                    
+    427                  }
+    428                }  
+    429                
+    430          }
+   \                     ??AP_AssociateResponseInterpreter_12:
+   \   00000132   F8BC               POP      {R3-R7}
+   \   00000134   01BC               POP      {R0}
+   \   00000136   0047               BX       R0               ;; return
+   \                     ??AP_AssociateResponseInterpreter_1:
+   \   00000138   ........           DC32     g_counter
+   \   0000013C   ........           DC32     `?<Constant "[ERROR">`
+   \   00000140   10270000           DC32     0x2710
+    431                      
+    432          
+    433          
+    434          
+    435          
+    436          
+    437          //funkcja wykonywania zadañ HTTP
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    438          void HTTP_Task(char *Buff_TX,  AT91PS_USART USART, _Net *Net)
+    439          {
+   \                     HTTP_Task:
+   \   00000000   70B5               PUSH     {R4-R6,LR}
+   \   00000002   0600               MOVS     R6,R0
+   \   00000004   0C00               MOVS     R4,R1
+   \   00000006   1500               MOVS     R5,R2
+    440              if ((Net->Status.HttpNextQueryTime<g_counter) || (Net->Status.HttpNextQueryTime==0))   //je¿eli spe³niony wymagany czas pomiêdzy odpytywaniami
+   \   00000008   2800               MOVS     R0,R5
+   \   0000000A   1830               ADDS     R0,R0,#+24
+   \   0000000C   0CC8               LDM      R0!,{R2,R3}
+   \   0000000E   0F48               LDR      R0,??HTTP_Task_0  ;; g_counter
+   \   00000010   03C8               LDM      R0!,{R0,R1}
+   \   00000012   8B42               CMP      R3,R1
+   \   00000014   09D3               BCC      ??HTTP_Task_1
+   \   00000016   01D8               BHI      ??HTTP_Task_2
+   \   00000018   8242               CMP      R2,R0
+   \   0000001A   06D3               BCC      ??HTTP_Task_1
+   \                     ??HTTP_Task_2:
+   \   0000001C   2800               MOVS     R0,R5
+   \   0000001E   1830               ADDS     R0,R0,#+24
+   \   00000020   03C8               LDM      R0!,{R0,R1}
+   \   00000022   0029               CMP      R1,#+0
+   \   00000024   0FD1               BNE      ??HTTP_Task_3
+   \   00000026   0028               CMP      R0,#+0
+   \   00000028   0DD1               BNE      ??HTTP_Task_3
+    441              {
+    442                  if (Net->Status.NextHttpOrder!=WizFi_NC)                                    //je¿eli jest oczekuj¹ce zadanie
+   \                     ??HTTP_Task_1:
+   \   0000002A   E878               LDRB     R0,[R5, #+3]
+   \   0000002C   0028               CMP      R0,#+0
+   \   0000002E   03D0               BEQ      ??HTTP_Task_4
+    443                  {
+    444                      Net->Status.CurrentOrder=Net->Status.NextHttpOrder;
+   \   00000030   A870               STRB     R0,[R5, #+2]
+    445                      Net->Status.NextHttpOrder=WizFi_NC;
+   \   00000032   0020               MOVS     R0,#+0
+   \   00000034   E870               STRB     R0,[R5, #+3]
+   \   00000036   01E0               B        ??HTTP_Task_5
+    446                  }else{
+    447                      Net->Status.CurrentOrder=HTTP_GET;
+   \                     ??HTTP_Task_4:
+   \   00000038   0E20               MOVS     R0,#+14
+   \   0000003A   A870               STRB     R0,[R5, #+2]
+    448                  }
+    449                  
+    450                  HTTP_Query(Buff_TX,  USART, Net);  
+   \                     ??HTTP_Task_5:
+   \   0000003C   2A00               MOVS     R2,R5
+   \   0000003E   2100               MOVS     R1,R4
+   \   00000040   3000               MOVS     R0,R6
+   \   00000042   ........           BL       HTTP_Query
+    451                  
+    452                  
+    453              }
+    454              
+    455          }
+   \                     ??HTTP_Task_3:
+   \   00000046   70BC               POP      {R4-R6}
+   \   00000048   01BC               POP      {R0}
+   \   0000004A   0047               BX       R0               ;; return
+   \                     ??HTTP_Task_0:
+   \   0000004C   ........           DC32     g_counter
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable3:
+   \   00000000   10270000           DC32     0x2710
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable4:
+   \   00000000   ........           DC32     g_counter
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "[DISASSOCIATED]">`:
+   \   00000000   5B4449534153       DC8 "[DISASSOCIATED]"
+   \              534F43494154
+   \              45445D00    
+   \   00000010   5B444953434F       DC8 "[DISCONNECT"
+   \              4E4E45435400
+   \   0000001C   5B4552524F52       DC8 "[ERROR: INVALID INPUT]"
+   \              3A20494E5641
+   \              4C494420494E
+   \              5055545D00  
+   \   00000033   00                 DC8 0
+   \   00000034   73656E642829       DC8 "send() failed:"
+   \              206661696C65
+   \              643A00      
+   \   00000043   00                 DC8 0
+   \   00000044   5B4552524F52       DC8 "[ERROR]"
+   \              5D00        
+
+   \                                 In section .rodata, align 4
+   \                     `?<Constant "[ERROR">`:
+   \   00000000   5B4552524F52       DC8 "[ERROR"
+   \              00          
+   \   00000007   00                 DC8 0
+    456          
+
+   Maximum stack usage in bytes:
+
+     Function                       .cstack
+     --------                       -------
+     AP_Associate                        8
+     AP_AssociateResponseInterpreter
+                                        24
+     CheckVarChangeHTTP                 32
+     HTTP_Task                          16
+     InitWizFi                          16
+     WiFi                               24
+     WizFiResponseInterpreter           24
+     strstr                              8
+
+
+   Section sizes:
+
+     Function/Label                 Bytes
+     --------------                 -----
+     strstr                           12
+     CheckVarChangeHTTP              212
+     AnalogPeriod                      8
+     pt1                               8
+     InitWizFi                        72
+     WiFi                            208
+     WizFiResponseInterpreter        336
+     AP_Associate                     82
+     AP_AssociateResponseInterpreter
+                                     324
+     HTTP_Task                        80
+     ??DataTable3                      4
+     ??DataTable4                      4
+     ?<Constant "[DISASSOCIATED]">    76
+     ?<Constant "[ERROR">              8
+
+ 
+    16 bytes in section .bss
+    84 bytes in section .rodata
+ 1 334 bytes in section Debug.txt
+ 
+ 1 322 bytes of CODE  memory (+ 12 bytes shared)
+    84 bytes of CONST memory
+    16 bytes of DATA  memory
+
+Errors: none
+Warnings: 6

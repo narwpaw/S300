@@ -1,0 +1,6 @@
+execUserReset()
+{
+	// reset
+	__writeMemory32(0xA5000004,0xFFFFFD00,"Memory"); // RSTC_CR
+	__sleep(10000);
+}

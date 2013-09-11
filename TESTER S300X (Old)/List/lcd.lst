@@ -1,0 +1,3232 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           12/Jun/2013  19:50:33 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v1.4 -              #
+#                    12.06.2013\Framework\lcd.c                               #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\Framework\lcd.c" -D AT91SAM7S256 -D           #
+#                    AT91SAM7SEK -D iH -D _LCD_NEGATIV_OLD_ -D __ALARM -D     #
+#                    __WIFI_MODULE -D _DEBUG_ -D S300iOld -D _TESTER_ -lC     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\TESTER S300X (Old)\List\" --diag_suppress     #
+#                    Pa082 -o "D:\Zeuron\Projekty\S300\S300-program v1.4 -    #
+#                    12.06.2013\TESTER S300X (Old)\Obj\" --no_unroll          #
+#                    --no_inline --no_tbaa --no_scheduling --debug --endian   #
+#                    little --cpu ARM7TDMI -e --fpu None --dlib_config        #
+#                    "C:\Program Files (x86)\IAR Systems\Embedded Workbench   #
+#                    5.0\ARM\INC\DLib_Config_Normal.h" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\lib\AT91SAM7S256\" -I                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.4 - 12.06.2013\cdc\" -I "D:\Zeuron\Projekty\S300\S300 #
+#                    -program v1.4 - 12.06.2013\core\" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\startup\" -I "D:\Zeuron\Projekty\S300\S300-pr #
+#                    ogram v1.4 - 12.06.2013\Framework\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\Framework\Configuration\" -I "C:\Program      #
+#                    Files (x86)\IAR Systems\Embedded Workbench               #
+#                    5.0\ARM\INC\" --section .text=Debug.txt --interwork      #
+#                    --cpu_mode thumb -Om                                     #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v1.4 -              #
+#                    12.06.2013\TESTER S300X (Old)\List\lcd.lst               #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v1.4 -              #
+#                    12.06.2013\TESTER S300X (Old)\Obj\lcd.o                  #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v1.4 - 12.06.2013\Framework\lcd.c
+      1          //****************************************************************************//
+      2          //*--------------------------------------------------------------------------*//
+      3          //*                                 CEURON                                   *//                     
+      4          //*--------------------------------------------------------------------------*//
+      5          //*--------------------------------------------------------------------------*//
+      6          //*  Nazwa pliku                  : LCD.c                                    *//
+      7          //*  Opis                         : Plik obs³ugi wyœwietlacza LCD            *//
+      8          //*  Autor                        : Pawe³ Narwojsz                           *//
+      9          //*  Data utrzorzenia             : 15.09.2007                               *//
+     10          //*  Data ostatniej modyfikacji   : --.--.----                               *//
+     11          //*--------------------------------------------------------------------------*//
+     12          //*                                                                          *//
+     13          //*--------------------------------------------------------------------------*//
+     14          //* Rejestr zmian  (data - opis):                                            *//
+     15          //*                                                                          *//
+     16          //*                               Brak zmian                                 *//
+     17          //*                                                                          *//
+     18          //*__________________________________________________________________________*// 
+     19          //****************************************************************************//
+     20          //****************************************************************************//
+     21          
+     22          
+     23          
+     24          
+     25          
+     26          
+     27          
+     28          
+     29          
+     30          
+     31          // Pliki do³¹czane -------------------------------------------------------------
+     32               #include "common.h"
+     33               #include "core/device.h"                                                   //aduje bibliotreki dla odpowiedniego procesora
+     34               //#include "AT91SAM7S256.h"
+     35               #include "core/trace.h"
+     36               #include "LCD.h"
+     37               #include "Framework.h "
+     38               #include <stdarg.h>
+     39          
+     40          //-----------------------Koniec plików do³¹czanych -----------------------------
+     41          
+     42          
+     43          #ifndef _LCD_NEGATIV_OLD_
+     44          #define LCD_delay 40
+     45          
+     46          //Zmienne globalne -------------------------------------------------------------
+     47            _Correct korekta_Y=1;
+     48            _Correct korekta_X=1;
+     49          //___________________________Koniec zmiennych globalnych________________________
+     50          
+     51          
+     52          extern void Delay (unsigned long a);
+     53          //extern MenuPaint(void);
+     54          extern long long int g_counter;
+     55          extern int MenuLevel;
+     56          extern char AlarmOn; 
+     57          extern char g_info;
+     58          //Definicje --------------------------------------------------------------------
+     59                AT91PS_PIO    m_pPio   = AT91C_BASE_PIOA;
+     60                AT91PS_PIO    TS_pPio  = AT91C_BASE_PIOA;
+     61                //TouchScreen
+     62          
+     63          #define  TS_ADC             AT91C_BASE_PDC_ADC
+     64          #define  TS_ADC_CH0         AT91C_ADC_CH0
+     65          #define  TS_ADC_CH1         AT91C_ADC_CH1
+     66          #define  TS_ADC_CH2         AT91C_ADC_CH2
+     67          #define  TS_ADC_CH3         AT91C_ADC_CH3
+     68          #define  TS_PIO             AT91C_BASE_PIOA
+     69          #define  TS_PIO_CH0         AT91C_PIO_PA17
+     70          #define  TS_PIO_CH1         AT91C_PIO_PA18
+     71          #define  TS_PIO_CH2         AT91C_PIO_PA19
+     72          #define  TS_PIO_CH3         AT91C_PIO_PA20
+     73          
+     74          #define  TS_ADC_ID         AT91C_ID_ADC        
+     75          // Leds
+     76          //___________________________Koniec definicji___________________________________
+     77          
+     78          
+     79                
+     80          extern signed short X_down;
+     81          extern signed short Y_down;
+     82          extern signed short X_up;
+     83          extern signed short Y_up;
+     84          
+     85          
+     86          char LCD_Canvas[8][128] = {
+     87                            {254,1,1,1,1,1,1,1,131,69,125,69,41,41,17,1,1,169,1,1,1,1,1,1,1,1,1,1,131,69,125,69,41,41,17,1,1,169,1,1,1,1,1,1,1,1,1,1,131,69,125,69,41,41,17,1,1,169,1,1,1,1,1,1,1,1,1,1,131,69,125,69,41,41,17,1,1,169,1,1,1,1,1,1,1,1,1,1,131,69,125,69,41,41,17,1,1,169,1,1,1,1,1,1,1,1,1,1,131,69,125,69,41,41,17,1,1,1,255,7,243,107,155,155,107,243,6,252},
+     88                            {255,164,160,144,160,164,24,0,66,66,66,66,66,99,66,0,0,170,0,0,32,32,32,32,32,48,32,0,66,66,66,66,66,99,66,0,0,170,0,0,28,36,36,36,36,36,24,0,66,66,66,66,66,99,66,0,0,170,0,0,16,16,16,16,16,24,16,0,66,66,66,66,66,99,66,0,0,170,0,0,60,8,16,16,32,36,24,0,66,66,66,66,66,99,66,0,0,170,0,0,152,164,160,144,160,164,24,0,66,66,66,66,66,99,66,0,0,0,255,254,60,189,125,253,189,60,254,255},
+     89                            {255,148,148,148,148,148,99,0,130,68,124,68,40,40,16,0,0,170,0,0,207,34,4,132,8,41,198,0,124,4,4,124,4,4,124,0,0,170,0,1,9,136,136,144,144,160,60,0,60,68,68,68,68,68,60,0,0,170,0,1,61,136,16,16,32,164,24,0,56,68,4,4,4,68,56,0,0,170,0,0,34,34,34,66,66,131,242,0,28,36,36,60,36,36,28,0,0,170,0,0,115,148,148,148,148,148,99,0,130,68,124,68,40,40,16,0,0,0,255,255,36,117,87,38,37,36,255,255},
+     90                            {255,4,8,8,16,18,12,0,0,0,0,0,0,0,0,0,0,170,0,0,32,161,125,164,169,49,32,0,0,0,0,0,0,0,0,0,0,170,0,0,99,148,132,148,115,36,227,0,0,0,0,0,0,0,0,0,0,170,0,0,131,132,244,146,164,196,131,0,0,0,0,0,0,0,0,0,0,170,0,0,16,16,254,82,148,24,16,0,0,0,0,0,0,0,0,0,0,170,0,0,158,4,8,8,16,18,12,0,0,0,0,0,0,0,0,0,0,0,255,255,159,223,63,191,127,63,255,255},
+     91                            {255,68,72,136,80,82,140,0,0,0,0,0,0,0,0,0,0,170,0,0,99,148,148,148,115,145,103,0,0,0,0,0,0,0,0,0,0,170,0,0,208,80,126,82,84,88,144,0,0,0,0,0,0,0,0,0,0,170,0,0,142,82,147,82,82,82,140,0,0,0,0,0,0,0,0,0,0,170,0,16,210,130,7,2,2,67,130,0,0,0,0,0,0,0,0,0,0,170,0,0,158,68,72,136,80,82,140,0,0,0,0,0,0,0,0,0,0,0,255,255,180,149,150,166,167,147,255,255},
+     92                            {255,18,18,33,34,66,121,0,0,0,0,0,0,0,0,0,0,170,0,128,132,4,4,8,8,16,30,0,0,0,0,0,0,0,0,0,0,170,0,0,57,74,74,74,74,74,49,0,0,0,0,0,0,0,0,0,0,170,0,0,49,74,75,50,74,74,49,0,0,0,0,0,0,0,0,0,0,170,0,0,51,72,65,33,66,74,49,0,0,0,0,0,0,0,0,0,0,170,0,0,17,18,18,33,34,66,121,0,0,0,0,0,0,0,0,0,0,0,255,255,36,110,113,117,123,57,255,255},
+     93                            {255,201,72,68,72,73,70,64,64,64,64,64,64,64,64,192,192,202,64,192,78,210,82,210,82,210,76,192,64,192,64,192,64,192,64,192,64,202,64,192,71,201,73,201,73,201,70,192,64,192,64,192,64,192,64,192,64,202,64,192,70,201,73,198,73,201,70,192,64,192,64,192,64,192,64,192,64,202,64,192,200,200,223,201,202,204,200,192,192,192,192,64,64,192,64,192,64,202,64,192,70,201,72,196,200,73,70,64,64,64,64,64,64,64,64,64,64,192,255,255,248,251,255,255,255,254,255,255},
+     94                            {255,192,128,128,128,128,128,140,158,191,191,128,128,128,128,192,255,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,128,255,255,255,255,192,222,222,192,255,255,255,255,128,213,170,213,170,213,170,213,170,213,170,213,255,192,128,128,128,191,191,158,140,128,128,128,128,128,192,255,255,255,255,255,255,255,255,127,63}
+     95                            };
+     96          
+     97          
+     98          
+     99          
+    100          
+    101          //===================================================================================================================================================================//
+    102          //===================================================================================================================================================================//
+    103          //===================================================================================================================================================================//
+    104          //===================================================================================================================================================================//
+    105          //============================================================      F U N K C J E      ==============================================================================//
+    106          //===================================================================================================================================================================//
+    107          //===================================================================================================================================================================//
+    108          
+    109          
+    110          
+    111          //*-----------------------------------------------------------------------------
+    112          //* Nazwa funkcji :    RepaintLCD
+    113          //* Funkcja g³ówna wyrysowywania tabeli LCD_Canvas na ekran LCD
+    114          //*-----------------------------------------------------------------------------
+    115          //* Konieczne zdefiniowanie zmiennej globalnej "char LCD_Canvas[8][128];"
+    116          //*-----------------------------------------------------------------------------
+    117          
+    118          char chipSelect=1;
+    119          void RepaintLCD(void)
+    120          {
+    121            
+    122          
+    123          char lcdData=0;
+    124          //char lcdStartPage=0;
+    125          //char chipSelect=0;
+    126          char displayY=0;
+    127            
+    128          //  for (char chipSelect=1; chipSelect<=2; chipSelect++)
+    129          //{
+    130          
+    131             if (chipSelect<2) {chipSelect=2;} else {chipSelect=1;}
+    132               at91ChipSelect(chipSelect);   
+    133          
+    134               at91DisplayYAdress(displayY);
+    135               Delay(50);  
+    136               
+    137                for (char lcdStartPage=0; lcdStartPage<8; lcdStartPage++)
+    138                {
+    139                   
+    140                  at91DisplayStartPage(lcdStartPage); 
+    141                  Delay(50);
+    142                  for (lcdData=(64*chipSelect-64); lcdData<(64*chipSelect); lcdData++)
+    143                  {
+    144                    
+    145                    at91DisplayData(LCD_Canvas[lcdStartPage][lcdData]);
+    146                    Delay(50);
+    147                  }
+    148                }
+    149           //}
+    150          
+    151          }//_______________________ Koniec funkcji RepaintLCD __________________________
+    152          
+    153          
+    154          
+    155          
+    156          
+    157          
+    158          //*-----------------------------------------------------------------------------
+    159          //* Nazwa funkcji :    CleanCanvas
+    160          //* Funkcja czyszczenia bufora ekranu. 
+    161          //*-----------------------------------------------------------------------------
+    162          //* Efekt widoczny po odœwierzeniu LCD (RepaintLCD)
+    163          //*-----------------------------------------------------------------------------
+    164          void CleanCanvas(void)
+    165          {
+    166            for (int i=0; i<=7; i++)
+    167            {
+    168              for (int j=0; j<=127; j++)
+    169              {
+    170                LCD_Canvas[i][j] =0; 
+    171              }
+    172            }
+    173          }//_______________________ Koniec funkcji CleanCanvas __________________________
+    174          
+    175          
+    176          
+    177          
+    178          
+    179          //*-----------------------------------------------------------------------------
+    180          //* Nazwa funkcji :    HalfCleanCanvas
+    181          //* Funkcja szatkowania bufora ekranu. 
+    182          //*-----------------------------------------------------------------------------
+    183          //* Efekt widoczny po odœwierzeniu LCD (RepaintLCD)
+    184          //*-----------------------------------------------------------------------------
+    185          void HalfCleanCanvas(void)
+    186          {
+    187            for (int i=0; i<=7; i++)
+    188            {
+    189              for (int j=0; j<=127; j++)
+    190              {
+    191                if ((j+i)%2) 
+    192                {
+    193                  LCD_Canvas[i][j] &=0xAA; 
+    194                }
+    195                else
+    196                {
+    197                  LCD_Canvas[i][j] &=0x55; 
+    198                } 
+    199              }
+    200            }
+    201          }//_______________________ Koniec funkcji HalfCleanCanvas __________________________
+    202          
+    203          
+    204          
+    205          //*-----------------------------------------------------------------------------
+    206          //* Nazwa funkcji :    CleanCanvasArea
+    207          //* Funkcja czyszczenia okreœlonego obszaru
+    208          //* Colour  -  0= bia³y, 1=czarny
+    209          //*-----------------------------------------------------------------------------
+    210          //* Efekt widoczny po odœwierzeniu LCD (RepaintLCD)
+    211          //*-----------------------------------------------------------------------------
+    212          void CleanCanvasArea(char X, char Y, char X_Lenght, char Y_Lenght, char Colour)
+    213          {
+    214          
+    215            char kol=0;
+    216            char bit=0;
+    217            char linia=Y;
+    218            
+    219          if ( Colour == 0 )
+    220          {
+    221            for (int i=0; i<=Y_Lenght-1; i++)
+    222             { 
+    223               kol=(X)/8;
+    224               bit=(X)%8;
+    225               
+    226          
+    227              
+    228               for (int j=0; j<=X_Lenght-1; j++)
+    229                {
+    230                     LCD_Canvas[kol][linia] &=~(1<<bit);  
+    231                     if (bit<7)  { bit++;}  else {bit=0;   kol++;  }
+    232                }   
+    233                linia++;
+    234             }
+    235          }
+    236          else
+    237          {
+    238            for (int i=0; i<=Y_Lenght-1; i++)
+    239             { 
+    240               kol=(X)/8;
+    241               bit=(X)%8;
+    242               
+    243               for (int j=0; j<=X_Lenght-1; j++)
+    244                {
+    245                     LCD_Canvas[kol][linia] |=(1<<bit);  
+    246                     if (bit<7)  { bit++;}  else {bit=0;   kol++;  }
+    247                }   
+    248                linia++;
+    249             }
+    250          }
+    251            
+    252          }//_______________________ Koniec funkcji CleanCanvasArea __________________________
+    253          
+    254          
+    255          
+    256          
+    257          //*-----------------------------------------------------------------------------
+    258          //* Nazwa funkcji :    CleanCanvasArea
+    259          //* Funkcja czyszczenia okreœlonego obszaru
+    260          //* Colour  -  0= bia³y, 1=czarny
+    261          //*-----------------------------------------------------------------------------
+    262          //* Efekt widoczny po odœwierzeniu LCD (RepaintLCD)
+    263          //*-----------------------------------------------------------------------------
+    264          void CanvasPixel(char X, char Y, char Colour)
+    265          {
+    266               char kol=(X)/8;
+    267               char bit=(X)%8;
+    268               
+    269               if ( Colour == 0 )
+    270               {
+    271                 LCD_Canvas[kol][Y] &=~(1<<bit); 
+    272               }
+    273               else
+    274               {
+    275                 LCD_Canvas[kol][Y] |=(1<<bit);  
+    276               }
+    277          }//_______________________ Koniec funkcji CleanCanvasArea __________________________
+    278          
+    279          
+    280          
+    281          
+    282          
+    283          
+    284          //*-----------------------------------------------------------------------------
+    285          //* Nazwa funkcji :    CopyToCanvas
+    286          //* Funkcja kopiowania dowolnej tablicy[8][128] do bufora wyœwietlacza 
+    287          //*-----------------------------------------------------------------------------
+    288          //* Efekt widoczny po odœwierzeniu LCD (RepaintLCD)
+    289          //*-----------------------------------------------------------------------------
+    290          void CopyToCanvas(char Tabela[8][128])
+    291          {
+    292            for (int i=0; i<=7; i++)
+    293            {
+    294              for (int j=0; j<=127; j++)
+    295              {
+    296                LCD_Canvas[i][j] =Tabela[i][j]; 
+    297              }
+    298            }
+    299          }//_______________________ Koniec funkcji CopyToCanvas __________________________
+    300          
+    301          
+    302          
+    303          
+    304          
+    305          
+    306          //*-----------------------------------------------------------------------------
+    307          //* Nazwa funkcji :    CopyToCanvas
+    308          //* Funkcja kopiowania dowolnej tablicy[8][128] do bufora wyœwietlacza 
+    309          //*-----------------------------------------------------------------------------
+    310          //* Efekt widoczny po odœwierzeniu LCD (RepaintLCD)
+    311          //*-----------------------------------------------------------------------------
+    312          void CopyToCanvasPoint(char *Tabela, char X, char Y, char X_Lenght, char Y_Lenght)
+    313          {
+    314          
+    315            char kol=0;
+    316            char bit=0;
+    317            char kol2=0;
+    318            char bit2=0;
+    319            char linia=Y;
+    320            
+    321            for (int i=0; i<=Y_Lenght-1; i++)
+    322             {
+    323          
+    324               
+    325               kol=(X)/8;
+    326               bit=(X)%8;
+    327               
+    328               kol2=0;
+    329               bit2=0;
+    330                 
+    331               for (int j=0; j<=X_Lenght-1; j++)
+    332                {
+    333                   if (((Tabela[(kol2*Y_Lenght)+(i)]>>bit2)&0x1)>0)
+    334                    {
+    335                       
+    336                       LCD_Canvas[kol][linia] |=(1<<bit); 
+    337                    }
+    338                    else
+    339                    {
+    340                       LCD_Canvas[kol][linia] &=~(1<<bit);  
+    341                    }
+    342                   
+    343            
+    344                     if (bit<7)  { bit++;}  else {bit=0;   kol++;  }
+    345                     if (bit2<7) { bit2++;} else {bit2=0;  kol2++; }           
+    346                }   
+    347               
+    348                linia++;
+    349             }
+    350          
+    351          }//_______________________ Koniec funkcji CopyToCanvas __________________________
+    352          
+    353          
+    354          
+    355          
+    356          //*-----------------------------------------------------------------------------
+    357          //* Nazwa funkcji :    at91DisplayOnOff
+    358          //* Funkcja za³¹czania/wy³¹czania LCD
+    359          //*-----------------------------------------------------------------------------
+    360          //////////////////////////////////////////////////////
+    361          // R/W  D/I  DB7  DB6  DB5  DB4  DB3  DB2  DB1  DB0 //
+    362          //  RW   DI  DB7  DB6  DB5  DB4  DB3  DB2  DB1  DB0 //
+    363          //   0    0    0    0    1    1    1    1    1    D //
+    364          //                                                  //
+    365          // on_off - "0" - OFF                               //
+    366          //        - "1" - ON                                //
+    367          //////////////////////////////////////////////////////
+    368          //*-----------------------------------------------------------------------------
+    369          
+    370           void at91DisplayOnOff(char on_off)
+    371           {
+    372              m_pPio->PIO_CODR =  LCD_BUS_MASK;                         // zeruje piny
+    373          
+    374             
+    375              //m_pPio->PIO_CODR = DB5 | DB4 | DB3 | DB2 | DB1 | on_off << 3;  // "1" na wyœwietlaczu
+    376             if (on_off)
+    377             {
+    378                m_pPio->PIO_SODR = DB5 | DB4 | DB3 | DB2 | DB1 | DB0;  // "1" na wyœwietlaczu
+    379             }
+    380             else
+    381             {
+    382                m_pPio->PIO_SODR = DB5 | DB4 | DB3 | DB2 | DB1;  // "1" na wyœwietlaczu 
+    383             }
+    384             
+    385             m_pPio->PIO_CODR = DI | RW;
+    386              m_pPio->PIO_SODR = ENABLE;
+    387              Delay(2);
+    388              m_pPio->PIO_CODR = ENABLE;
+    389             m_pPio->PIO_CODR =  LCD_BUS_MASK;                         // "0" na wyœwietlaczu
+    390          
+    391          }//_______________________ Koniec funkcji at91DisplayOnOff ______________________
+    392           
+    393           
+    394          
+    395          
+    396          
+    397          
+    398          
+    399           
+    400          //*-----------------------------------------------------------------------------
+    401          //* Nazwa funkcji :    at91DisplayStartLine
+    402          //* Funkcja ustawienia lini startowej
+    403          //*-----------------------------------------------------------------------------
+    404          //////////////////////////////////////////////////////
+    405          // R/W  D/I  DB7  DB6  DB5  DB4  DB3  DB2  DB1  DB0 //
+    406          //  RW   DI  DB7  DB6  DB5  DB4  DB3  DB2  DB1  DB0 //
+    407          //   0    0    1    1    A    A    A    A    A    A //
+    408          //                                                  //
+    409          // AAAAAA - przesuniêcie w górê strony testowej     //
+    410          //////////////////////////////////////////////////////
+    411          //*-----------------------------------------------------------------------------
+    412           void at91DisplayStartLine(void)
+    413           {
+    414             m_pPio->PIO_CODR =  LCD_BUS_MASK;                         // zeruje piny
+    415          
+    416             
+    417              m_pPio->PIO_SODR =  DB7 | DB6 ;  // "1" na wyœwietlaczu
+    418              m_pPio->PIO_CODR = DI | RW;
+    419              m_pPio->PIO_SODR = ENABLE;
+    420              Delay(2);
+    421              m_pPio->PIO_CODR = ENABLE;
+    422              m_pPio->PIO_CODR =  LCD_BUS_MASK;                         // "0" na wyœwietlaczu
+    423          
+    424          }//_____________________ Koniec funkcji at91DisplayStartLine ___________________
+    425          
+    426          
+    427          
+    428          
+    429          
+    430          
+    431          
+    432          
+    433           
+    434          //*-----------------------------------------------------------------------------
+    435          //* Nazwa funkcji :    at91DisplayStartPage
+    436          //* Funkcja ustawienia strony
+    437          //*-----------------------------------------------------------------------------
+    438          //////////////////////////////////////////////////////
+    439          // R/W  D/I  DB7  DB6  DB5  DB4  DB3  DB2  DB1  DB0 //
+    440          //  RW   DI  DB7  DB6  DB5  DB4  DB3  DB2  DB1  DB0 //
+    441          //   0    0    1    0    1    1    1    A    A    A //
+    442          //                                                  //
+    443          // AAA - numer zapisywanej strony                   //
+    444          //////////////////////////////////////////////////////
+    445          //*-----------------------------------------------------------------------------
+    446          
+    447           void at91DisplayStartPage(char lcd_start_page)
+    448           {
+    449              char data=lcd_start_page; 
+    450              
+    451              m_pPio->PIO_CODR =  LCD_BUS_MASK;                         // zeruje piny
+    452          
+    453                
+    454              //m_pPio->PIO_CODR = DB7 | DB5 | DB4 | DB3 | lcd_start_page << 3;  // "1" na wyœwietlaczu
+    455              m_pPio->PIO_SODR = DB7 | DB5 | DB4 | DB3 | (((data>>2)&0x1)<<mDB2) | (((data>>1)&0x1)<<mDB1) | (((data>>0)&0x1)<<mDB0) ;  // "1" na wyœwietlaczu
+    456              m_pPio->PIO_CODR = DI | RW;
+    457              m_pPio->PIO_SODR = ENABLE;
+    458              Delay(LCD_delay);
+    459              m_pPio->PIO_CODR = ENABLE;
+    460             m_pPio->PIO_CODR =  LCD_BUS_MASK;                         // "0" na wyœwietlaczu
+    461          
+    462          }//_____________________ Koniec funkcji at91DisplayStartPage ___________________
+    463          
+    464          
+    465          
+    466          
+    467          
+    468          
+    469          
+    470          
+    471          
+    472          //*-----------------------------------------------------------------------------
+    473          //* Nazwa funkcji :    at91DisplayYAdress
+    474          //* Funkcja okreœla wspó³rzêdne X od których ma zacz¹æ 
+    475          //*         zapisywaæ, automatycznie inkrementowane    
+    476          //*         po kazdej operacji zapisu/odczytu
+    477          //*-----------------------------------------------------------------------------      
+    478          //////////////////////////////////////////////////////
+    479          // R/W  D/I  DB7  DB6  DB5  DB4  DB3  DB2  DB1  DB0 //
+    480          //  RW   DI  DB7  DB6  DB5  DB4  DB3  DB2  DB1  DB0 //
+    481          //   0    0    0    1    A    A    A    A    A    A //
+    482          //                                                  //
+    483          // AAAAAA-przesuniêcie zapisywanej kolumny w prawo  //
+    484          //////////////////////////////////////////////////////
+    485          //*-----------------------------------------------------------------------------
+    486          
+    487           void at91DisplayYAdress(char display_Y)
+    488           {
+    489             char data=(0x3F-display_Y); 
+    490             
+    491             m_pPio->PIO_CODR =  LCD_BUS_MASK;                         // zeruje piny
+    492          
+    493          
+    494              m_pPio->PIO_SODR = DB6 | (((display_Y>>5)&0x1)<<mDB5) | (((display_Y>>4)&0x1)<<mDB4) | (((display_Y>>3)&0x1)<<mDB3) | (((display_Y>>2)&0x1)<<mDB2) | (((display_Y>>1)&0x1)<<mDB1) | (((display_Y>>0)&0x1)<<mDB0);             // "0" na wyœwietlaczu // "1" na wyœwietlaczu
+    495              m_pPio->PIO_CODR = DI | RW | (((data>>5)&0x1)<<mDB5) | (((data>>4)&0x1)<<mDB4) | (((data>>3)&0x1)<<mDB3) | (((data>>2)&0x1)<<mDB2) | (((data>>1)&0x1)<<mDB1) | (((data>>0)&0x1)<<mDB0);             // "0" na wyœwietlaczu
+    496              
+    497              m_pPio->PIO_SODR = ENABLE;
+    498              Delay(1);
+    499              m_pPio->PIO_CODR = ENABLE;
+    500              m_pPio->PIO_CODR =  LCD_BUS_MASK;                       // "0" na wyœwietlaczu
+    501          }//_______________________ Koniec funkcji at91DisplayYAdress ___________________
+    502          
+    503           
+    504           
+    505          
+    506           
+    507          
+    508          
+    509          
+    510          //*-----------------------------------------------------------------------------
+    511          //* Nazwa funkcji :    at91DisplayData
+    512          //* Funkcja wpisywania danych do Ram LCD
+    513          //*-----------------------------------------------------------------------------
+    514          //* R/W  D/I  DB7  DB6  DB5  DB4  DB3  DB2  DB1  DB0 
+    515          //*  RW   DI  DB7  DB6  DB5  DB4  DB3  DB2  DB1  DB0 
+    516          //*  0    1    A    A    A    A    A    A    A    A 
+    517          //*                                                  
+    518          //*  AAAAAAAA - dane                                  
+    519          //*-----------------------------------------------------------------------------
+    520          
+    521          inline void at91DisplayData(char lcd_data)
+    522           {
+    523          
+    524             char data=(0xFF-lcd_data); 
+    525             m_pPio->PIO_CODR =  LCD_BUS_MASK;                         // zeruje piny
+    526             
+    527                m_pPio->PIO_SODR = DI | (((lcd_data>>7)&0x1)<<mDB7) | (((lcd_data>>6)&0x1)<<mDB6) | (((lcd_data>>5)&0x1)<<mDB5) | (((lcd_data>>4)&0x1)<<mDB4) | (((lcd_data>>3)&0x1)<<mDB3) | (((lcd_data>>2)&0x1)<<mDB2) | (((lcd_data>>1)&0x1)<<mDB1) | (((lcd_data>>0)&0x1)<<mDB0); 
+    528                m_pPio->PIO_CODR = RW | (((data>>7)&0x1)<<mDB7) | (((data>>6)&0x1)<<mDB6) | (((data>>5)&0x1)<<mDB5) | (((data>>4)&0x1)<<mDB4) | (((data>>3)&0x1)<<mDB3) | (((data>>2)&0x1)<<mDB2) | (((data>>1)&0x1)<<mDB1) | (((data>>0)&0x1)<<mDB0); 
+    529             
+    530          
+    531              
+    532             m_pPio->PIO_SODR = ENABLE;
+    533          
+    534              Delay(18);
+    535              m_pPio->PIO_CODR = ENABLE;
+    536          
+    537             // m_pPio->PIO_SODR =  LCD_BUS_MASK;                         // zeruje piny
+    538          
+    539          }//_______________________ Koniec funkcji at91DisplayData ______________________
+    540          
+    541          
+    542           
+    543           
+    544           
+    545          //*-----------------------------------------------------------------------------
+    546          //* Nazwa funkcji :    at91ChipSelect
+    547          //* Funkcja wyboru kontrolera 1z2
+    548          //*-----------------------------------------------------------------------------
+    549          //* chip_select - "1" - CS1                   
+    550          //*             - "2" - CS2      
+    551          //*-----------------------------------------------------------------------------
+    552          
+    553           void at91ChipSelect(char chip_select)
+    554           {
+    555             unsigned long cs_set;
+    556             unsigned long cs_clr;
+    557             
+    558             m_pPio->PIO_CODR =  LCD_BUS_MASK;                         // zeruje piny
+    559          
+    560             
+    561             if (chip_select==2) 
+    562                {
+    563                  cs_set=CS2;
+    564                  cs_clr=CS1;
+    565                }
+    566           
+    567             if (chip_select==1) 
+    568                {
+    569                  cs_set=CS1;
+    570                  cs_clr=CS2;
+    571                }
+    572             
+    573          
+    574          
+    575             
+    576              m_pPio->PIO_CODR = cs_clr;   
+    577              m_pPio->PIO_SODR = cs_set;                           // "1" na wyœwietlaczu
+    578              
+    579              
+    580              
+    581          at91DisplayOnOff(1); 
+    582            
+    583            
+    584          
+    585          }//_______________________ Koniec funkcji at91ChipSelect __________________________
+    586          
+    587           
+    588           
+    589          
+    590          
+    591          
+    592          
+    593          
+    594          //*-----------------------------------------------------------------------------
+    595          //* Nazwa funkcji :    ReadTP
+    596          //* Funkcja obs³ugi TouchPanel`a
+    597          //*-----------------------------------------------------------------------------
+    598          //*  !!! Czas trwania funkcji 15us
+    599          //*-----------------------------------------------------------------------------
+    600          
+    601          void ReadTP(_TPoint *Point)
+    602          {
+    603            unsigned pomX, pomY;
+    604            pomX=0;
+    605            pomY=0;
+    606          
+    607              //POMIAR X -------------------------------------------------------------------
+    608            AT91F_PIO_CfgOutput(TS_PIO, TS_PIO_CH1);
+    609            AT91F_PIO_CfgOutput(TS_PIO, TS_PIO_CH3);
+    610           
+    611            AT91F_PIO_CfgInput(TS_PIO, TS_PIO_CH0);
+    612            TS_PIO->PIO_PPUDR=TS_PIO_CH0;
+    613            
+    614            TS_pPio->PIO_SODR = TS_PIO_CH1; 
+    615            TS_pPio->PIO_CODR = TS_PIO_CH3;         
+    616              
+    617            pomX =  ReadADC(2);
+    618            
+    619          
+    620            
+    621            //POMIAR Y -------------------------------------------------------------------
+    622            AT91F_PIO_CfgOutput(TS_PIO, TS_PIO_CH0);
+    623            AT91F_PIO_CfgOutput(TS_PIO, TS_PIO_CH2);
+    624            
+    625            AT91F_PIO_CfgInput(TS_PIO, TS_PIO_CH3);
+    626            TS_PIO->PIO_PPUDR=TS_PIO_CH3;
+    627            
+    628            TS_pPio->PIO_SODR = TS_PIO_CH2; 
+    629            TS_pPio->PIO_CODR = TS_PIO_CH0;        
+    630            
+    631            
+    632            pomY =  ReadADC(1);
+    633          
+    634            //walidacja / wykrycie dotkniêcia
+    635            if ((pomY>900) || (pomY<=0) || (pomX>900) || (pomX<=0) )
+    636            {
+    637              pomY=0;
+    638              pomX=0;
+    639            }
+    640          
+    641            //kalibracja -----------------------------------------------------------------
+    642          
+    643          
+    644            //przepisanie pomiarów
+    645            Point->y=pomY;
+    646            Point->x=pomX;
+    647          }
+    648          //END Touth panel ----------------------------------------------------------  
+    649          
+    650          
+    651          
+    652          
+    653          
+    654          
+    655          //*-----------------------------------------------------------------------------
+    656          //* Nazwa funkcji :    ReadADC
+    657          //*-----------------------------------------------------------------------------
+    658          //*-----------------------------------------------------------------------------
+    659              unsigned short odp=0; 
+    660          
+    661          unsigned short ReadADC (char Channel) 
+    662          { 
+    663          
+    664           
+    665          
+    666              //enable channel and set PIN to ADCx function (no need to write PIO!!) 
+    667            AT91C_BASE_ADC->ADC_CR = AT91C_ADC_SWRST; 
+    668          AT91C_BASE_ADC->ADC_MR = (15<24)|(11<<16)|(4<<8); 
+    669          AT91C_BASE_ADC->ADC_CHDR =0xFF;   
+    670            
+    671            //AT91C_BASE_ADC->ADC_CHDR =0xFF; 
+    672              AT91C_BASE_ADC->ADC_CHER = (1<< Channel);    
+    673              
+    674          
+    675              //start first conversion 
+    676              AT91C_BASE_ADC->ADC_CR = AT91C_ADC_START; 
+    677           
+    678              while ((AT91C_BASE_ADC->ADC_SR &(1 << Channel))==0){};
+    679              //while ((AT91C_BASE_ADC->ADC_SR & AT91C_ADC_DRDY)==0){};
+    680          
+    681                switch (Channel){
+    682                  case 0: odp=AT91C_BASE_ADC->ADC_CDR0; break; 
+    683                  case 1: odp=AT91C_BASE_ADC->ADC_CDR1; break;  
+    684                  case 2: odp=AT91C_BASE_ADC->ADC_CDR2; break;  
+    685                  case 3: odp=AT91C_BASE_ADC->ADC_CDR3; break;  
+    686                  case 4: odp=AT91C_BASE_ADC->ADC_CDR4; break;  
+    687                  case 5: odp=AT91C_BASE_ADC->ADC_CDR5; break;  
+    688                } 
+    689                
+    690                
+    691           while ((AT91C_BASE_ADC->ADC_SR &(1 << Channel))==1){};
+    692               
+    693               // odp=AT91C_BASE_ADC->ADC_LCDR;
+    694          
+    695          
+    696                
+    697               // AT91C_BASE_ADC->ADC_CR = AT91C_ADC_SWRST; 
+    698                
+    699               // AT91C_BASE_ADC->ADC_CHDR = (1<< Channel);
+    700              return odp;
+    701          }
+    702          //*-----------------------------------------------------------------------------   
+    703             
+    704          
+    705          
+    706          //*-----------------------------------------------------------------------------
+    707          //* Nazwa funkcji :    InitTS
+    708          //* Funkcja inicjalizacji obs³ugi touchopanel`a
+    709          //*-----------------------------------------------------------------------------
+    710          //*-----------------------------------------------------------------------------
+    711          void Init_LCD_TS(void) 
+    712          { 
+    713          //LCD panel ----------------------------------------------------------  
+    714           AT91F_PIO_ClearOutput(LCD_PIO,(unsigned int)LightLCD);
+    715            AT91F_PIO_CfgOutput(LCD_PIO,(unsigned int)LightLCD);      //AT91PS_PIO pPio, unsigned int pioEnable
+    716          
+    717            at91DisplayOnOff(1);     // 0-OFF, 1-ON   
+    718            at91DisplayStartPage(0);
+    719            at91DisplayStartLine();  // set start line 
+    720             //  at91DisplayStartPage(0);
+    721             //at91DisplayYAdress(0);
+    722            
+    723          //Touth panel ----------------------------------------------------------   
+    724             
+    725          AT91C_BASE_PIOA->PIO_PPUDR|= TS_PIO_CH0;    //Pull-up enable enable reg.
+    726          AT91C_BASE_PIOA->PIO_PPUDR|= TS_PIO_CH1;    //Pull-up enable enable reg.
+    727          AT91C_BASE_PIOA->PIO_PPUDR|= TS_PIO_CH2;    //Pull-up enable enable reg.
+    728          AT91C_BASE_PIOA->PIO_PPUDR|= TS_PIO_CH3;    //Pull-up enable enable reg.
+    729            
+    730          AT91C_BASE_ADC->ADC_MR = (3<24)|(11<<16)|(4<<8); 
+    731          
+    732          }//_______________________ Koniec funkcji InitTS __________________________
+    733          
+    734          
+    735          
+    736          
+    737          
+    738          
+    739          
+    740          
+    741          
+    742          
+    743          
+    744          const char Arial_7[101][10] = {
+    745                            {7,127,127,62,62,62,28,28,8,8},        //30   ""
+    746                            {7,8,8,28,28,62,62,62,127,127},        //31   ""
+    747                            {0,0,0,0,0,0,0,0,0,0},        //32   " "
+    748                            {1,0,1,0,1,1,1,1,1,0},        //33   "!"
+    749                            {3,0,0,0,0,0,0,5,5,0},        //34   """
+    750                            {6,3,7,15,31,63,31,15,7,3},        //35   "Strza³ka w prawo"
+    751                            {6,48,56,60,62,63,62,60,56,48},        //36   "Strza³ka w lewo"
+    752                            {8,228,164,232,8,16,16,23,37,39},        //37   "%"
+    753                            {5,0,4,14,21,12,6,21,14,4},        //38   "$"
+    754                            {5,0,0,0,0,0,0,17,10,4},        //39   "^"
+    755                            {3,4,2,1,1,1,1,1,2,4},        //40   "("
+    756                            {3,1,2,4,4,4,4,4,2,1},        //41   ")"
+    757                            {3,0,0,0,5,2,5,0,0,0},        //42   "*"
+    758                            {5,0,4,4,31,4,4,0,0,0},        //43   "+"//{5,0,36,4,63,4,4,0,0,0}, 
+    759                            {1,1,1,0,0,0,0,0,0,0},        //44   ","
+    760                            {2,0,0,0,3,0,0,0,0,0},        //45   "-"
+    761                            {1,0,1,0,0,0,0,0,0,0},        //46   "."
+    762                            {3,0,1,1,2,2,2,4,4,0},        //47   "/"
+    763                            {4,0,6,9,9,9,9,9,6,0},    //0
+    764                            {2,0,2,2,2,2,2,3,2,0},    //1
+    765                            {4,0,15,2,4,4,8,9,6,0},   //2
+    766                            {4,0,6,9,8,4,8,9,6,0},    //3
+    767                            {4,0,8,8,31,9,10,12,8,0}, //4
+    768                            {4,0,6,9,8,8,7,1,15,0},   //5
+    769                            {4,0,6,9,9,9,7,9,6,0},    //6
+    770                            {4,0,2,2,2,4,4,8,15,0},   //7
+    771                            {4,0,6,9,9,6,9,9,6,0},    //8
+    772                            {4,0,6,9,14,9,9,9,6,0},    //9  
+    773                            {1,0,1,0,0,0,1,0,0,0},        //58   ":"
+    774                            {1,1,1,0,0,0,1,0,0,0},        //59   ";"
+    775                            {3,0,0,4,2,1,2,4,0,0},        //60   "<"
+    776                            {4,0,0,0,15,0,15,0,0,0},        //61   "="
+    777                            {3,0,0,1,2,4,2,1,0,0},        //62   ">"
+    778                            {5,0,4,0,4,12,16,17,14,0},        //63   "?"
+    779                            {8,194,61,85,149,181,169,66,60,0},        //64   "@"
+    780                            {7,0,65,34,62,34,20,20,8,0},        //65   "A"
+    781                            {4,0,7,9,9,15,9,9,7,0},        //66   "B"
+    782                            {5,0,14,17,1,1,1,17,14,0},        //67   "C"
+    783                            {5,0,15,17,17,17,17,17,15,0},        //68   "D"
+    784                            {5,0,31,1,1,31,1,1,31,0},        //69   "E"
+    785                            {4,0,1,1,1,7,1,1,15,0},        //70   "F"
+    786                            {5,0,14,17,17,25,1,17,14,0},        //71   "G"
+    787                            {5,0,17,17,17,31,17,17,17,0},        //72   "H"
+    788                            {3,0,7,2,2,2,2,2,7,0},        //73   "I"
+    789                            {4,0,7,9,8,8,8,8,8,0},        //74   "J"
+    790                            {5,0,17,9,5,3,5,9,17,0},        //75   "K"
+    791                            {4,0,15,1,1,1,1,1,1,0},        //76   "L"
+    792                            {7,0,73,85,85,85,99,99,65,0},        //77   "M"
+    793                            {5,0,17,25,25,21,19,19,17,0},        //78   "N"
+    794                            {5,0,14,17,17,17,17,17,14,0},        //79   "O"
+    795                            {4,0,1,1,1,15,9,9,15,0},        //80   "P"
+    796                            {5,0,30,9,17,17,17,17,14,0},        //81   "Q"
+    797                            {5,0,17,17,9,15,17,17,15,0},        //82   "R"
+    798                            {4,0,6,9,8,6,1,9,6,0},        //83   "S"
+    799                            {5,0,4,4,4,4,4,4,31,0},        //84   "T"
+    800                            {5,0,14,17,17,17,17,17,17,0},        //85   "U"
+    801                            {5,0,4,10,10,10,17,17,17,0},        //86   "V"
+    802                            {7,0,34,34,85,73,73,65,65,0},        //87   "W"
+    803                            {5,17,10,10,4,10,10,17,0},        //88   "X"
+    804                            {5,0,4,4,4,4,10,10,17,0},        //89   "Y"
+    805                            {6,0,63,1,2,4,8,16,63,0},        //90   "Z"
+    806                            {2,1,1,1,1,1,1,1,3,0},        //91   "["
+    807                            {3,0,4,4,2,2,2,1,1,0},        //92   "\"
+    808                            {2,2,2,2,2,2,2,2,3,0},        //93   "]"
+    809                            {3,0,0,0,0,0,5,5,2,0},        //94   "^"
+    810                            {5,0,31,0,0,0,0,0,0,0},        //95   "_"
+    811                            {2,0,0,0,0,0,0,2,1,0},        //96   "`"
+    812                            {4,0,15,9,14,8,15,0,0,0},        //97   "a"
+    813                            {4,0,7,9,9,9,7,1,1,0},        //98   "b"
+    814                            {4,0,6,9,1,9,6,0,0,0},        //99   "c"
+    815                            {4,0,14,9,9,9,14,8,8,0},        //100   "d"
+    816                            {4,0,14,1,15,9,6,0,0,0},        //101   "e"
+    817                            {3,0,2,2,2,2,7,2,4,0},        //102   "f"
+    818                            {4,6,9,14,9,9,14,0,0,0},        //103   "g"
+    819                            {4,0,9,9,9,9,7,1,1,0},        //104   "h"
+    820                            {1,0,9,9,9,9,5,0,1,0},        //105   "i"
+    821                            {1,1,9,9,9,9,5,0,1,0},        //106   "j"
+    822                            {4,0,9,5,7,5,9,1,1,0},        //107   "k"
+    823                            {1,0,1,1,1,1,1,1,1,0},        //108   "l"
+    824                            {7,0,73,73,73,73,63,0,0,0},        //109   "m"
+    825                            {4,0,9,9,9,9,7,0,0,0},        //110   "n"
+    826                            {4,0,70,73,73,73,38,0,0,0},        //111   "o"
+    827                            {4,1,71,73,73,73,39,0,0,0},        //112   "p"
+    828                            {4,8,78,73,73,73,46,0,0,0},        //113   "q"
+    829                            {3,0,1,1,1,1,7,0,0,0},             //114   "r"
+    830                            {4,0,71,72,70,65,46,0,0,0},        //115   "s"
+    831                            {2,0,67,73,65,65,43,1,0,0},        //116   "t"
+    832                            {4,0,14,9,9,9,9,0,0,0},            //117   "u"
+    833                            {5,0,68,74,74,74,17,0,0,0},        //118   "v"
+    834                            {5,0,10,21,21,21,21,0,0,0},         //119   "w"
+    835                            {4,0,73,70,70,70,9,0,0,0},         //120   "x"
+    836                            {5,4,4,10,10,10,17,0,0,0},         //121   "y"
+    837                            {3,0,71,65,66,68,23,0,0,0},        //122   "z"
+    838                            {3,2,66,66,65,66,18,2,6,0},        //123   "{"
+    839                            {1,1,1,1,1,1,1,1,1,0},        //124   "|"
+    840                            {3,2,2,2,4,2,2,2,3,0},        //125   "}"
+    841                            {4,0,0,0,13,11,0,0,0,0},        //126   "~"
+    842                            {8,0,96,144,16,16,18,149,98,0},        //127   "*C"
+    843                            {5,0,30,1,31,1,31,1,30,0},        //128   "€"
+    844                            {5,0,17,10,10,4,10,10,17,0},        //129   X
+    845                            {7,0,28,34,65,73,73,42,8,0}  //130 OnOff
+    846                            };
+    847          
+    848          
+    849          
+    850          const unsigned short Arial_18[100][26] = {
+    851           {16,0,0,0,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,0,0,0},        //30   ""
+    852                            {16,0,0,0,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,0,0,0},        //31   ""
+    853                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},        //32   " "
+    854                            {16,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65534,65534,65534,65534,65534},        //33   "!"
+    855                            {16,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65502,65502,65502,65502},        //34   """
+    856                            {16,0,0,0,903,1927,1935,1807,1806,65535,65535,65535,3614,3612,7708,7740,7740,65535,65535,65535,15480,14456,14448,30832,30960,30960},        //35   "#"
+    857                            {15,448,448,448,2032,8188,16382,32767,32223,31183,31183,31168,31168,32704,16320,8176,2044,510,479,463,463,32207,16383,16382,8188,2040},        //36   "$"
+    858                            {16,0,0,0,480,448,33728,33664,34688,36608,36608,40448,39936,48128,14584,31742,62430,63375,59279,51087,51087,34703,34703,990,1022,248},        //37   "%"
+    859                            {16,0,0,0,2032,57340,65534,65087,63519,63503,64527,65039,65311,57118,4094,2040,2032,4080,16376,15608,30840,30844,31992,16376,16368,4064},        //38   "&"
+    860                            {16,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65279,65535,65535,65535,65535,65535,65535,63487,63487,65534,65534,65534,65534},        //39   "'"
+    861                            {16,120,60,60,1084,56350,64542,64542,63519,63503,64527,64527,64527,56335,3087,1055,1054,3102,15390,15420,30780,30780,31864,15472,15600,3296},        //40   "("
+    862                            {16,65535,65535,65535,65535,65535,65535,65535,65535,65519,65535,65535,65535,65535,65519,65519,65535,65535,65535,65527,65535,65535,65535,65535,65535,65534},        //41   ")"
+    863                            {16,0,0,0,0,53248,61440,61440,61440,61440,61440,61440,61440,53248,0,0,0,460,13310,12796,28924,29182,30719,14335,12408,120},        //42   "*"
+    864                            {16,0,0,0,0,0,0,960,960,960,960,960,960,65535,65535,65535,960,960,960,960,960,960,0,0,0,0},        //43   "+"
+    865                            {5,14,28,28,31,31,31,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},        //44   ","
+    866                            {9,0,0,0,0,0,0,0,0,0,0,511,511,511,0,0,0,0,0,0,0,0,0,0,0,0},        //45   "-"
+    867                            {3,0,0,0,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},        //46   "."
+    868                            {8,0,0,0,3,3,7,7,7,7,15,14,14,30,30,28,60,60,56,120,120,112,112,240,224,224},        //47   "/"
+    869                            {15,0,0,0,2032,8188,8188,15934,31775,31775,30735,30735,30735,30735,30735,30735,30735,30735,30735,30735,31775,31775,15934,8188,8188,2032},        //48   "0"
+    870                            {9,0,0,0,480,480,480,480,480,480,480,480,480,480,480,480,480,480,483,495,511,510,504,496,480,448},        //49   "1"
+    871                            {15,0,0,0,32767,32767,32767,31,62,124,248,496,960,1920,3840,7680,15360,31744,30720,30735,30735,31775,32318,16382,8188,2032},        //50   "2"
+    872                            {15,0,0,0,2032,8188,16382,15935,31775,30735,30720,30720,30720,31744,31744,16352,4064,4064,7936,15360,15375,15391,15934,8190,4092,2032},        //51   "3"
+    873                            {15,0,0,0,3840,3840,3840,3840,3840,32767,32767,32767,3847,3855,3870,3870,3900,3960,3960,4080,4064,4032,4032,3968,3840,3840},        //52   "4"
+    874                            {15,0,0,0,2032,8188,16382,15903,31759,30735,30720,30720,30720,30720,31744,32287,16383,8190,2046,30,30,62,60,16380,16380,16380},        //53   "5"
+    875                            {15,0,0,0,2032,8188,16382,15934,31775,30735,30735,30735,30735,30751,32319,16383,8191,2031,15,15,30751,31774,15934,16380,8184,2032},        //54   "6"
+    876                            //{16,65535,65535,65535,65527,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65471,65535,65407,65535,65279,65535,65535,65535,65534,65534,65534},        //55   "7"
+    877                           // 0,0,0,0,120,120,120,120,120,240,240,240,224,224,224,192,192,128,128,   0,0,0,255,255,255,255},
+    878                            {14,0,0,0,120,120,120,120,120,240,240,240,224,224,480,448,960,896,1920,1792,3840, 7680,16383,16383,16383,16383},
+    879                           //{0,0,0,0,0,    0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  3,  3,  7,  7, 15,30,63 ,63 , 63, 63},
+    880                            {16,0,0,0,2032,8188,16382,32319,31775,63503,63503,63503,30735,31775,32318,16380,4088,8188,15934,31774,31775,31775,15934,16382,8188,2032},        //56   "8"
+    881                            {15,0,0,0,1016,4092,8190,16190,15903,31759,31744,30720,31736,32764,32766,32319,31775,30735,30735,30735,30735,31775,15935,8190,4092,2032},        //57   "9"
+    882                            {5,0,0,0,31,31,31,0,0,0,0,0,0,0,0,0,0,31,31,31,0,0,0,0,0,0},        //58   ":"
+    883                            {5,14,30,28,31,31,31,0,0,0,0,0,0,0,0,0,0,31,31,31,0,0,0,0,0,0},        //59   ";"
+    884                            {16,0,0,0,0,0,0,57344,63488,65280,32704,4080,1022,127,31,127,1022,4080,32704,65280,63488,57344,0,0,0,0},        //60   "<"
+    885                            {16,0,0,0,0,0,0,0,0,0,65535,65535,65535,0,0,0,65535,65535,65535,0,0,0,0,0,0,0},        //61   "="
+    886                            {16,0,0,0,0,0,0,7,31,255,1022,4080,32704,65024,63488,65024,32704,4080,1022,255,31,7,0,0,0,0},        //62   ">"
+    887                            {15,0,0,0,480,480,480,0,0,480,992,992,960,1984,3968,7936,15872,31744,30720,30720,30735,30751,32319,16382,8188,2032},        //63   "?"
+    888                            {16,504,124,60,32286,65438,65423,59343,33743,975,975,975,975,975,1999,3998,40862,65310,65084,63612,248,1008,4064,65472,65280,64512},        //64   "@"
+    889                            {16,0,0,0,7,32775,32783,49167,49183,49183,57374,65534,65532,65532,61564,63608,30968,31984,15600,15856,16352,8160,8128,4032,3968,1920},        //65   "A"
+    890                            {16,65535,65535,65535,65534,65534,65534,61438,65534,65534,65534,65534,65534,61438,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //66   "B"
+    891                            {16,0,0,0,32704,65520,65528,57852,49278,32830,31,31,15,15,15,15,15,15,31,31,32830,49278,57596,65528,65520,32640},        //67   "C"
+    892                            {16,65535,65535,65535,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,32766,32766,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //68   "D"
+    893                            {16,65535,65535,65535,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //69   "E"
+    894                            {16,65535,65535,65535,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //70   "F"
+    895                            {16,0,0,0,65408,65504,65528,33276,126,62,31,31,63503,63503,63503,15,15,15,31,30,62,126,49660,65528,65504,65408},        //71   "G"
+    896                            {16,65535,65535,65535,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //72   "H"
+    897                            {16,65535,65535,65535,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //73   "I"
+    898                            {13,0,0,0,1016,2046,4095,8095,7951,7695,7695,7680,7680,7680,7680,7680,7680,7680,7680,7680,7680,7680,7680,7680,7680,7680},        //74   "J"
+    899                            {16,65535,65535,65535,65534,65534,57342,65534,65534,65534,64510,65534,65534,65534,65534,65534,65518,65502,65534,65534,65534,65534,65534,65534,65534,65534},        //75   "K"
+    900                            {16,65535,65535,65535,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //76   "L"
+    901                            {16,65535,65535,65535,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //77   "M"
+    902                            {16,65535,65535,65535,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //78   "N"
+    903                            {16,0,0,0,32640,65504,65528,57852,32894,62,31,31,15,15,15,15,15,31,31,31,62,32894,57852,65528,65504,32640},        //79   "O"
+    904                            {16,65535,65535,65535,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,61438,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //80   "P"
+    905                            {16,0,0,0,32640,65504,65528,57852,63614,30782,6175,31,15,15,15,15,15,15,31,31,62,32894,57852,65528,65520,32640},        //81   "Q"
+    906                            {16,65535,65535,65535,65534,65534,65534,65534,65534,61438,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //82   "R"
+    907                            {16,0,0,0,16352,65528,65532,61566,49183,32783,32783,49152,57344,64512,65472,65528,8188,254,62,30,49182,57374,61566,65532,65528,16352},        //83   "S"
+    908                            {16,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65534,65534,65534},        //84   "T"
+    909                            {16,65535,65535,65535,65535,65535,65535,65533,57343,65535,49151,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //85   "U"
+    910                            {16,65535,65535,65535,64767,63743,64255,62335,63359,63295,61375,61375,53151,57311,57295,40943,49135,16359,32759,32755,32755,65531,65529,65529,65532,65532},        //86   "V"
+    911                            {16,65535,65535,65535,65087,65087,65087,65215,64991,64991,64991,63951,64495,64495,62447,63463,63479,59383,61427,61427,61435,53241,57337,8185,8189,16380},        //87   "W"
+    912                            {16,65535,65535,65535,65535,65535,65535,57343,65531,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,61431,65535,65535,65535,32766},        //88   "X"
+    913                            {16,65535,65535,65535,65023,65023,65023,65023,65023,65023,65023,65023,65023,64767,63743,63615,62271,59199,61343,53199,40911,16359,16371,32755,65529,65532},        //89   "Y"
+    914                            {16,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65503,65535,65535,65535,65535,65535,64511,65535,65535,65534,65534,65534},        //90   "Z"
+    915                            {16,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65528,65528,65528},        //91   "["
+    916                            {16,65535,65535,65535,65471,65471,65535,65535,65503,65535,65535,65519,65519,65535,65527,65527,65535,65531,65531,65535,65535,65533,65535,65535,65534,65534},        //92   "\"
+    917                            {16,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65534,65534,65534},        //93   "]"
+    918                            {13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7687,3855,3855,3999,1950,1950,1020,1020,504,504,504},        //94   "^"
+    919                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},        //95   "_"
+    920                            {16,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65535,65534},        //96   "`"
+    921                            {15,0,0,0,32252,16383,16383,16271,15887,15887,15375,15870,16380,16128,15360,15887,15903,8190,8190,2040,0,0,0,0,0,0},        //97   "a"
+    922                            {16,65535,65535,65535,65502,65534,65534,65534,64510,65534,63486,63486,63486,63486,65534,65534,65022,65534,65534,65502,65534,65534,65534,65534,65534,65534},        //98   "b"
+    923                            {14,0,0,0,2032,4092,8190,15935,15391,15375,15,15,15,15,15,15391,15935,8190,4092,2032,0,0,0,0,0,0},        //99   "c"
+    924                            {15,0,0,0,32248,32764,32766,32575,32287,31759,31759,31751,31751,31759,31759,32271,32575,32766,32764,32248,31744,31744,31744,31744,31744,31744},        //100   "d"
+    925                            {15,0,0,0,2040,8188,16382,15935,31759,15,7,32767,32767,31751,31759,15375,16191,8190,4092,1016,0,0,0,0,0,0},        //101   "e"
+    926                            {15,0,0,0,1054,7198,15390,15390,31774,30,30,31774,31774,31774,31774,15390,15390,7423,3327,255,30,30,30,510,508,504},        //102   "f"
+    927                            {15,15903,15375,15360,16376,32764,32766,32575,32271,31759,31759,31751,31751,31759,31759,32271,32575,32766,32764,32760,0,0,0,0,0,0},        //103   "g"
+    928                            {16,65535,65535,65535,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //104   "h"
+    929                            {16,65535,65535,65535,64510,64510,64510,64510,64510,64510,64510,64510,64510,64510,64510,65534,65534,65534,65534,65534,65535,65535,65535,65534,65534,65534},        //105   "i"
+    930                            {16,65535,65535,65535,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65535,65535,65535,65534,65534,65534},        //106   "j"
+    931                            {16,65535,65535,65535,65534,65534,65278,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534},        //107   "k"
+    932                            {16,65535,65535,65535,65022,65534,65534,65406,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65534,65278,65534,65534,65534,65534,65534,65534},        //108   "l"
+    933                            {16,0,0,0,31775,31775,31775,31775,31775,31775,31775,31775,31775,31775,31775,31775,65151,65535,57343,4047,0,0,0,0,0,0},        //109   "m"
+    934                            {15,0,0,0,31775,31775,31775,31775,31775,31775,31775,31775,31775,31775,31775,31775,15999,16383,8191,4095,0,0,0,0,0,0},        //110   "n"
+    935                            {15,0,0,0,1016,4092,8190,16191,15903,15375,31759,31759,31759,31759,15375,15903,16191,8190,4092,2032,0,0,0,0,0,0},        //111   "o"
+    936                            {15,15,15,15,2031,8191,16383,15935,31775,30751,30735,30735,30735,30735,30751,31775,15999,16383,8191,2031,0,0,0,0,0,0},        //112   "p"
+    937                            {15,31744,31744,31744,32752,32764,32766,32575,32271,31759,31759,31751,31751,31759,31759,32271,32575,32766,32764,32248,0,0,0,0,0,0},        //113   "q"
+    938                            {15,30720,30720,30720,30751,30751,30751,30751,30751,30751,30751,30751,30751,30751,30751,30751,30783,31231,31743,31743,0,0,0,0,0,0},        //114   "r"
+    939                            {14,0,0,0,1016,4094,8191,7967,15887,15872,8064,8184,4094,511,31,15,7951,3999,4094,1020,0,0,0,0,0,0},        //115   "s"
+    940                            {14,0,0,0,764,3838,7934,7710,15902,15902,7710,7710,3614,30,30,30,7710,3839,3839,767,30,30,30,30,28,16},        //116   "t"
+    941                            {15,0,0,0,32248,32764,32766,32574,31775,31775,31775,31775,31775,31775,31775,31775,31775,31775,31775,31775,0,0,0,0,0,0},        //117   "u"
+    942                            {14,0,0,0,496,496,1008,1016,1016,2044,1980,1980,3870,3870,7967,7695,7695,15887,15367,15367,0,0,0,0,0,0},        //118   "v"
+    943                            {16,0,0,0,57592,57592,61688,61948,61948,63996,63966,31710,31710,16335,16271,16271,16271,7943,7943,7943,0,0,0,0,0,0},        //119   "w"
+    944                            {16,0,0,0,56839,57103,53007,51102,51198,50172,49656,16888,16624,504,1020,1020,2046,3999,3855,7951,0,0,0,0,0,0},        //120   "x"
+    945                            {16,248,240,240,33248,33264,33264,33776,33784,34808,34748,1980,3900,3870,3870,7711,7695,15887,15375,15367,0,0,0,0,0,0},        //121   "y"
+    946                            {16,0,0,0,49151,49151,49151,32783,32799,32830,32892,248,496,992,1984,3968,7936,8191,8191,8191,0,0,0,0,0,0},        //122   "z"
+    947                            {16,124,60,60,48188,48188,48188,32828,32828,32830,32798,15,7,15,1054,3134,7228,7228,7228,7228,60,60,60,508,504,496},        //123   "{"
+    948                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},        //124   "|"
+    949                            {16,65511,65519,65519,65519,65519,65519,65519,65519,65519,65487,65311,65407,65311,65487,65519,65511,65511,65511,65511,65511,65511,65527,65520,65520,65528},        //125   "}"
+    950                            {16,0,0,0,0,0,0,0,0,0,0,15873,32643,65511,59391,49662,32892,0,0,0,0,0,0,0,0,0},        //126   "~"
+    951                            //{16,0,0,0,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,0,0,0},        //127   ""
+    952                            {8,0,0,0,0,0,0,0,0,0,0,0,0,0,56,124,110,6,6,110,124,56,2,5,2},  //127   "*C"
+    953                            {16,0,0,0,32704,65520,65528,57596,126,62,30,31,16383,16383,15,15,16383,32767,31,31,62,126,57596,65528,65520,32640},        //128   "€"
+    954                            {16,0,0,0,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,32771,0,0,0},        //129   ""
+    955                            };
+    956          
+    957          
+    958          //*-----------------------------------------------------------------------------
+    959          //* Nazwa funkcji :    Label
+    960          //* Funkcja wrysowania napisu
+    961          //*-----------------------------------------------------------------------------
+    962          //*  Vstring    - wskaŸnik do tablicy znaków
+    963          //*  alig       - wyrównanie -0=do lewej, 1=do prawej, 2=wyœrodkowany
+    964          //*  X          - wspó³¿êdna X zale¿na od wyrównania 
+    965          //*  Y          - wspó³¿êdna Y do³u napisu
+    966          //*  maxChar    - maksymalna d³ugoœæ napisu w znakach 
+    967          //*  clean      - d³ugoœæ (w pikselach) obszaru czyszczenia t³a 
+    968          //*  minY, maxY - obszar roboczy
+    969          //*  negatyw    - 0-brak, 1-negatyw
+    970          //*  funkcja zwraca d³ugoœæ napisu w pikselach
+    971          //*-----------------------------------------------------------------------------
+    972          
+    973          char Label (char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+    974          { 
+    975            //char offset=43;
+    976            char offset=30;
+    977            
+    978            
+    979            int kol=0;
+    980            char linia=0;
+    981            char bit=0;
+    982            char ill_znak=0;
+    983            
+    984            char pocz_X=X;
+    985            
+    986            kol=X/8;
+    987            bit=X%8;
+    988            linia=Y;
+    989             
+    990            char dlugosc=0;
+    991            char clean_offset=0;
+    992            
+    993            
+    994          
+    995            
+    996            
+    997            
+    998            if (alig==1)
+    999            {
+   1000              do {       
+   1001                 
+   1002                 if (Vstring[ill_znak]>=offset)  
+   1003                  {
+   1004                    dlugosc += Arial_7[Vstring[ill_znak]-offset][0];
+   1005                  }
+   1006                 else
+   1007                 {
+   1008                   dlugosc++;
+   1009                   dlugosc++;
+   1010                   dlugosc++;
+   1011                 }
+   1012                 dlugosc++;
+   1013                 ill_znak++;
+   1014                } while ((Vstring[ill_znak]) && (ill_znak<maxChar) && (X-dlugosc>=0) );
+   1015           
+   1016              clean_offset=clean;
+   1017            }
+   1018            else
+   1019            {
+   1020              do {   
+   1021                 
+   1022                 
+   1023                 if (Vstring[ill_znak]>=offset)  
+   1024                  {
+   1025                    dlugosc += Arial_7[Vstring[ill_znak]-offset][0];
+   1026                  }
+   1027                 else
+   1028                 {
+   1029                   dlugosc++;
+   1030                   dlugosc++;
+   1031                   dlugosc++;
+   1032                 }
+   1033                 
+   1034                 
+   1035                 dlugosc++;
+   1036                 ill_znak++;
+   1037               } while ((Vstring[ill_znak]) && (ill_znak<maxChar) && (X+dlugosc<=64));
+   1038              
+   1039            }
+   1040              
+   1041            dlugosc--;
+   1042            
+   1043             //Czyszczenie obszaru ----------------------
+   1044            linia=Y;
+   1045            for (int i=1; i<=9; i++)
+   1046             {
+   1047              if ((linia>=minY) && (linia<=maxY))
+   1048              {
+   1049               kol=(X-clean_offset)/8;
+   1050               bit=(X-clean_offset)%8;
+   1051                 
+   1052                for (int j=0; j<=clean; j++)
+   1053                {
+   1054                  LCD_Canvas[kol][linia] &=~(1<<bit);
+   1055                  
+   1056                  if (bit<7) { bit++;} else {bit=0;  kol++; }
+   1057                }   
+   1058          
+   1059          
+   1060             }
+   1061              linia++;
+   1062            }
+   1063            //------------------------------------------------------
+   1064              
+   1065            if (alig==1)
+   1066            {  
+   1067              X-=dlugosc;
+   1068            }  
+   1069           
+   1070            if (alig==2)
+   1071            {  
+   1072              X+=(clean-dlugosc)/2;
+   1073              
+   1074              if (((clean-dlugosc)%2)>0) X++;
+   1075            }  
+   1076          
+   1077              
+   1078            //wklejanie napisu do LCD_Canvas ----------------------
+   1079            linia=Y;
+   1080            for (int i=1; i<=9; i++)
+   1081             {
+   1082              if ((linia>=minY) && (linia<=maxY))
+   1083              {
+   1084               kol=X/8;
+   1085               bit=X%8;
+   1086              for (int k=0; k<=(ill_znak-1); k++)
+   1087              {     
+   1088                
+   1089                if ((Vstring[k]>=offset) &&  (Vstring[k]!=32))
+   1090                {
+   1091                  for (int j=0; j<=Arial_7[Vstring[k]-offset][0]; j++)
+   1092                  {
+   1093                      LCD_Canvas[kol][linia] |= (((Arial_7[Vstring[k]-offset][i])>>j)&0x1)<<bit;
+   1094                      if (bit<7) { bit++;} else {bit=0;  kol++; } 
+   1095                  }
+   1096                }
+   1097                else 
+   1098                {
+   1099                     if (bit<7) { bit++;} else {bit=0;  kol++; } 
+   1100                     if (bit<7) { bit++;} else {bit=0;  kol++; } 
+   1101                     if (bit<7) { bit++;} else {bit=0;  kol++; } 
+   1102          
+   1103                }
+   1104                
+   1105                
+   1106              }
+   1107             }
+   1108              linia++;
+   1109            }
+   1110            //------------------------------------------------------
+   1111              
+   1112          
+   1113            //negatyw obszaru ----------------------
+   1114           if (negatyw)
+   1115           {
+   1116            linia=Y;
+   1117            for (int i=1; i<=9; i++)
+   1118             {
+   1119              if ((linia>=minY) && (linia<=maxY))
+   1120              {
+   1121               
+   1122               kol=(pocz_X-clean_offset)/8;
+   1123               bit=(pocz_X-clean_offset)%8;
+   1124                 
+   1125                for (int j=0; j<=clean; j++)
+   1126                {
+   1127                 
+   1128                  if (((LCD_Canvas[kol][linia]>>bit)&0x1)>0)
+   1129                  {
+   1130                     LCD_Canvas[kol][linia] &=~(1<<bit);   
+   1131                    
+   1132                  }
+   1133                  else
+   1134                  {
+   1135                    LCD_Canvas[kol][linia] |=(1<<bit); 
+   1136                    
+   1137                  }
+   1138                  
+   1139                  
+   1140                  
+   1141                  if (bit<7) { bit++;} else {bit=0;  kol++; }
+   1142                }   
+   1143          
+   1144          
+   1145             }
+   1146              linia++;
+   1147            }
+   1148            }
+   1149            //------------------------------------------------------
+   1150             
+   1151           return dlugosc;
+   1152            
+   1153          }//_______________________ Koniec funkcji Label __________________________
+   1154          
+   1155          
+   1156          
+   1157          
+   1158          
+   1159          
+   1160          
+   1161          
+   1162          //*-----------------------------------------------------------------------------
+   1163          //* Nazwa funkcji :    LabelLength
+   1164          //* Funkcja wrysowania napisu
+   1165          //*-----------------------------------------------------------------------------
+   1166          //*  Vstring    - wskaŸnik do tablicy znaków
+   1167          //*  maxChar    - maksymalna d³ugoœæ napisu w znakach 
+   1168          //*  funkcja zwraca d³ugoœæ napisu w pikselach
+   1169          //*-----------------------------------------------------------------------------
+   1170          
+   1171          char LabelLength (char *Vstring, char maxChar)
+   1172          { 
+   1173            //char offset=43;
+   1174            char offset=30;
+   1175            
+   1176            
+   1177            int kol=0;
+   1178            char linia=0;
+   1179            char bit=0;
+   1180            char ill_znak=0;
+   1181          
+   1182             
+   1183            char dlugosc=0;
+   1184            char clean_offset=0;
+   1185            
+   1186           
+   1187              do {   
+   1188                 
+   1189                 
+   1190                 if (Vstring[ill_znak]>=offset)  
+   1191                  {
+   1192                    dlugosc += Arial_7[Vstring[ill_znak]-offset][0];
+   1193                  }
+   1194                 else
+   1195                 {
+   1196                   dlugosc++;
+   1197                   dlugosc++;
+   1198                   dlugosc++;
+   1199                 }
+   1200                 
+   1201                 
+   1202                 dlugosc++;
+   1203                 ill_znak++;
+   1204               } while ((Vstring[ill_znak]) && (ill_znak<maxChar) && (dlugosc<=64));
+   1205              
+   1206            
+   1207              
+   1208            dlugosc--;
+   1209            
+   1210             
+   1211           return dlugosc;
+   1212            
+   1213          }//_______________________ Koniec funkcji LabelLength __________________________
+   1214          
+   1215          
+   1216          
+   1217          
+   1218          
+   1219          
+   1220          
+   1221          
+   1222          //*-----------------------------------------------------------------------------
+   1223          //* Nazwa funkcji :    Label
+   1224          //* Funkcja wrysowania napisu
+   1225          //*-----------------------------------------------------------------------------
+   1226          //*  Vstring    - wskaŸnik do tablicy znaków
+   1227          //*  alig       - wyrównanie -0=do lewej, 1=do prawej, 2=wyœrodkowany
+   1228          //*  X          - wspó³¿êdna X zale¿na od wyrównania 
+   1229          //*  Y          - wspó³¿êdna Y do³u napisu
+   1230          //*  maxChar    - maksymalna d³ugoœæ napisu w znakach 
+   1231          //*  clean      - d³ugoœæ (w pikselach) obszaru czyszczenia t³a 
+   1232          //*  minY, maxY - obszar roboczy
+   1233          //*  negatyw    - 0-brak, 1-negatyw
+   1234          //*-----------------------------------------------------------------------------
+   1235          
+   1236          void Label20 (char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   1237          { 
+   1238            //char offset=43;
+   1239            char offset=30;
+   1240            
+   1241            
+   1242            int kol=0;
+   1243            char linia=0;
+   1244            char bit=0;
+   1245            char ill_znak=0;
+   1246            
+   1247            char pocz_X=X;
+   1248            
+   1249            kol=X/8;
+   1250            bit=X%8;
+   1251            linia=Y;
+   1252             
+   1253            char dlugosc=0;
+   1254            char clean_offset=0;
+   1255            
+   1256            
+   1257          
+   1258            
+   1259            
+   1260            
+   1261            if (alig==1)
+   1262            {
+   1263              do {       
+   1264                 
+   1265                 if (Vstring[ill_znak]>=offset)  
+   1266                  {
+   1267                    dlugosc += Arial_18[Vstring[ill_znak]-offset][0];
+   1268                  }
+   1269                 else
+   1270                 {
+   1271                   dlugosc++;
+   1272                   dlugosc++;
+   1273                   dlugosc++;
+   1274                 }
+   1275                 dlugosc++;
+   1276                 ill_znak++;
+   1277                } while ((Vstring[ill_znak]) && (ill_znak<maxChar) && (X-dlugosc>=0) );
+   1278           
+   1279              clean_offset=clean;
+   1280            }
+   1281            else
+   1282            {
+   1283              do {   
+   1284                 
+   1285                 
+   1286                 if (Vstring[ill_znak]>=offset)  
+   1287                  {
+   1288                    dlugosc += Arial_18[Vstring[ill_znak]-offset][0];
+   1289                  }
+   1290                 else
+   1291                 {
+   1292                   dlugosc++;
+   1293                   dlugosc++;
+   1294                   dlugosc++;
+   1295                 }
+   1296                 
+   1297                 
+   1298                 dlugosc++;
+   1299                 ill_znak++;
+   1300               } while ((Vstring[ill_znak]) && (ill_znak<maxChar) && (X+dlugosc<=64));
+   1301              
+   1302            }
+   1303              
+   1304            dlugosc--;
+   1305            
+   1306             //Czyszczenie obszaru ----------------------
+   1307            linia=Y;
+   1308            for (int i=1; i<=25; i++)
+   1309             {
+   1310              if ((linia>=minY) && (linia<=maxY))
+   1311              {
+   1312               kol=(X-clean_offset)/8;
+   1313               bit=(X-clean_offset)%8;
+   1314                 
+   1315                for (int j=0; j<=clean; j++)
+   1316                {
+   1317                  LCD_Canvas[kol][linia] &=~(1<<bit);
+   1318                  
+   1319                  if (bit<7) { bit++;} else {bit=0;  kol++; }
+   1320                }   
+   1321          
+   1322          
+   1323             }
+   1324              linia++;
+   1325            }
+   1326            //------------------------------------------------------
+   1327              
+   1328            if (alig==1)
+   1329            {  
+   1330              X-=dlugosc;
+   1331            }  
+   1332           
+   1333            if (alig==2)
+   1334            {  
+   1335              X+=(clean-dlugosc)/2;
+   1336              
+   1337              if (((clean-dlugosc)%2)>0) X++;
+   1338            }  
+   1339          
+   1340              
+   1341            //wklejanie napisu do LCD_Canvas ----------------------
+   1342            linia=Y;
+   1343            for (int i=1; i<=25; i++)
+   1344             {
+   1345              if ((linia>=minY) && (linia<=maxY))
+   1346              {
+   1347               kol=X/8;
+   1348               bit=X%8;
+   1349              for (int k=0; k<=(ill_znak-1); k++)
+   1350              {     
+   1351                
+   1352                if ((Vstring[k]>=offset) &&  (Vstring[k]!=32))
+   1353                {
+   1354                  for (int j=0; j<=Arial_18[Vstring[k]-offset][0]; j++)
+   1355                  {
+   1356                      LCD_Canvas[kol][linia] |= (((Arial_18[Vstring[k]-offset][i])>>j)&0x1)<<bit;
+   1357                      if (bit<7) { bit++;} else {bit=0;  kol++; } 
+   1358                  }
+   1359                }
+   1360                else 
+   1361                {
+   1362                     if (bit<7) { bit++;} else {bit=0;  kol++; } 
+   1363                     if (bit<7) { bit++;} else {bit=0;  kol++; } 
+   1364                     if (bit<7) { bit++;} else {bit=0;  kol++; } 
+   1365          
+   1366                }
+   1367                
+   1368                
+   1369              }
+   1370             }
+   1371              linia++;
+   1372            }
+   1373            //------------------------------------------------------
+   1374              
+   1375          
+   1376            //negatyw obszaru ----------------------
+   1377           if (negatyw)
+   1378           {
+   1379            linia=Y;
+   1380            for (int i=1; i<=9; i++)
+   1381             {
+   1382              if ((linia>=minY) && (linia<=maxY))
+   1383              {
+   1384               
+   1385               kol=(pocz_X-clean_offset)/8;
+   1386               bit=(pocz_X-clean_offset)%8;
+   1387                 
+   1388                for (int j=0; j<=clean; j++)
+   1389                {
+   1390                 
+   1391                  if (((LCD_Canvas[kol][linia]>>bit)&0x1)>0)
+   1392                  {
+   1393                     LCD_Canvas[kol][linia] &=~(1<<bit);   
+   1394                    
+   1395                  }
+   1396                  else
+   1397                  {
+   1398                    LCD_Canvas[kol][linia] |=(1<<bit); 
+   1399                    
+   1400                  }
+   1401                  
+   1402                  
+   1403                  
+   1404                  if (bit<7) { bit++;} else {bit=0;  kol++; }
+   1405                }   
+   1406          
+   1407          
+   1408             }
+   1409              linia++;
+   1410            }
+   1411            }
+   1412            //------------------------------------------------------
+   1413             
+   1414          
+   1415            
+   1416          }//_______________________ Koniec funkcji Label __________________________
+   1417          
+   1418          
+   1419          
+   1420          
+   1421          
+   1422          
+   1423          
+   1424          
+   1425          
+   1426          //*-----------------------------------------------------------------------------
+   1427          //* Nazwa funkcji :    TimeToStr
+   1428          //* Funkcja Czasu na string
+   1429          //*-----------------------------------------------------------------------------
+   1430          //*-----------------------------------------------------------------------------
+   1431          void TimeToStr (char godz, char min, char sek, char Vstring[8]) 
+   1432          { 
+   1433                 if (godz<10) 
+   1434                 {
+   1435                   Vstring[0]=48;
+   1436                   Vstring[1]=godz+48;
+   1437                 }
+   1438                 else
+   1439                 {
+   1440                   Vstring[0]=godz/10+48;
+   1441                   Vstring[1]=godz%10+48;
+   1442                 }
+   1443                 Vstring[2]=58;
+   1444                 
+   1445                 if (min<10) 
+   1446                 {
+   1447                   Vstring[3]=48;
+   1448                   Vstring[4]=min+48;
+   1449                 }
+   1450                 else
+   1451                 {
+   1452                   Vstring[3]=min/10+48;
+   1453                   Vstring[4]=min%10+48;
+   1454                 }
+   1455                 Vstring[5]=58;
+   1456                 
+   1457                 
+   1458                 if (sek<10) 
+   1459                 {
+   1460                   Vstring[6]=48;
+   1461                   Vstring[7]=sek+48;
+   1462                 }
+   1463                 else
+   1464                 {
+   1465                   Vstring[6]=sek/10+48;
+   1466                   Vstring[7]=sek%10+48;
+   1467                 }
+   1468          
+   1469                 
+   1470          }//_______________________ Koniec funkcji TimeToStr____________________________
+   1471          
+   1472          
+   1473          
+   1474          //*-----------------------------------------------------------------------------
+   1475          //* Nazwa funkcji :    DateToStr
+   1476          //* Funkcja Daty na string
+   1477          //*-----------------------------------------------------------------------------
+   1478          //*-----------------------------------------------------------------------------
+   1479          void DateToStr (char dzin, char mies, char rok, char Vstring[8]) 
+   1480          { 
+   1481                 if (dzin<10) 
+   1482                 {
+   1483                   Vstring[0]=48;
+   1484                   Vstring[1]=dzin+48;
+   1485                 }
+   1486                 else
+   1487                 {
+   1488                   Vstring[0]=dzin/10+48;
+   1489                   Vstring[1]=dzin%10+48;
+   1490                 }
+   1491                 Vstring[2]=45; //"-"
+   1492                 
+   1493                 if (mies<10) 
+   1494                 {
+   1495                   Vstring[3]=48;
+   1496                   Vstring[4]=mies+48;
+   1497                 }
+   1498                 else
+   1499                 {
+   1500                   Vstring[3]=mies/10+48;
+   1501                   Vstring[4]=mies%10+48;
+   1502                 }
+   1503                 Vstring[5]=45; //"-"
+   1504                 
+   1505                 
+   1506                 if (rok<10) 
+   1507                 {
+   1508                   Vstring[6]=48;
+   1509                   Vstring[7]=rok+48;
+   1510                 }
+   1511                 else
+   1512                 {
+   1513                   Vstring[6]=rok/10+48;
+   1514                   Vstring[7]=rok%10+48;
+   1515                 }
+   1516          
+   1517                 
+   1518          }//_______________________ Koniec funkcji DateToStr ____________________________
+   1519          
+   1520          
+   1521          
+   1522          
+   1523          //*-----------------------------------------------------------------------------
+   1524          //* Nazwa funkcji :    CharToStr
+   1525          //* Funkcja konwersji zmiennej float na ³añcuch string   
+   1526          //*-----------------------------------------------------------------------------
+   1527          //*  Value   - zmienna typu float
+   1528          //*  Vstring - tablica znaków
+   1529          //*  ill     - liloœæ znaków (max=9) , ostatnia wartoœæ zapisanego ³añcucha to zawsze 0
+   1530          //* return   - iloœæ cyfr w stringu
+   1531          //*-----------------------------------------------------------------------------
+   1532          char CharToStr (char Value, char *Vstring, char ill) 
+   1533          { 
+   1534                char set=0;
+   1535                char dzies=0;
+   1536                char jedn=0;
+   1537                char ind;
+   1538                
+   1539                for (int i=0; i<ill; i++) Vstring[i]=0;
+   1540                  
+   1541                
+   1542                set= Value/100;
+   1543                dzies= (Value%100)/10;
+   1544                jedn = Value- (set*100) - (dzies*10);
+   1545                
+   1546                if (ill==0) ill=1; 
+   1547                ill--;
+   1548                 
+   1549                ind=0;
+   1550                if (set>0) 
+   1551                {
+   1552                  Vstring[ind]=set+48;
+   1553                  ind++;
+   1554                }
+   1555                if (set+dzies>0) 
+   1556                {
+   1557                  Vstring[ind]=dzies+48;
+   1558                  ind++;
+   1559                }
+   1560                Vstring[ind]=jedn+48;
+   1561          
+   1562                ind++;
+   1563                return ind;
+   1564                
+   1565                 
+   1566          }//_______________________ Koniec funkcji konwersji float na string ____________________________
+   1567          
+   1568          
+   1569          
+   1570          
+   1571          
+   1572          
+   1573          //*-----------------------------------------------------------------------------
+   1574          //* Nazwa funkcji :    CharToStr2
+   1575          //* Funkcja konwersji zmiennej float na ³añcuch string  w formacie 00 
+   1576          //*-----------------------------------------------------------------------------
+   1577          //*  Value   - zmienna typu float
+   1578          //*  Vstring - tablica znaków
+   1579          //*-----------------------------------------------------------------------------
+   1580          void CharToStr2 (char Value, char *Vstring) 
+   1581          { 
+   1582                char set=0;
+   1583                char dzies=0;
+   1584                char jedn=0;
+   1585          
+   1586                set= Value/100;
+   1587                dzies= (Value%100)/10;
+   1588                jedn = Value- (set*100) - (dzies*10);      
+   1589                
+   1590                Vstring[1]=jedn+48;
+   1591                Vstring[0]=dzies+48;        
+   1592          }//_______________________ Koniec funkcji konwersji float na string ____________________________
+   1593          
+   1594          
+   1595          
+   1596          
+   1597          
+   1598          
+   1599          
+   1600          
+   1601          //*-----------------------------------------------------------------------------
+   1602          //* Nazwa funkcji :    CharToStr
+   1603          //* Funkcja konwersji zmiennej char na ³añcuch znakowy string -2 elementowy   
+   1604          //*-----------------------------------------------------------------------------
+   1605          //*  Value   - zmienna typu float
+   1606          //*  Vstring - tablica znaków
+   1607          //*-----------------------------------------------------------------------------
+   1608          void CharToStrData (char Value, char *Vstring) 
+   1609          { 
+   1610          
+   1611                
+   1612                for (int i=0; i<2; i++) Vstring[i]=0;
+   1613                
+   1614                Vstring[0]=(Value/10)+48;
+   1615                Vstring[1]=(Value%10)+48;
+   1616          
+   1617          }//_______________________ Koniec funkcji konwersji char na string ____________________________
+   1618          
+   1619          
+   1620          
+   1621          
+   1622          
+   1623          //*-----------------------------------------------------------------------------
+   1624          //* Nazwa funkcji :    sIntToStr
+   1625          //* Funkcja konwersji zmiennej short int na ³añcuch string  wed³óg schematu dla zmiennej analogowej systemu (-3276.8 + 3276.7)
+   1626          //*-----------------------------------------------------------------------------
+   1627          //*  Value   - zmienna typu float
+   1628          //*  Vstring - tablica znaków
+   1629          //* return   - iloœæ cyfr w stringu
+   1630          //*-----------------------------------------------------------------------------
+   1631          char sIntToStr (signed short int Value, char *Vstring) 
+   1632          { 
+   1633                char znak=0;
+   1634                char ind=0;
+   1635                if (Value<0) znak='-';
+   1636                
+   1637                short int ValueTmp=abs(Value);
+   1638                
+   1639                char wartosc[6];
+   1640                
+   1641                for (int i=0; i<5; i++) 
+   1642                {
+   1643                  Vstring[i]=0;
+   1644                  wartosc[i]=0;
+   1645                }
+   1646                  
+   1647                
+   1648                wartosc[0]   = ValueTmp/10000;
+   1649                wartosc[1]   = (ValueTmp-(wartosc[0]*10000))/1000;
+   1650                wartosc[2]   = (ValueTmp-(wartosc[0]*10000)-(wartosc[1]*1000))/100;
+   1651                wartosc[3]   = (ValueTmp-(wartosc[0]*10000)-(wartosc[1]*1000)-(wartosc[2]*100))/10;
+   1652                wartosc[4]   = '.';
+   1653                wartosc[5]   = (ValueTmp-(wartosc[0]*10000)-(wartosc[1]*1000)-(wartosc[2]*100)-(wartosc[3]*10));
+   1654                
+   1655                char PP=0;
+   1656                for (char i=0; i<5; i++) 
+   1657                  if ((wartosc[i]>0) && (PP==0)) 
+   1658                  {
+   1659                    if (wartosc[i]=='.') PP=i; else PP=i+1;
+   1660                  
+   1661                  }
+   1662                
+   1663                if ((PP==0) && (wartosc[5]==0))
+   1664                {
+   1665                  ind=1;
+   1666                  Vstring[0]='0';
+   1667                }
+   1668                else
+   1669                {
+   1670                  if (znak) 
+   1671                  {
+   1672                    Vstring[ind++]='-';
+   1673                  }
+   1674                  if (PP>0)
+   1675                  for (char i=PP-1; i<4; i++)
+   1676                  {
+   1677                    Vstring[ind]=48+wartosc[i];
+   1678                    ind++;
+   1679                  }
+   1680                  
+   1681                    Vstring[ind]='.';
+   1682                    Vstring[++ind]=48+wartosc[5];
+   1683                    ind++;
+   1684                }
+   1685                
+   1686                return ind;
+   1687                
+   1688                 
+   1689          }//_______________________ Koniec funkcji konwersji float na string ____________________________
+   1690          
+   1691          
+   1692          
+   1693          
+   1694          
+   1695          
+   1696          
+   1697          //*-----------------------------------------------------------------------------
+   1698          //* Nazwa funkcji :    FloToStr
+   1699          //* Funkcja konwersji zmiennej float na ³añcuch string   
+   1700          //*-----------------------------------------------------------------------------
+   1701          //*  Value   - zmienna typu float
+   1702          //*  Vstring - tablica znaków
+   1703          //*  ill     - liloœæ znaków (max=9) , ostatnia wartoœæ zapisanego ³añcucha to zawsze 0
+   1704          //*  Funkcja zwraca d³ugoœæ ³añcucha
+   1705          //*-----------------------------------------------------------------------------
+   1706          void HexToStr (int Value, char Vstring[8],char length) 
+   1707          { 
+   1708                length=length-1; 
+   1709                for (int i=0; i<=length; i++) Vstring[i]=0;
+   1710                 
+   1711                 for (int i=0; i<=length; i++)
+   1712                 {
+   1713                    Vstring[length-i]=((Value>>(4*i))&0xf)+48;  
+   1714                    
+   1715                    if (Vstring[length-i]>57) {Vstring[length-i]+=7;}
+   1716          
+   1717                    
+   1718                 }   
+   1719             
+   1720             
+   1721             
+   1722          }//_______________________ Koniec funkcji konwersji float na string ____________________________
+   1723          
+   1724          
+   1725          
+   1726          
+   1727          
+   1728          
+   1729          
+   1730          
+   1731          
+   1732          
+   1733          //*-----------------------------------------------------------------------------
+   1734          //* Nazwa funkcji :    List_Paint
+   1735          //* Funkcja rysowania listy
+   1736          //*-----------------------------------------------------------------------------
+   1737          //* name[7]   -  Nazwa listy
+   1738          //* Rows      -  ilosc wierszy
+   1739          //* RowWith   -  szerokosc wiersza
+   1740          //* Y         -  odsuniecie od górnej krawêdzi
+   1741          //* FormStyle -  rodzaj formy 0-zwyk³a 1..-coraz mniejsze
+   1742          //* Algin     - wyrównanie 0-pion œrodek, poziom lowo, 1-pion góra, poziom lowo, 2 pion dó³, poziom lowo, 3-pion œrodek, poziom wyœrodkowanie
+   1743          //* p1...p8   - nazwy kolejnych pól
+   1744          //*-----------------------------------------------------------------------------
+   1745          
+   1746          char RealRows;
+   1747          char RowsPoz;
+   1748          void List_Paint(char name[10], char Rows, char RowWith, char Y, char FormStyle, char Algin, __String p,...)
+   1749          {
+   1750            
+   1751            
+   1752           va_list parg; 
+   1753           va_start( parg, p);// pocz¹tek pracy ze zmienn¹ list¹ parametrów 
+   1754          char *par[20];
+   1755          char idf=0;
+   1756          par[0] =p;
+   1757          while(idf<Rows) {par[++idf] = va_arg( parg, char*);} 
+   1758          va_end(parg); 
+   1759            
+   1760          
+   1761            RealRows=Rows;
+   1762            if ((Rows>7) && (RowWith>13)) Rows=6;
+   1763            if ((Rows>8) && (RowWith<=13)) Rows=7;
+   1764            
+   1765            if (FormStyle<4) 
+   1766            {
+   1767              CleanCanvas();
+   1768            }
+   1769            else
+   1770            {
+   1771              //  HalfCleanCanvas();
+   1772              if (FormStyle)
+   1773              {     
+   1774                CleanCanvasArea(FormStyle-1, 127-(Y+18+(RowWith*Rows))-2, 62-2*FormStyle+4,(RowWith*Rows)+5,0);
+   1775              
+   1776              }
+   1777              else
+   1778              {
+   1779                CleanCanvasArea(0, 127-(18+(RowWith*Rows))+Y, 62,(RowWith*Rows),0);
+   1780          
+   1781              }
+   1782            }
+   1783            
+   1784             
+   1785            
+   1786           
+   1787            if (FormStyle==0)
+   1788            {
+   1789            char ekran_tab[8][18] = {
+   1790                            {255,1,255,255,255,255,255,255,255,255,255,255,255,255,255,255,254,252},
+   1791                            {255,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255},
+   1792                            {255,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255},
+   1793                            {255,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255},
+   1794                            {255,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255},
+   1795                            {255,0,255,255,127,127,127,127,127,127,127,127,127,127,127,127,255,255},
+   1796                            {255,0,255,0,254,255,251,247,111,159,159,111,247,251,255,254,0,255},
+   1797                            {255,128,255,240,231,239,237,238,239,239,239,239,238,237,111,103,48,31}
+   1798                            };
+   1799              
+   1800              CopyToCanvasPoint((char *)ekran_tab,0,109-Y,64,18); 
+   1801              Label(name,0,2,114-Y,10,42,0,127,1);  //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   1802              
+   1803             } 
+   1804              
+   1805           if (Rows>0)
+   1806           {
+   1807              
+   1808              char napis1_Y=110-Y-(RowWith/2)-5;
+   1809          
+   1810              
+   1811          
+   1812              for (char i=0; i<=Rows-1; i++)
+   1813              {
+   1814                 if (par[i+RowsPoz]>0)
+   1815                 switch (Algin)
+   1816                 {
+   1817                    case 0: Label(par[i+RowsPoz],0,2+FormStyle,napis1_Y-RowWith*i,15,58-2*FormStyle,0,127,0);     break; //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   1818                    case 1: Label(par[i+RowsPoz],0,2+FormStyle,110-Y-10-RowWith*i,15,58-2*FormStyle,0,127,0);     break; //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   1819                    case 2: Label(par[i+RowsPoz],0,2+FormStyle,110-Y+1-RowWith*(i+1),15,58-2*FormStyle,0,127,0);  break; //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw)   
+   1820                    case 3: Label(par[i+RowsPoz],2,2+FormStyle,napis1_Y-RowWith*i,15,58-2*FormStyle,0,127,0);     break; //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   1821                 }   
+   1822              }
+   1823              
+   1824              
+   1825              if (~FormStyle) H_line(2,127-(17)-Y,54,0); 
+   1826              
+   1827              V_line(62-FormStyle,127-(18+(Rows*RowWith))-Y,(Rows*RowWith),1);
+   1828              if (FormStyle)
+   1829              {
+   1830                  V_line(63-FormStyle,127-(18+(Rows*RowWith))-Y,(Rows*RowWith)-2,1);
+   1831              }
+   1832              else
+   1833              {
+   1834                  V_line(63-FormStyle,127-(18+(Rows*RowWith))-Y,(Rows*RowWith),1); 
+   1835              }
+   1836              
+   1837              V_line(FormStyle,127-(18+(Rows*RowWith))-Y,(Rows*RowWith),1);
+   1838              
+   1839              if (FormStyle) H_line(FormStyle,127-18-Y,63-2*FormStyle,1); 
+   1840              
+   1841              for (char i=18+RowWith; i<=18+(Rows*RowWith); i=i+RowWith)
+   1842              {
+   1843                H_line(1+FormStyle,127-i-Y,61-2*FormStyle,1); 
+   1844              }
+   1845              
+   1846              H_line(4+FormStyle,127-(18+(Rows*RowWith))-1-Y,60-(2*FormStyle),1); 
+   1847            
+   1848           
+   1849              if (RealRows!=Rows) //je¿eli wiêcej pozycji ni¿ na ekranie
+   1850              {
+   1851                 char LabelButt1[2], LabelButt2[2];
+   1852                 LabelButt1[1]=0; LabelButt2[1]=0;  //LabelButt1 -góra, LabelButt2-dó³
+   1853                 LabelButt1[0]=30; LabelButt2[0]=31;
+   1854                 
+   1855                 if (RowsPoz==0)
+   1856                 {
+   1857                    Button(LabelButt2,0,127-(18+(Rows*RowWith))-1-Y-15,64,16); //(etykieta char poz_X , char poz_Y ,char width, char height) 
+   1858                 } 
+   1859                 if ((RowsPoz>0) && (RowsPoz<RealRows-Rows))
+   1860                 {
+   1861                   Button(LabelButt1,0,127-(18+(Rows*RowWith))-1-Y-15,32,16); //(etykieta ,char poz_X , char poz_Y ,char width, char height)
+   1862                   Button(LabelButt2,32,127-(18+(Rows*RowWith))-1-Y-15,32,16); //(etykieta char poz_X , char poz_Y ,char width, char height) 
+   1863                 }
+   1864                 if ((RowsPoz>0) && (RowsPoz>=RealRows-Rows))
+   1865                 {
+   1866                   Button(LabelButt1,0,127-(18+(Rows*RowWith))-1-Y-15,64,16); //(etykieta ,char poz_X , char poz_Y ,char width, char height)
+   1867                 }
+   1868                 
+   1869                
+   1870              }
+   1871              
+   1872              
+   1873              
+   1874              //bar poziomy
+   1875              if (RealRows!=Rows)
+   1876              {
+   1877                 char MaxPoz = 127-19;
+   1878                 char MinPoz = 127-(18+(Rows*RowWith))-1-Y+2;
+   1879                 char Zakres =MaxPoz-MinPoz;
+   1880                 char DlOdc=RealRows-Rows;
+   1881                 DlOdc=RealRows-Rows+1;
+   1882                 DlOdc=Zakres/DlOdc;
+   1883                 char poz=RowsPoz*DlOdc;
+   1884                 poz=MaxPoz-poz-DlOdc;
+   1885                 V_line (61, MinPoz,Zakres+1, 1);  //V_line (char X, int Y, char lenght, char typ) 
+   1886                 V_line (62, poz,DlOdc, 0);  //V_line (char X, int Y, char lenght, char typ) 
+   1887              }
+   1888              
+   1889           }else{
+   1890             V_line(0,1,115,1); 
+   1891             V_line(63,0,115,1);
+   1892             V_line(62,0,115,1);
+   1893             H_line(0,1,63,1);
+   1894             H_line(4,0,59,1);
+   1895           }
+   1896              
+   1897          }//_______________________ Koniec funkcji List_Paint __________________________
+   1898          
+   1899          
+   1900          
+   1901              
+   1902          
+   1903          
+   1904          
+   1905          
+   1906          
+   1907          //*-----------------------------------------------------------------------------
+   1908          //* Nazwa funkcji :    List_Event
+   1909          //* Funkcja rysowania listy
+   1910          //*-----------------------------------------------------------------------------
+   1911          //* name[7]   -  Nazwa listy
+   1912          //* Rows      -  ilosc wierszy
+   1913          //* RowWith   -  szerokosc wiersza
+   1914          //* Y         -  odsuniecie od górnej krawêdzi
+   1915          //* p1...p8   - nazwy kolejnych pól
+   1916          //*-----------------------------------------------------------------------------
+   1917          
+   1918          int List_Event(int X_up, int Y_up, int X_down, int Y_down, char Rows, char RowWith, char FormStyle, char Y)
+   1919          {
+   1920            static char SelectRow; 
+   1921            char podswietl=0;
+   1922            int ans = 0;
+   1923            char AnsDown;
+   1924             static char DownAction=0;
+   1925          char Y_up_tmp=127-Y_up;
+   1926          
+   1927              static char Xdown=0;
+   1928          
+   1929            //zdarzenie typu down "X"
+   1930              if ((FormStyle==0) && (X_down>46) && (X_down<63) && (Y_down>112-Y) && (Y_down<127-Y))    //"X"
+   1931              {
+   1932                MenuPaint();
+   1933                H_line(49,114-Y,10,0);
+   1934                H_line(49,123-Y,10,0); 
+   1935                V_line(49,114-Y,10,0); 
+   1936                V_line(58,114-Y,10,0); 
+   1937                podswietl=1;
+   1938          
+   1939                DownAction=1;
+   1940                AnsDown=0xFF;
+   1941                
+   1942                if ((!(AT91C_IFLASH_MEM->Config.SoundOff)) && (Xdown==0)) {
+   1943                  ButtonBipCounter=g_counter+8;
+   1944                    AT91C_BASE_PIOA->PIO_SODR =SpeakerPin;
+   1945                  } 
+   1946                Xdown=1;
+   1947                
+   1948              }
+   1949            
+   1950              
+   1951              if ((FormStyle==0) && (X_up>46) && (X_up<63) && (Y_up>112-Y) && (Y_up<127-Y))                    //"X"
+   1952              {
+   1953                RowsPoz=0;
+   1954                ans = -1;
+   1955                      if ((!(AT91C_IFLASH_MEM->Config.SoundOff)) && (Xdown==1)) 
+   1956                      {
+   1957                        ButtonBipCounter=g_counter+8;
+   1958                        AT91C_BASE_PIOA->PIO_SODR =SpeakerPin;
+   1959                      } 
+   1960                      Xdown=0;
+   1961              }  
+   1962          
+   1963              
+   1964              if (Rows>0)
+   1965              {
+   1966          
+   1967          
+   1968              if ((Rows>7) && (RowWith>13)) Rows=6;
+   1969              if ((Rows>8) && (RowWith<=13)) Rows=7;
+   1970          
+   1971            //zdarzenie typu down
+   1972              if ((X_down>FormStyle) && (X_down<63-FormStyle) && (Y_down>127-(17+(Rows*RowWith))-Y) && (Y_down<127-(17)-Y) && (RowWith))   
+   1973              {
+   1974                char Y_down_tmp=127-Y_down;
+   1975                MenuPaint();
+   1976                H_line(2+FormStyle,127-(  (((Y_down_tmp-18-Y) / RowWith)*RowWith)    +18+Y)-1,61-2*FormStyle,1);
+   1977                H_line(2+FormStyle,127-(  (((Y_down_tmp-18-Y) / RowWith)*RowWith)    +18+Y)-(RowWith-1),61-2*FormStyle,1);
+   1978                V_line(1+FormStyle,127-(  (((Y_down_tmp-18-Y) / RowWith)*RowWith)    +18+Y)-(RowWith-1),RowWith-1,1);
+   1979                V_line(61-FormStyle,127-(  (((Y_down_tmp-18-Y) / RowWith)*RowWith)    +18+Y)-(RowWith-2),RowWith-3,1);
+   1980                podswietl=1;
+   1981                DownAction=1;
+   1982                
+   1983                DownAction=1;
+   1984                AnsDown=((Y_down_tmp-18-Y) / RowWith)+1;
+   1985                
+   1986                //dzwiêk przyciœniêcia
+   1987                    static char LastAnsD=-1;
+   1988                    if ((AnsDown>=0) && (AnsDown!=LastAnsD))
+   1989                    {
+   1990                      if ((!(AT91C_IFLASH_MEM->Config.SoundOff))) {
+   1991                          ButtonBipCounter=g_counter+8;
+   1992                          AT91C_BASE_PIOA->PIO_SODR =SpeakerPin;
+   1993                          
+   1994                        } 
+   1995                    }
+   1996                    LastAnsD=AnsDown;
+   1997                    Xdown=0;
+   1998                
+   1999           }
+   2000              
+   2001          
+   2002          
+   2003              
+   2004              
+   2005              
+   2006              if ((RowWith) &(X_up>3) && (X_up<59) && (Y_up<127-(  (((Y_up_tmp-18-Y) / RowWith)*RowWith)    +18+Y)-1) && (Y_up>127-(  (((Y_up_tmp-18-Y) / RowWith)*RowWith)    +18+Y)-(RowWith-1)))                        //ustawienia
+   2007              {
+   2008                ans=RowsPoz+((Y_up_tmp-18-Y) / RowWith)+1;
+   2009               // MenuPaint();
+   2010              }
+   2011              
+   2012              if ((FormStyle==0) && (X_up>46) && (X_up<63) && (Y_up>112-Y) && (Y_up<127-Y))                    //"X"
+   2013              {
+   2014                ans = -1;
+   2015             
+   2016              }   
+   2017              if ((podswietl==0)) MenuPaint();
+   2018              
+   2019              if (ans>RowsPoz+Rows) ans=0;  
+   2020           
+   2021          
+   2022              if ((AnsDown>0) && (SelectRow!=AnsDown))
+   2023              {
+   2024                 SelectRow=AnsDown;
+   2025                  
+   2026              }else if (ans<0)
+   2027              {
+   2028                SelectRow=0;
+   2029              }
+   2030              
+   2031              char Button1Action=0;
+   2032              char Button2Action=0;
+   2033              if (RealRows!=Rows) //je¿eli wiêcej pozycji ni¿ na ekranie
+   2034              {
+   2035                 char LabelButt1[2], LabelButt2[2];
+   2036                 LabelButt1[1]=0; LabelButt2[1]=0;
+   2037                 LabelButt1[0]=30; LabelButt2[0]=31;
+   2038                 //LabelButt1 -góra, LabelButt2-dó³
+   2039                 if (RowsPoz==0)
+   2040                 {
+   2041                    Button2Action=Button(LabelButt2,0,127-(18+(Rows*RowWith))-1-Y-15,64,16); //(etykieta char poz_X , char poz_Y ,char width, char height) 
+   2042                 } 
+   2043                 if ((RowsPoz>0) && (RowsPoz<RealRows-Rows))
+   2044                 {
+   2045                   Button1Action=Button(LabelButt1,0,127-(18+(Rows*RowWith))-1-Y-15,32,16); //(etykieta ,char poz_X , char poz_Y ,char width, char height)
+   2046                   Button2Action=Button(LabelButt2,32,127-(18+(Rows*RowWith))-1-Y-15,32,16); //(etykieta char poz_X , char poz_Y ,char width, char height) 
+   2047                 }
+   2048                 if ((RowsPoz>0) && (RowsPoz>=RealRows-Rows))
+   2049                 {
+   2050                   Button1Action=Button(LabelButt1,0,127-(18+(Rows*RowWith))-1-Y-15,64,16); //(etykieta ,char poz_X , char poz_Y ,char width, char height)
+   2051                 }
+   2052              
+   2053                 if (Button1Action==1) {RowsPoz--;  MenuPaint(); }
+   2054                 if (Button2Action==1) {RowsPoz++;  MenuPaint(); }
+   2055              }
+   2056              
+   2057              }
+   2058              
+   2059             // if (ans>0) RowsPoz=0;
+   2060              static char LastAns=-1;
+   2061              if ((ans>=0) && (ans!=LastAns))
+   2062              {
+   2063                Xdown=0;
+   2064                if ((!(AT91C_IFLASH_MEM->Config.SoundOff))) {
+   2065                  ButtonBipCounter=g_counter+8;
+   2066                    AT91C_BASE_PIOA->PIO_SODR =SpeakerPin;
+   2067                  } 
+   2068              }
+   2069              
+   2070              if ((X_up>0)|| (Y_up>0)) Xdown=0;
+   2071              LastAns=ans;
+   2072              return ans;
+   2073            
+   2074              
+   2075              
+   2076          }//_______________________ Koniec funkcji List_Event __________________________
+   2077          
+   2078          
+   2079          
+   2080          
+   2081          //*-----------------------------------------------------------------------------
+   2082          //* Nazwa funkcji :    ScrollList_Paint
+   2083          //* Funkcja rysowania listy
+   2084          //*-----------------------------------------------------------------------------
+   2085          //* name[7]   -  Nazwa listy
+   2086          //* Size_scroll  -  wielkosc listy
+   2087          //* poz   -1 -  poziome linie rozdzielaj¹ce
+   2088          
+   2089          //*-----------------------------------------------------------------------------
+   2090          
+   2091          void ScrollList_Paint(char name[15], int Size_scroll, int *_Suw_poz, char poz)
+   2092              {
+   2093          
+   2094                 char ekran_tab[8][128] = {
+   2095                            {254,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,255,3,253,245,237,221,61,61,221,237,245,253,3,254},
+   2096                            {255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,240,239,235,237,238,239,239,238,237,235,239,240,255},
+   2097                            {255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255},
+   2098                            {255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255},
+   2099                            {255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255},
+   2100                            {255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255},
+   2101                            {255,96,32,32,32,32,32,32,32,32,32,32,32,32,32,32,224,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,160,96,224,32,32,32,32,32,32,32,32,32,32,32,32,32,32,96,255,255,255,255,255,255,255,255,255,255,255,255,255,255},
+   2102                            {127,192,128,128,128,128,132,142,159,155,128,128,128,128,128,128,255,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,170,213,255,128,128,128,128,155,159,142,132,128,128,128,128,128,128,192,255,255,255,255,255,255,255,255,255,255,255,255,127,63},
+   2103                            };
+   2104               
+   2105                 
+   2106                  char suwak[14] = {128,255,255,255,255,224,238,238,224,255,255,255,255,128};
+   2107                  
+   2108                  int Suw_poz_tmp;
+   2109                  //rysowanie wskaŸnika po³o¿enia
+   2110                  if (Size_scroll>50)
+   2111                  {
+   2112                      Suw_poz_tmp=98-(((*_Suw_poz)*67)/Size_scroll)-14;
+   2113              
+   2114                      for (int i=(Suw_poz_tmp); i<=Suw_poz_tmp+13; i++)
+   2115                      {
+   2116                        ekran_tab[7][i]=suwak[i-Suw_poz_tmp];
+   2117                      }
+   2118                  }
+   2119                  
+   2120                  CopyToCanvas(ekran_tab);
+   2121                  
+   2122                  Label(name,0,15,116,15,46,0,127,1);  //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2123                  if ((poz) && (Size_scroll>50))
+   2124                  {
+   2125                    H_line(54,Suw_poz_tmp,9,0);
+   2126                    H_line(54,Suw_poz_tmp+13,9,0);
+   2127                    V_line(54,Suw_poz_tmp+1,12,1); 
+   2128                    V_line(55,Suw_poz_tmp+1,12,1); 
+   2129                  }
+   2130              
+   2131              }//_________________________________________________________________________
+   2132          
+   2133          
+   2134          
+   2135          
+   2136          
+   2137          //*-----------------------------------------------------------------------------
+   2138          //* Nazwa funkcji :    Ask_Paint
+   2139          //* Funkcja rysowania listy
+   2140          //*-----------------------------------------------------------------------------
+   2141          //* name[7]   -  Nazwa listy
+   2142          //* p1...p2   - nazwy kolejnych pól
+   2143          //*-----------------------------------------------------------------------------
+   2144          void Ask_Paint(char name[10], char p1[15], char p2[15])
+   2145          {
+   2146          
+   2147          
+   2148              List_Paint(name,1,47,25,0,3," "); //(char name[7], char Rows, char RowWith, char Y, char FormStyle, char back, char p1[12], char p2[12] , char p3[12] , char p4[12] , char p5[12] , char p6[12] , char p7[12] , char p8[12])
+   2149                 
+   2150              
+   2151             if (p1!="") Label(p1,2,2,71,15,59,0,127,0);  //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2152             if (p2!="")  Label(p2,2,2,62,15,59,0,127,0);  //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2153              Label(" ",2,2,53,15,59,0,127,0);  //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2154          
+   2155          
+   2156              
+   2157              char ekran_tab[8][15] = {
+   2158                            {249,13,245,245,245,245,245,245,245,245,245,245,245,13,249},
+   2159                            {255,0,255,255,119,55,55,87,103,103,119,255,255,0,255},
+   2160                            {255,0,255,255,199,187,187,187,187,187,199,255,255,0,255},
+   2161                            {63,96,95,95,95,95,95,95,95,95,95,95,95,96,63},
+   2162                            {254,3,253,253,253,253,253,253,253,253,253,253,253,3,254},
+   2163                            {255,0,255,255,227,221,221,221,221,221,227,255,255,0,255},
+   2164                            {255,0,255,255,238,246,250,252,250,246,238,255,255,0,255},
+   2165                            {207,216,215,215,215,215,215,215,215,215,215,215,215,216,207},
+   2166                            };
+   2167              
+   2168              CopyToCanvasPoint((char *)ekran_tab,0,40,64,15); 
+   2169              H_line(2,57,59,1); 
+   2170              
+   2171              
+   2172          }//_______________________ Koniec funkcji Ask_Paint __________________________
+   2173          
+   2174          
+   2175          
+   2176          
+   2177          //*-----------------------------------------------------------------------------
+   2178          //* Nazwa funkcji :    List_Event
+   2179          //* Funkcja rysowania listy
+   2180          //*-----------------------------------------------------------------------------
+   2181          //* name[7]   -  Nazwa listy
+   2182          //* Rows      -  ilosc wierszy
+   2183          //* RowWith   -  szerokosc wiersza
+   2184          //* Y         -  odsuniecie od górnej krawêdzi
+   2185          //* p1...p8   - nazwy kolejnych pól
+   2186          //*-----------------------------------------------------------------------------
+   2187          int Ask_Event(int X_up, int Y_up, int X_down, int Y_down)
+   2188          {
+   2189            char Y=25;
+   2190            
+   2191            char podswietl=0;
+   2192            int ans = 0;
+   2193            
+   2194          
+   2195          
+   2196          
+   2197            
+   2198            //zdarzenie typu down 
+   2199              for (char i=0; i<=30; i=i+30)
+   2200              {
+   2201            
+   2202                  if ((X_down>2+i) && (X_down<51+i) &&  (Y_down>38) && (Y_down<55))   
+   2203                  {  
+   2204                    //MenuPaint();
+   2205                    H_line(4+i,41,26,1);
+   2206                    H_line(4+i,53,26,1);
+   2207                    V_line(3+i,41,12,1);
+   2208                    V_line(29+i,42,13,1);
+   2209                    podswietl=1;
+   2210                  }
+   2211              }
+   2212          
+   2213           
+   2214            //zdarzenie typu down "X"
+   2215              if ((X_down>46) && (X_down<63) && (Y_down>112-Y) && (Y_down<127-Y))    //"X"
+   2216              {
+   2217                //MenuPaint();
+   2218                H_line(49,114-Y,10,0);
+   2219                H_line(49,123-Y,10,0); 
+   2220                V_line(49,114-Y,10,0); 
+   2221                V_line(58,114-Y,10,0); 
+   2222                podswietl=1;
+   2223              }
+   2224            
+   2225              
+   2226              if ((X_up>46) && (X_up<63) && (Y_up>112-Y) && (Y_up<127-Y))                    //"X"
+   2227              {
+   2228                ans = -1;
+   2229              }  
+   2230          
+   2231              
+   2232                //zdarzenie typu down 
+   2233              for (char i=0; i<=1; i++)
+   2234              {
+   2235                  if ((X_up>2+(i*30)) && (X_up<51+(i*30)) &&  (Y_up>38) && (Y_up<55))   
+   2236                  {  
+   2237                     ans=i+1;
+   2238                  }
+   2239              }
+   2240          
+   2241             // if ((X_down>=0) && (X_down<64) && (podswietl==0)) {MenuPaint();}
+   2242          
+   2243          
+   2244              return ans;
+   2245            
+   2246          }//_______________________ Koniec funkcji List_Event __________________________
+   2247          
+   2248          
+   2249          
+   2250          
+   2251          //*-----------------------------------------------------------------------------
+   2252          //* Nazwa funkcji :    Info_Paint
+   2253          //* Funkcja info
+   2254          //*-----------------------------------------------------------------------------
+   2255          //* p1...p2   - nazwy kolejnych pól
+   2256          //*-----------------------------------------------------------------------------
+   2257          void Message(char p1[15], char p2[15], int MenuLevelJump)
+   2258          {
+   2259          
+   2260          
+   2261              List_Paint("Info ",1,47,25,0,3,0,0,0,0,0,0,0,0); //(char name[7], char Rows, char RowWith, char Y, char FormStyle, char back, char p1[12], char p2[12] , char p3[12] , char p4[12] , char p5[12] , char p6[12] , char p7[12] , char p8[12])
+   2262                 
+   2263              
+   2264             if (p1!="")  Label(p1,2,2,71,15,59,0,127,0);  //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2265             if (p2!="")  Label(p2,2,2,62,15,59,0,127,0);  //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2266              Label(" ",2,2,53,15,59,0,127,0);  //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2267              H_line(2,57,59,1); 
+   2268             
+   2269              if (Button("Ok ",12,40,40,15))
+   2270              {
+   2271                MenuLevel=MenuLevelJump;
+   2272                MenuPaint();
+   2273              }
+   2274              
+   2275              
+   2276          }//_______________________ Koniec funkcji Info_Paint __________________________
+   2277          
+   2278          
+   2279          
+   2280          
+   2281          //*-----------------------------------------------------------------------------
+   2282          //* Nazwa funkcji :    List_Paint
+   2283          //* Funkcja rysowania listy
+   2284          //*-----------------------------------------------------------------------------
+   2285          //* name[7]   -  Nazwa listy
+   2286          //* Rows      -  ilosc wierszy
+   2287          //* RowWith   -  szerokosc wiersza
+   2288          //* Y         -  odsuniecie od górnej krawêdzi
+   2289          //* FormStyle -  rodzaj formy 0-zwyk³a 1..-coraz mniejsze
+   2290          //* Algin     - wyrównanie 0-pion œrodek, poziom lowo, 1-pion góra, poziom lowo, 2 pion dó³, poziom lowo, 3-pion œrodek, poziom wyœrodkowanie
+   2291          //* p1...p8   - nazwy kolejnych pól
+   2292          //*-----------------------------------------------------------------------------
+   2293          void Number_Paint(char name[10], char p1[1], char p2[1])
+   2294          {
+   2295           
+   2296            CleanCanvas();
+   2297          
+   2298            char ekran_tab[8][128] = {
+   2299                            {254,255,3,249,5,245,245,245,245,245,245,245,245,245,245,245,245,245,245,5,249,1,1,249,5,245,245,245,245,245,245,245,245,245,245,245,245,245,245,5,249,1,1,249,5,245,245,245,245,245,245,245,245,245,245,245,245,245,245,5,249,1,1,249,5,245,245,245,245,245,245,245,245,245,245,245,245,245,245,5,249,3,255,255,255,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,255,3,255,255,255,255,255,255,255,255,255,255,255,254,252,248},
+   2300                            {255,255,0,255,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255,0,255,0,0,255,0,255,255,249,249,249,243,243,243,231,231,207,192,255,255,0,255,0,0,255,0,255,255,231,231,192,230,229,229,227,227,231,231,255,255,0,255,0,0,255,0,255,255,231,231,231,231,231,231,229,225,227,231,255,255,0,255,0,255,255,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255},
+   2301                            {255,255,0,7,136,139,139,139,139,139,139,139,139,139,139,139,139,139,139,136,7,0,0,7,136,139,139,139,139,139,139,139,139,139,139,139,139,139,139,136,7,0,0,7,136,139,139,139,139,139,139,139,139,139,139,139,139,139,139,136,7,0,0,7,136,139,139,139,139,139,139,139,139,139,139,139,139,139,139,136,7,0,255,255,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255},
+   2302                            {255,255,0,255,0,254,254,62,158,158,158,158,158,158,158,158,62,254,254,0,255,0,0,255,0,254,254,62,158,158,158,158,62,158,158,158,62,254,254,0,255,0,0,255,0,254,254,62,158,254,254,254,158,30,158,62,62,254,254,0,255,0,0,255,0,254,254,30,158,62,126,126,254,254,254,158,62,254,254,0,255,0,255,255,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255},
+   2303                            {255,255,0,255,0,127,127,124,121,121,121,121,121,121,121,121,124,127,127,0,255,0,0,255,0,127,127,124,121,121,121,121,124,121,121,121,124,127,127,0,255,0,0,255,0,127,127,124,121,121,121,121,121,124,127,127,120,127,127,0,255,0,0,255,0,127,127,120,127,127,126,124,124,121,121,121,124,127,127,0,255,0,255,255,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255},
+   2304                            {255,255,0,224,17,209,209,209,209,209,209,209,209,209,209,209,209,209,209,17,224,0,0,224,17,209,209,209,209,209,209,209,209,209,209,209,209,209,209,17,224,0,0,224,17,209,209,209,209,209,209,209,209,209,209,209,209,209,209,17,224,0,0,224,17,209,209,209,209,209,209,209,209,209,209,209,209,209,209,17,224,0,255,255,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,192,127,127,127,127,127,127,127,127,127,127,127,127,255,255},
+   2305                            {255,255,0,255,0,255,255,255,255,255,255,255,255,255,255,255,255,255,255,0,255,0,0,255,0,255,255,199,179,63,63,7,51,51,51,51,135,255,255,0,255,0,0,255,0,255,255,135,51,51,49,49,129,241,243,55,143,255,255,0,255,0,0,255,0,255,255,135,51,63,63,63,143,63,63,51,135,255,255,0,255,0,255,255,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,254,255,251,247,111,159,159,111,247,251,255,254,0,255},
+   2306                            {127,255,192,159,160,175,175,175,175,175,175,175,175,175,175,175,175,175,175,160,159,128,128,159,160,175,175,175,175,175,175,175,175,175,175,175,175,175,175,160,159,128,128,159,160,175,175,175,175,175,175,175,175,175,175,175,175,175,175,160,159,128,128,159,160,175,175,175,175,175,175,175,175,175,175,175,175,175,175,160,159,192,255,255,255,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,192,255,240,231,239,237,238,239,239,239,239,238,237,239,103,48,31},
+   2307                            };
+   2308              
+   2309              CopyToCanvas(ekran_tab);
+   2310              Label(name,0,2,116,10,42,0,127,1);  //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2311              
+   2312           
+   2313              
+   2314          
+   2315          
+   2316              Label(p1,0,9,7,2,7,0,127,1);      //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2317              Label(p2,0,51,7,2,7,0,127,1);    //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2318              
+   2319          }//_______________________ Koniec funkcji List_Paint __________________________
+   2320          
+   2321          
+   2322          
+   2323          
+   2324          
+   2325          //*-----------------------------------------------------------------------------
+   2326          //* Nazwa funkcji :    Number_Event
+   2327          //* Funkcja rysowania listy
+   2328          //*-----------------------------------------------------------------------------
+   2329          //* name[7]   -  Nazwa listy
+   2330          //* Rows      -  ilosc wierszy
+   2331          //* RowWith   -  szerokosc wiersza
+   2332          //* Y         -  odsuniecie od górnej krawêdzi
+   2333          //* p1...p8   - nazwy kolejnych pól
+   2334          //*-----------------------------------------------------------------------------
+   2335          int Number_Event(int X_up, int Y_up, int X_down, int Y_down)
+   2336          {
+   2337          
+   2338            char podswietl=0;
+   2339            int ans = 0;
+   2340            char kol = 0;
+   2341            char row = 0;
+   2342            
+   2343          
+   2344          
+   2345            //zdarzenie typu down (najechanie na przycisk)
+   2346            if ((X_down>1) && (X_down<62) && (Y_down>3) && (Y_down<81) && (X_down!=21) && (X_down!=42) && (Y_down!=61) && (Y_down!=41) && (Y_down!=21) )   
+   2347              {
+   2348                kol = (((X_down-1)/21))*21;
+   2349                row = (((Y_down-3)/20))*20;
+   2350                
+   2351                MenuPaint();   
+   2352                
+   2353                H_line(kol+3, row+4, 16,1);
+   2354                H_line(kol+3, row+19, 16,1);
+   2355                V_line(kol+3, row+4, 16,1);
+   2356                V_line(kol+18, row+4, 16,1);
+   2357             
+   2358                podswietl=1;
+   2359              }
+   2360           
+   2361          
+   2362              
+   2363            //zdarzenie typu down "X"
+   2364              if ((X_down>46) && (X_down<63) && (Y_down>112) && (Y_down<127))    //"X"
+   2365              {
+   2366                MenuPaint();
+   2367                H_line(49,115,10,0);
+   2368                H_line(49,124,10,0); 
+   2369                V_line(49,115,10,0); 
+   2370                V_line(58,115,10,0); 
+   2371                podswietl=1;
+   2372              }
+   2373             
+   2374            
+   2375             //zdarzenie typu up (naciœniêcie na "X")
+   2376              if ( (X_up>46) && (X_up<63) && (Y_up>112) && (Y_up<127))                    //"X"
+   2377              {
+   2378                ans = -1;
+   2379              }  
+   2380            
+   2381            
+   2382              if ((X_up>1) && (X_up<62) && (Y_up>3) && (Y_up<81) && (X_up!=21) && (X_up!=42) && (Y_up!=61) && (Y_up!=41) && (Y_up!=21) )   
+   2383              {
+   2384                kol = (((X_up-1)/21)+1);
+   2385                row = 3-(((Y_up-3)/20));
+   2386          
+   2387                ans=(row*3)+kol;
+   2388                
+   2389                if ((!(AT91C_IFLASH_MEM->Config.SoundOff)) && (AlarmOn==0)) {
+   2390                  ButtonBipCounter=g_counter+8;
+   2391                    AT91C_BASE_PIOA->PIO_SODR =SpeakerPin;
+   2392                  } 
+   2393              }
+   2394          
+   2395            
+   2396              if ((X_down>=0) && (X_down<64) && (podswietl==0)) MenuPaint();
+   2397          
+   2398           
+   2399          
+   2400              return ans;
+   2401            
+   2402              
+   2403          }//_______________________ Koniec funkcji List_Event __________________________
+   2404          
+   2405          
+   2406          
+   2407          
+   2408          
+   2409          
+   2410          
+   2411          
+   2412          
+   2413          //*-----------------------------------------------------------------------------
+   2414          //* Nazwa funkcji :    Message_Paint
+   2415          //* Funkcja wiadomosci
+   2416          //*-----------------------------------------------------------------------------
+   2417          //* algin    - wyrównanie tekstu
+   2418          //* p1..p3   -   napisy kolejnych lini
+   2419          
+   2420          //*-----------------------------------------------------------------------------
+   2421          extern  char g_Message;
+   2422          void Message_Paint(char algin, char p1[15], char p2[15], char p3[15],char p4[15],char p5[15])
+   2423          {
+   2424            g_Message=1;
+   2425            g_info=1;
+   2426            
+   2427            char ekran_tab[8][128] = {
+   2428                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,1,253,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,229,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,253,1,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   2429                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,0,0,248,12,244,244,244,244,244,244,244,244,244,244,12,248,0,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   2430                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,0,0,255,0,255,255,255,255,255,255,255,255,255,255,0,255,0,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   2431                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,0,0,255,0,255,255,199,187,187,187,187,187,199,255,0,255,0,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   2432                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,0,0,255,0,255,255,221,237,245,249,245,237,221,255,0,255,0,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   2433                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,0,0,255,0,255,255,255,255,255,255,255,255,255,255,0,255,0,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   2434                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,0,0,63,96,95,95,95,95,95,95,95,95,95,95,96,63,0,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   2435                            {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,128,191,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,167,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,160,191,128,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+   2436                            };
+   2437              
+   2438              CopyToCanvas(ekran_tab);
+   2439          
+   2440          
+   2441              if (p1!="") Label(p1,algin,4,90,15,56,0,127,0);      //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2442              if (p2!="") Label(p2,algin,4,90-9,15,56,0,127,0);    //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2443              if (p3!="") Label(p3,algin,4,90-18,15,56,0,127,0);    //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2444              if (p4!="") Label(p4,algin,4,90-27,15,56,0,127,0);    //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2445              if (p5!="") Label(p5,algin,4,90-36,15,56,0,127,0);    //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, char negatyw) 
+   2446              
+   2447              
+   2448          }//_______________________ Koniec funkcji Mesage_Paint __________________________
+   2449          
+   2450          
+   2451          
+   2452          
+   2453          
+   2454          
+   2455          
+   2456          //*-----------------------------------------------------------------------------
+   2457          //* Nazwa funkcji :    FloToStr
+   2458          //* Funkcja konwersji zmiennej float na ³añcuch string   
+   2459          //*-----------------------------------------------------------------------------
+   2460          //*  Value   - zmienna typu float
+   2461          //*  Vstring - tablica znaków
+   2462          //*  ill     - liloœæ znaków (max=9) , ostatnia wartoœæ zapisanego ³añcucha to zawsze 0
+   2463          //*  Funkcja zwraca d³ugoœæ ³añcucha
+   2464          //*-----------------------------------------------------------------------------
+   2465          char FloToStr (float Value, char Vstring[8],char ill) 
+   2466          { 
+   2467            float str_tmp[15]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};        
+   2468             int min;
+   2469             ill-=1;
+   2470            
+   2471             for (char i=0; i<=7; i++)  Vstring[i]=0;
+   2472             for (char i=0; i<=14; i++)  str_tmp[i]=0;
+   2473             
+   2474             min=0;
+   2475             if (Value<0)
+   2476             {
+   2477               Value=Value*(-1); 
+   2478               min=1;
+   2479               ill-=1;
+   2480             }
+   2481             
+   2482           
+   2483             int E_tmp=0;
+   2484             int ill_tmp=0;
+   2485             int ill_cor=0;
+   2486             
+   2487             
+   2488             if (Value==0)
+   2489             {
+   2490               Vstring[0]=48;
+   2491               ill_tmp=1;
+   2492             }
+   2493             else
+   2494             {
+   2495              if (Value>=1000000000000) 
+   2496              {
+   2497                 Vstring[0]=0x4C; //L
+   2498                 Vstring[1]=0x4F; //O
+   2499                 Vstring[2]=0x4E; //N
+   2500                 Vstring[3]=0x47; //G
+   2501                 Vstring[4]=0; Vstring[5]=0; Vstring[6]=0; Vstring[7]=0;
+   2502              }  
+   2503              else 
+   2504              {  
+   2505                long long int __Value=(long long int)(Value*1000000);
+   2506                long long int __ValueRST=__Value;
+   2507                long long int NastDiel=0;
+   2508               
+   2509                 if (Value>=100000000000 ) {if (E_tmp==0) E_tmp=12;     if (ill_tmp<ill)                   { ill_tmp++;  str_tmp[ill_tmp]=48+__Value    / 100000000000000000; __ValueRST=__Value    % 100000000000000000; }};
+   2510                 if (Value>=10000000000  ) {if (E_tmp==0) E_tmp=11;     if (ill_tmp<ill)                   { ill_tmp++;  str_tmp[ill_tmp]=48+__ValueRST / 10000000000000000 ; __ValueRST=__ValueRST % 10000000000000000 ; }};
+   2511                 if (Value>=1000000000   ) {if (E_tmp==0) E_tmp=10;     if (ill_tmp<ill)                   { ill_tmp++;  str_tmp[ill_tmp]=48+__ValueRST / 1000000000000000  ; __ValueRST=__ValueRST % 1000000000000000  ; }};
+   2512                 if (Value>=100000000    ) {if (E_tmp==0) E_tmp=9;      if (ill_tmp<ill)                   { ill_tmp++;  str_tmp[ill_tmp]=48+__ValueRST / 100000000000000   ; __ValueRST=__ValueRST % 100000000000000   ; }};
+   2513                 if (Value>=10000000     ) {if (E_tmp==0) E_tmp=8;      if (ill_tmp<ill)                   { ill_tmp++;  str_tmp[ill_tmp]=48+__ValueRST / 10000000000000    ; __ValueRST=__ValueRST % 10000000000000    ; }};
+   2514                 if (Value>=1000000      ) {if (E_tmp==0) E_tmp=7;      if (ill_tmp<ill)                   { ill_tmp++;  str_tmp[ill_tmp]=48+__ValueRST / 1000000000000     ; __ValueRST=__ValueRST % 1000000000000     ; NastDiel=100000000000; }};
+   2515                 if (Value>=100000       ) {if (E_tmp==0) E_tmp=6;      if (ill_tmp<ill)                   { ill_tmp++;  str_tmp[ill_tmp]=48+__ValueRST / 100000000000      ; __ValueRST=__ValueRST % 100000000000      ; NastDiel=10000000000 ; }};
+   2516                 if (Value>=10000        ) {if (E_tmp==0) E_tmp=5;      if (ill_tmp<ill) { ill_tmp++;  str_tmp[ill_tmp]=48+__ValueRST / 10000000000       ; __ValueRST=__ValueRST % 10000000000       ; NastDiel=1000000000  ; }};
+   2517                 if (Value>=1000         ) {if (E_tmp==0) E_tmp=4;      if (ill_tmp<ill) { ill_tmp++;  str_tmp[ill_tmp]=48+__ValueRST / 1000000000        ; __ValueRST=__ValueRST % 1000000000        ; NastDiel=100000000   ; }};
+   2518                 if (Value>=100          ) {if (E_tmp==0) E_tmp=3;      if (ill_tmp<ill) { ill_tmp++;  str_tmp[ill_tmp]=48+__ValueRST / 100000000         ; __ValueRST=__ValueRST % 100000000         ; NastDiel=10000000    ; }};
+   2519                 if (Value>=10           ) {if (E_tmp==0) E_tmp=2;      if (ill_tmp<ill) { ill_tmp++;  str_tmp[ill_tmp]=48+__ValueRST / 10000000          ; __ValueRST=__ValueRST % 10000000          ; NastDiel=1000000     ; }};
+   2520                 if (Value>=1            ) {if (E_tmp==0) E_tmp=1;      if (ill_tmp<ill) { ill_tmp++;  str_tmp[ill_tmp]=48+__ValueRST / 1000000           ; __ValueRST=__ValueRST % 1000000           ; NastDiel=100000      ; }};
+   2521                 if (Value>=0.09999      ) {if (E_tmp==0) E_tmp=100;    if ((ill_tmp<ill)&&(__ValueRST>0)) { ill_tmp++;  str_tmp[ill_tmp]=0x2E; ill_tmp++;  str_tmp[ill_tmp]=48+__ValueRST / 100000            ; __ValueRST=__ValueRST % 100000            ; NastDiel=10000; }};
+   2522                 if (Value>=0.009999     ) {if (E_tmp==0) E_tmp=101;    if ((ill_tmp<ill)&&(__ValueRST>0)) { ill_tmp++;  str_tmp[ill_tmp]=48+(__ValueRST / 10000)           ; __ValueRST=__ValueRST % 10000             ; NastDiel=1000        ; }};
+   2523                 if (Value>=0.0009999    ) {if (E_tmp==0) E_tmp=102;    if ((ill_tmp<ill)&&(__ValueRST>0)) { ill_tmp++;  str_tmp[ill_tmp]=48+(__ValueRST / 1000)            ; __ValueRST=__ValueRST % 1000              ; NastDiel=100         ; }};
+   2524                 if (Value>=0.00009999   ) {if (E_tmp==0) E_tmp=103;    if ((ill_tmp<ill)&&(__ValueRST>0)) { ill_tmp++;  str_tmp[ill_tmp]=48+(__ValueRST / 100)             ; __ValueRST=__ValueRST % 100               ; NastDiel=10          ; }};
+   2525                 if (Value>=0.000009999  ) {if (E_tmp==0) E_tmp=104;    if ((ill_tmp<ill)&&(__ValueRST>0)) { ill_tmp++;  str_tmp[ill_tmp]=48+(__ValueRST / 10)              ; __ValueRST=__ValueRST % 10                ; NastDiel=1           ; }};
+   2526                 if (Value>=0.0000009999 ) {if (E_tmp==0) E_tmp=105;    if ((ill_tmp<ill)&&(__ValueRST>0)) { ill_tmp++;  str_tmp[ill_tmp]=48+(__ValueRST / 1)               ; __ValueRST=__ValueRST % 1                 ; NastDiel=0           ; }};
+   2527             
+   2528                 if ((__ValueRST) && (NastDiel))
+   2529                 {
+   2530                   if (((__ValueRST/NastDiel)>5) && (str_tmp[ill_tmp]<57)) { str_tmp[ill_tmp]++; }
+   2531                   if (((__ValueRST/NastDiel)>5) && (str_tmp[ill_tmp]==57)) 
+   2532                      { 
+   2533                        str_tmp[ill_tmp]=0;
+   2534                        ill_cor++;
+   2535                        if ((str_tmp[ill_tmp-1]>53) && (str_tmp[ill_tmp-1]<57) && ((ill_tmp-1)<1)  )
+   2536                          { 
+   2537                            str_tmp[ill_tmp-1]++; 
+   2538                          }
+   2539                          if ((str_tmp[ill_tmp-1]==57) && ((ill_tmp-1)>0)  )
+   2540                          {
+   2541                            ill_cor++;
+   2542                            str_tmp[ill_tmp-1]=0;
+   2543                            
+   2544                              if ((str_tmp[ill_tmp-2]>53) && (str_tmp[ill_tmp-2]<57) && ((ill_tmp-2)<1)  )
+   2545                              { 
+   2546                                str_tmp[ill_tmp-2]++; 
+   2547                              }
+   2548                            
+   2549                              if ((str_tmp[ill_tmp-2]==57) && ((ill_tmp-2)>0)  )
+   2550                              {
+   2551                                  str_tmp[ill_tmp-2]=0;
+   2552                                  if ((str_tmp[ill_tmp-3]>53) && (str_tmp[ill_tmp-3]<57) && ((ill_tmp-3)<1)  )
+   2553                                  { 
+   2554                                    ill_cor++;
+   2555                                    str_tmp[ill_tmp-3]++; 
+   2556                                  }
+   2557                                  if ((str_tmp[ill_tmp-3]==57) && ((ill_tmp-3)>0)  )
+   2558                                  {
+   2559                                      str_tmp[ill_tmp-3]=0;
+   2560                                      if ((str_tmp[ill_tmp-4]>53) && (str_tmp[ill_tmp-4]<57) && ((ill_tmp-4)<1)  )
+   2561                                      { 
+   2562                                        ill_cor++;
+   2563                            
+   2564                                        str_tmp[ill_tmp-4]++; 
+   2565                                      }
+   2566                                      if ((str_tmp[ill_tmp-4]==57) && ((ill_tmp-4)>0)  )
+   2567                                      {
+   2568                                
+   2569                                        if ((str_tmp[ill_tmp-5]>53) && (str_tmp[ill_tmp-5]<57) && ((ill_tmp-5)<1)  )
+   2570                                        { 
+   2571                                          ill_cor++;
+   2572                                          str_tmp[ill_tmp-4]=0;
+   2573                                          str_tmp[ill_tmp-5]++; 
+   2574                                        }
+   2575                      
+   2576                                      }
+   2577                                  }
+   2578                                     
+   2579                              }
+   2580                            
+   2581                            
+   2582                          }
+   2583                      }
+   2584                 }
+   2585                 
+   2586          
+   2587                
+   2588                if (ill_tmp-ill_cor) {ill_tmp-=ill_cor;} else {ill_tmp=0;}
+   2589          
+   2590                
+   2591                if (E_tmp<100) 
+   2592                {
+   2593                  for (int i=0; i<=ill-1; i++) Vstring[min+i]=str_tmp[i+1];  
+   2594                }
+   2595          
+   2596                if ( E_tmp == 100 )
+   2597                  {
+   2598                    Vstring[min+0]=48;
+   2599                    for (int i=1; i<=(E_tmp-100); i++) Vstring[min+i]=48; 
+   2600                    for (int i=1+(E_tmp-100); i<=ill-1; i++) Vstring[min+i]=str_tmp[1+i-(1+(E_tmp-100))];  
+   2601                  }
+   2602                if ( E_tmp > 100 )
+   2603                  {
+   2604                    Vstring[min+0]=48;
+   2605                    Vstring[min+1]=46;
+   2606                    for (int i=2; i<=(1+E_tmp-100); i++) Vstring[min+i]=48; 
+   2607                    for (int i=2+(E_tmp-100); i<=ill-1; i++) {Vstring[min+i]=str_tmp[1+i-(2+(E_tmp-100))];  }
+   2608          
+   2609                  }  
+   2610           
+   2611              
+   2612            
+   2613                if (NastDiel<=10000)
+   2614                {
+   2615                  if ((Vstring[ill-1]==46)) 
+   2616                    {
+   2617                      Vstring[ill-1]=0;
+   2618                    }
+   2619                  if ((Vstring[ill-1]==48)) 
+   2620                    {
+   2621                      Vstring[ill-1]=0;
+   2622                      ill_tmp--;
+   2623                      if (Vstring[ill-2]==46)
+   2624                      {
+   2625                         Vstring[ill-2]=0;
+   2626                         ill_tmp--; 
+   2627                      }
+   2628                      else
+   2629                      {
+   2630                           if ((Vstring[ill-2]==48)) 
+   2631                           {
+   2632                              Vstring[ill-2]=0;
+   2633                              ill_tmp--;
+   2634                              if (Vstring[ill-3]==46)
+   2635                              {
+   2636                                Vstring[ill-3]=0;
+   2637                                ill_tmp--; 
+   2638                              }
+   2639                              else
+   2640                              {
+   2641                                    if ((Vstring[ill-3]==48)) 
+   2642                                    {
+   2643                                      Vstring[ill-3]=0;
+   2644                                      ill_tmp--;
+   2645                                      if (Vstring[ill-4]==46)
+   2646                                      {
+   2647                                        Vstring[ill-4]=0;
+   2648                                        ill_tmp--; 
+   2649                                      }
+   2650                                      else
+   2651                                      {
+   2652                                          if ((Vstring[ill-4]==48)) 
+   2653                                          {
+   2654                                            Vstring[ill-4]=0;
+   2655                                            ill_tmp--;
+   2656                                            if (Vstring[ill-5]==46)
+   2657                                            {
+   2658                                              Vstring[ill-5]=0;
+   2659                                              ill_tmp--; 
+   2660                                            }
+   2661                                            else
+   2662                                            {
+   2663                                                if ((Vstring[ill-5]==48)) 
+   2664                                                {
+   2665                                                  Vstring[ill-5]=0;
+   2666                                                  ill_tmp--;
+   2667                                                  if (Vstring[ill-6]==46)
+   2668                                                  {
+   2669                                                    Vstring[ill-6]=0;
+   2670                                                    ill_tmp--; 
+   2671                                                  }
+   2672                                                  else
+   2673                                                  {  
+   2674                                                    if ((Vstring[ill-6]==48)) 
+   2675                                                    {
+   2676                                                      Vstring[ill-6]=0;
+   2677                                                      ill_tmp--;
+   2678                                                      if (Vstring[ill-7]==46)
+   2679                                                      {
+   2680                                                        Vstring[ill-7]=0;
+   2681                                                        ill_tmp--; 
+   2682                                                      }
+   2683          
+   2684                                                    }
+   2685                                                  }
+   2686                                                 }
+   2687                                          
+   2688                                          
+   2689                         
+   2690                                            }
+   2691                                          }
+   2692                                    
+   2693                         
+   2694                                      }
+   2695                                    }  
+   2696                         
+   2697                              }
+   2698                           }  
+   2699                        
+   2700                         
+   2701                      }
+   2702                  
+   2703                    }
+   2704                  
+   2705                }
+   2706                
+   2707              
+   2708                if ((E_tmp>ill) && (E_tmp<100))
+   2709                {
+   2710                  if ((Vstring[ill-2]>53)&&(Vstring[ill-3]<57)) Vstring[ill-3]++;
+   2711                  Vstring[ill-2]=0x45;
+   2712                  Vstring[ill-1]=48+E_tmp-ill+2;
+   2713                }    
+   2714              
+   2715                if (min)
+   2716                {
+   2717                  Vstring[0]=45; 
+   2718                }
+   2719                
+   2720                ill++;
+   2721                Vstring[ill+1]=0;
+   2722              
+   2723               }
+   2724             }
+   2725          
+   2726               
+   2727             return ill_tmp;
+   2728          
+   2729          
+   2730             
+   2731          }//_______________________ Koniec funkcji konwersji float na string ____________________________
+   2732          
+   2733          
+   2734          
+   2735          
+   2736          
+   2737          
+   2738          //*-----------------------------------------------------------------------------
+   2739          //* Nazwa funkcji :    H_line
+   2740          //* Funkcja rysowania lini poziomej
+   2741          //*-----------------------------------------------------------------------------
+   2742          
+   2743          //*  X          - wspó³¿êdna X zale¿na 
+   2744          //*  Y          - wspó³¿êdna Y do³u napisu
+   2745          //*  length     -d³ugoœæ
+   2746          //*  typ        -0-bia³a 1=ci¹gla, 2=kropkowana, 3=kreskowana 
+   2747          //*-----------------------------------------------------------------------------
+   2748          void H_line (char X, int Y, char lenght, char typ) 
+   2749          { 
+   2750              int kol=0;
+   2751              char bit=0;
+   2752            
+   2753                kol=X/8;
+   2754                bit=X%8;
+   2755                
+   2756                for (int j=1; j<=lenght; j++)
+   2757                {
+   2758                    
+   2759                    if (typ>0) 
+   2760                    {
+   2761                      LCD_Canvas[kol][Y] |= (0x1)<<bit;
+   2762                      if (bit<7) { bit++;} else {bit=0;  kol++; }
+   2763                    }
+   2764                    else
+   2765                    {
+   2766                        
+   2767                        LCD_Canvas[kol][Y] &= ~((0x1)<<bit);
+   2768                      if (bit<7) { bit++;} else {bit=0;  kol++; }
+   2769                      
+   2770                    }
+   2771                   
+   2772                    if ((typ==3) && ((j+1)<=lenght))
+   2773                    {
+   2774                      LCD_Canvas[kol][Y] |= (0x1)<<bit;
+   2775                      if (bit<7) { bit++;} else {bit=0;  kol++;}
+   2776                      j++;
+   2777                    }
+   2778                     if ((typ>=2) && ((j+1)<=lenght))
+   2779                    {
+   2780                      LCD_Canvas[kol][Y] &=~((0x1)<<bit);
+   2781                      if (bit<7) { bit++;} else {bit=0;  kol++;}
+   2782                      j++;
+   2783                    }
+   2784                    
+   2785                }   
+   2786          
+   2787          }//_______________________ Koniec funkcji H_line ____________________________ 
+   2788          
+   2789          
+   2790          
+   2791          
+   2792          
+   2793          
+   2794          
+   2795          //*-----------------------------------------------------------------------------
+   2796          //* Nazwa funkcji :    V_line
+   2797          //* Funkcja rysowania lini pionowej
+   2798          //*-----------------------------------------------------------------------------
+   2799          
+   2800          //*  X          - wspó³¿êdna X zale¿na 
+   2801          //*  Y          - wspó³¿êdna Y do³u napisu
+   2802          //*  length     -d³ugoœæ
+   2803          //*  typ        -0-bia³a 1=ci¹gla, 2=kropkowana, 3=kreskowana 
+   2804          //*-----------------------------------------------------------------------------
+   2805          void V_line (char X, int Y, char lenght, char typ) 
+   2806          { 
+   2807              int kol=0;
+   2808              char bit=0;
+   2809            
+   2810                kol=X/8;
+   2811                bit=X%8;
+   2812                
+   2813                if (typ==1) 
+   2814                {
+   2815                  for (int j=0; j<=lenght-1; j++)
+   2816                  {
+   2817                    LCD_Canvas[kol][Y+j] |= (0x1)<<bit;
+   2818                  }
+   2819                }
+   2820                
+   2821                if (typ==2) 
+   2822                {
+   2823                  char zmiana=0;
+   2824                  for (int j=0; j<=lenght-1; j++)
+   2825                  {
+   2826                    if (zmiana==0)
+   2827                    {
+   2828                      LCD_Canvas[kol][Y+j] |= (0x1)<<bit;
+   2829                      zmiana=1;
+   2830                    }
+   2831                    else
+   2832                    {
+   2833                      LCD_Canvas[kol][Y+j] &= ~((0x1)<<bit);
+   2834                      zmiana=0;
+   2835                    }
+   2836                  }
+   2837                }
+   2838                
+   2839                if (typ==3) 
+   2840                {
+   2841                  char zmiana=0;
+   2842                  for (int j=0; j<=lenght-1; j++)
+   2843                  {
+   2844                    if (zmiana<2)
+   2845                    {
+   2846                      LCD_Canvas[kol][Y+j] |= (0x1)<<bit;
+   2847                      zmiana++;
+   2848                    }
+   2849                    else
+   2850                    {
+   2851                      LCD_Canvas[kol][Y+j] &= ~((0x1)<<bit);
+   2852                      zmiana=0;
+   2853                    }
+   2854                  }
+   2855                }
+   2856                
+   2857                
+   2858                if (typ==0) 
+   2859                {
+   2860                   for (int j=0; j<=lenght-1; j++)
+   2861                    {
+   2862                    LCD_Canvas[kol][Y+j] &= ~((0x1)<<bit);
+   2863                    }
+   2864                  
+   2865                }
+   2866          
+   2867          
+   2868          }//_______________________ Koniec funkcji H_line ____________________________ 
+   2869          
+   2870          
+   2871          
+   2872          long long int ButtonEventTime=0;
+   2873          //*-----------------------------------------------------------------------------
+   2874          //* Nazwa funkcji :    Button
+   2875          //* Uniwersalna funkcja przycisku
+   2876          //*-----------------------------------------------------------------------------
+   2877          //*  Label        - etykieta
+   2878          //*  poz_X   - pozycja lewy róg
+   2879          //*  poz_Y   - pozycja dolny róg
+   2880          //*  width -   szerokoœæ
+   2881          //*  height -  wysokoœæ
+   2882          //*-----------------------------------------------------------------------------
+   2883          long long ButtonBipCounter=0;
+   2884          
+   2885          char Button (char _Label[15], char poz_X , char poz_Y ,char width, char height) 
+   2886          { 
+   2887              char odp =0;
+   2888              char tmpI=0;
+   2889              char tmpF=0;
+   2890              while ((tmpI<=15) && (tmpF==0))
+   2891              {
+   2892                if (_Label[tmpI]==0)
+   2893                {
+   2894                  tmpF=1;
+   2895                }else{
+   2896                  tmpI++;
+   2897                }
+   2898              }
+   2899              static char ButtonDown=0;
+   2900              CleanCanvasArea(poz_X+2, poz_Y+2, width-4, height-4,1);  //(char X, char Y, char X_Lenght, char Y_Lenght, char Type);   
+   2901              Label(_Label,2,poz_X+3,poz_Y+(height/2)-4,tmpI,width-7,1,127,1);  //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, negatyw) 
+   2902           
+   2903          
+   2904          
+   2905              if ( (X_down>poz_X) && (X_down<poz_X+width) && (Y_down>poz_Y+2) && (Y_down<poz_Y+height))
+   2906              {    
+   2907                  H_line(poz_X+2,poz_Y+1,width-4,1); // (char X, int Y, char lenght, char typ) 
+   2908                  H_line(poz_X+2,poz_Y+height-2,width-4,1); // (char X, int Y, char lenght, char typ) 
+   2909                  V_line(poz_X+1,poz_Y+2,height-4,1); // (char X, int Y, char lenght, char typ) 
+   2910                  V_line(poz_X+width-2,poz_Y+2,height-4,1); // (char X, int Y, char lenght, char typ) 
+   2911                  odp=2;
+   2912                  
+   2913                  if ((ButtonDown==0) && (!(AT91C_IFLASH_MEM->Config.SoundOff))) {
+   2914                    AT91C_BASE_PIOA->PIO_SODR =SpeakerPin;
+   2915                    ButtonBipCounter=g_counter+8;
+   2916                  } 
+   2917                  ButtonDown=1;
+   2918              }
+   2919              else 
+   2920              {
+   2921                  
+   2922                
+   2923                 
+   2924                  H_line(poz_X+2,poz_Y+1,width-4,0); // (char X, int Y, char lenght, char typ) 
+   2925                  H_line(poz_X+2,poz_Y+height-2,width-4,0); // (char X, int Y, char lenght, char typ) 
+   2926                  V_line(poz_X+1,poz_Y+2,height-4,0); // (char X, int Y, char lenght, char typ) 
+   2927                  V_line(poz_X+width-2,poz_Y+2,height-4,0); // (char X, int Y, char lenght, char typ)   
+   2928                 
+   2929                  H_line(poz_X+1,poz_Y,width-2,1); // (char X, int Y, char lenght, char typ) 
+   2930                  H_line(poz_X+1,poz_Y+height-1,width-2,1); // (char X, int Y, char lenght, char typ) 
+   2931                  V_line(poz_X,poz_Y+1,height-2,1); // (char X, int Y, char lenght, char typ) 
+   2932                  V_line(poz_X+width-1,poz_Y+1,height-2,1); // (char X, int Y, char lenght, char typ) 
+   2933              
+   2934                  CanvasPixel(poz_X+1, poz_Y+1,1);   //(char X, char Y, char Colour)
+   2935                  CanvasPixel(poz_X+width-2, poz_Y+1,1);   //(char X, char Y, char Colour)
+   2936                  CanvasPixel(poz_X+1, poz_Y+height-2,1);   //(char X, char Y, char Colour)
+   2937                  CanvasPixel(poz_X+width-2, poz_Y+height-2 ,1);   //(char X, char Y, char Colour)
+   2938                  
+   2939                  
+   2940                  if ( (X_up>poz_X) && (X_up<poz_X+width) && (Y_up>poz_Y+2) && (Y_up<poz_Y+height))
+   2941                  {    
+   2942                    odp =1;
+   2943                    ButtonDown=0;
+   2944                  } 
+   2945                    
+   2946                    
+   2947              }
+   2948              
+   2949          
+   2950                 
+   2951                ButtonEventTime=g_counter;
+   2952              
+   2953              return odp;
+   2954              
+   2955          }
+   2956          
+   2957          
+   2958          
+   2959          
+   2960          
+   2961          
+   2962          //*-----------------------------------------------------------------------------
+   2963          //* Nazwa funkcji :    Zone
+   2964          //* Uniwersalna funkcja przycisku strefy (przycisk bia³y)
+   2965          //*-----------------------------------------------------------------------------
+   2966          //*  Label        - etykieta
+   2967          //*  poz_X   - pozycja lewy róg
+   2968          //*  poz_Y   - pozycja dolny róg
+   2969          //*  width -   szerokoœæ
+   2970          //*  height -  wysokoœæ
+   2971          //*  LineType- typ lini 0-bia³a 1=ci¹gla, 2=kropkowana, 3=kreskowana
+   2972          //*-----------------------------------------------------------------------------
+   2973          char Zone (char _Label[15], char poz_X , char poz_Y ,char width, char height, char LineType) 
+   2974          { 
+   2975              char odp =0;
+   2976              char tmpI=0;
+   2977              char tmpF=0;
+   2978              while ((tmpI<=15) && (tmpF==0))
+   2979              {
+   2980                if (_Label[tmpI]==0)
+   2981                {
+   2982                  tmpF=1;
+   2983                }else{
+   2984                  tmpI++;
+   2985                }
+   2986              }
+   2987              
+   2988              //CleanCanvasArea(poz_X+2, poz_Y+2, width-4, height-4,0);  //(char X, char Y, char X_Lenght, char Y_Lenght, char Type);   
+   2989              if (_Label!=0) Label(_Label,2,poz_X+3,poz_Y+(height/2)-4,tmpI,width-7,1,127,0);  //(char *Vstring, char alig, char X, int Y, char maxChar, char clean, char minY, char maxY, negatyw) 
+   2990           
+   2991          
+   2992          
+   2993              if ( (X_down>poz_X) && (X_down<poz_X+width) && (Y_down>poz_Y+2) && (Y_down<poz_Y+height))
+   2994              {    
+   2995                  H_line(poz_X+2,poz_Y+1,width-4,1); // (char X, int Y, char lenght, char typ) 
+   2996                  H_line(poz_X+2,poz_Y+height-2,width-4,1); // (char X, int Y, char lenght, char typ) 
+   2997                  V_line(poz_X+1,poz_Y+2,height-4,1); // (char X, int Y, char lenght, char typ) 
+   2998                  V_line(poz_X+width-2,poz_Y+2,height-4,1); // (char X, int Y, char lenght, char typ) 
+   2999                  odp=2;
+   3000              }
+   3001              else 
+   3002              {
+   3003                  
+   3004              
+   3005                  H_line(poz_X+1,poz_Y,width-2,LineType); // (char X, int Y, char lenght, char typ) 
+   3006                  H_line(poz_X+1,poz_Y+height-1,width-2,LineType); // (char X, int Y, char lenght, char typ) 
+   3007                  V_line(poz_X,poz_Y+1,height-2,LineType); // (char X, int Y, char lenght, char typ) 
+   3008                  V_line(poz_X+width-1,poz_Y+1,height-2,LineType); // (char X, int Y, char lenght, char typ) 
+   3009              
+   3010          
+   3011                  
+   3012                  if ( (X_up>poz_X) && (X_up<poz_X+width) && (Y_up>poz_Y+2) && (Y_up<poz_Y+height))
+   3013                  {    
+   3014                    odp =1;
+   3015                  }
+   3016              }
+   3017              
+   3018          
+   3019                 
+   3020                ButtonEventTime=g_counter;
+   3021              
+   3022              return odp;
+   3023              
+   3024          }
+   3025          
+   3026          
+   3027           
+   3028          
+   3029          
+   3030          //*-----------------------------------------------------------------------------
+   3031          //* Nazwa funkcji :    List_Paint
+   3032          //* Funkcja rysowania listy
+   3033          //*-----------------------------------------------------------------------------
+   3034          //* X1
+   3035          //* Y1
+   3036          //* X2
+   3037          //* Y2
+   3038          //* p - solid
+   3039          //*-----------------------------------------------------------------------------
+   3040          
+   3041          
+   3042          void Rectangle(char X1,char Y1,char Width,char Height,...)
+   3043          {
+   3044            
+   3045           va_list parg; 
+   3046           va_start( parg, Height);// pocz¹tek pracy ze zmienn¹ list¹ parametrów 
+   3047           char SO;
+   3048           SO = va_arg( parg, char);
+   3049           va_end(parg); 
+   3050            
+   3051          
+   3052          
+   3053             H_line(X1,Y1,Width,1);
+   3054             H_line(X1,Y1+Height-1,Width,1);
+   3055             V_line(X1,Y1,Height,1);
+   3056             V_line(X1+Width-1,Y1,Height,1);
+   3057                        
+   3058             //if (SO==1) CleanCanvasArea(X1,Y1,Width,Height,1);
+   3059             
+   3060          }
+   3061           
+   3062           
+   3063          //*-----------------------------------------------------------------------------
+   3064          //* Nazwa funkcji :    CheckLCD
+   3065          //* Funkcja sprawdza kolejne porty LCD
+   3066          //*-----------------------------------------------------------------------------
+   3067          //*-----------------------------------------------------------------------------
+   3068          
+   3069          void CheckLCD(void)
+   3070           {
+   3071             m_pPio->PIO_SODR =  LCD_BUS_MASK;                         // zeruje piny
+   3072           
+   3073             
+   3074             AT91C_BASE_PIOA->PIO_CODR = DI; AT91C_BASE_PIOA->PIO_SODR = DI; 
+   3075             AT91C_BASE_PIOA->PIO_CODR = RW; AT91C_BASE_PIOA->PIO_SODR = RW; 
+   3076             AT91C_BASE_PIOA->PIO_CODR = ENABLE; AT91C_BASE_PIOA->PIO_SODR = ENABLE; 
+   3077             AT91C_BASE_PIOA->PIO_CODR = DB0; AT91C_BASE_PIOA->PIO_SODR = DB0; 
+   3078             AT91C_BASE_PIOA->PIO_CODR = DB1; AT91C_BASE_PIOA->PIO_SODR = DB1; 
+   3079             AT91C_BASE_PIOA->PIO_CODR = DB2; AT91C_BASE_PIOA->PIO_SODR = DB2; 
+   3080             AT91C_BASE_PIOA->PIO_CODR = DB3; AT91C_BASE_PIOA->PIO_SODR = DB3; 
+   3081             AT91C_BASE_PIOA->PIO_CODR = DB4; AT91C_BASE_PIOA->PIO_SODR = DB4; 
+   3082             AT91C_BASE_PIOA->PIO_CODR = DB5; AT91C_BASE_PIOA->PIO_SODR = DB5; 
+   3083             AT91C_BASE_PIOA->PIO_CODR = DB6; AT91C_BASE_PIOA->PIO_SODR = DB6; 
+   3084             AT91C_BASE_PIOA->PIO_CODR = DB7; AT91C_BASE_PIOA->PIO_SODR = DB7; 
+   3085             AT91C_BASE_PIOA->PIO_CODR = CS1; AT91C_BASE_PIOA->PIO_SODR = CS1; 
+   3086             AT91C_BASE_PIOA->PIO_CODR = CS2; AT91C_BASE_PIOA->PIO_SODR = CS2; 
+   3087             AT91C_BASE_PIOA->PIO_CODR = (unsigned long)LightLCD; AT91C_BASE_PIOA->PIO_SODR = (unsigned long)LightLCD; 
+   3088          
+   3089            
+   3090          
+   3091          }//_______________________ Koniec funkcji CheckLCD __________________________
+   3092          
+   3093           
+   3094            _TPoint Up, Down;   
+   3095          
+   3096          #define TouchAmount 4       //iloœæ pamiêtanych punktów dotyku   
+   3097          void GetTouchPoint(signed short *Xd,signed short  *Yd, signed short *Xu, signed short  *Yu)
+   3098          {
+   3099          
+   3100            static _TPoint TouchList[TouchAmount];                                        //lista FIFO wspó³¿êdnych
+   3101          
+   3102          
+   3103            for (char i=1; i<TouchAmount; i++)
+   3104            {
+   3105               TouchList[TouchAmount-i].x=TouchList[TouchAmount-i-1].x;
+   3106               TouchList[TouchAmount-i].y=TouchList[TouchAmount-i-1].y;
+   3107            }
+   3108          
+   3109            Down.x=-1;
+   3110            Down.y=-1;
+   3111            Up.x=-1;
+   3112            Up.y=-1;
+   3113              
+   3114            ReadTP(TouchList); 
+   3115            
+   3116            //je¿eli pomiar ci¹g³y dotkniêtego ekranu 
+   3117            if ((TouchList[0].x>0) && (TouchList[1].x>0) && (TouchList[2].x>0) &&(TouchList[3].x>0))  
+   3118            {
+   3119              Down.x=((TouchList[1].x) + (TouchList[2].x))/2;
+   3120          
+   3121              Down.y=((TouchList[1].y) + (TouchList[2].y))/2;
+   3122            }
+   3123            
+   3124            //je¿eli dotkniêto ekran
+   3125            if ((TouchList[0].x>0) && (TouchList[1].x>0) && (TouchList[2].x>0) &&(TouchList[3].x<=0))  
+   3126            {
+   3127              Down.x=((TouchList[0].x) + (TouchList[1].x))/2;
+   3128          
+   3129              Down.y=((TouchList[0].y) + (TouchList[1].y))/2;
+   3130              TouchList[2].x=Down.x;
+   3131              TouchList[2].x=Down.x;
+   3132            }
+   3133          
+   3134            //je¿eli puszczono ekran
+   3135            if ((TouchList[0].x<=0) && (TouchList[1].x>0) && (TouchList[2].x>0) &&(TouchList[3].x>0))  
+   3136            {
+   3137              Up.x=((TouchList[2].x) + (TouchList[3].x))/2;
+   3138          
+   3139              Up.y=((TouchList[2].y) + (TouchList[3].y))/2;
+   3140            }  
+   3141            
+   3142            if ((Down.x>0) && (Down.y>0))
+   3143            {
+   3144              Down.x=korekta_X.A*Down.x+korekta_X.B;
+   3145              Down.y=korekta_Y.A*Down.y+korekta_Y.B;
+   3146            }
+   3147            
+   3148            if ((Up.x>0) && (Up.y>0))
+   3149            { 
+   3150              Up.x=korekta_X.A*Up.x+korekta_X.B;
+   3151              Up.y=korekta_Y.A*Up.y+korekta_Y.B;
+   3152              /*
+   3153              for (char i=0; i<TouchAmount; i++)
+   3154                {
+   3155                   TouchList[TouchAmount-i].x=0;
+   3156                   TouchList[TouchAmount-i].y=0;
+   3157                   
+   3158                }
+   3159                   Down.x=0;
+   3160                   Down.y=0;
+   3161                   */
+   3162                   
+   3163            }
+   3164            if ((korekta_X.B!=0) && (korekta_Y.B!=0))
+   3165            {
+   3166              if ((Down.x>64) || (Down.y>128)) {Down.x=-1; Down.y=-1;} 
+   3167              if ((Up.x>64) || (Up.y>128)) {Up.x=-1; Up.y=-1;} 
+   3168            }
+   3169            *Xd=Down.x;
+   3170            *Yd=Down.y;
+   3171            *Xu=Up.x;
+   3172            *Yu=Up.y;
+   3173          
+   3174          }
+   3175          
+   3176          #endif
+                       ^
+Warning[Pe001]: last line of file ends without a newline
+
+
+ 
+ 
+ 0 bytes of memory
+
+Errors: none
+Warnings: 1

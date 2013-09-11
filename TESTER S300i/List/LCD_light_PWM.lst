@@ -1,0 +1,251 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           20/Mar/2013  07:53:31 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-          #
+#                    14.03.2013\Framework\LCD_light_PWM.c                     #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\Framework\LCD_light_PWM.c" -D AT91SAM7S256    #
+#                    -D AT91SAM7SEK -D iH -D __ALARM -D __WIFI_MODULE -D      #
+#                    S300i -D _TESTER_ -lC "D:\Zeuron\Projekty\S300\S300-prog #
+#                    ram v1.3 BETA- 14.03.2013\TESTER S300i\List\"            #
+#                    --diag_suppress Pa082 -o "D:\Zeuron\Projekty\S300\S300-p #
+#                    rogram v1.3 BETA- 14.03.2013\TESTER S300i\Obj\"          #
+#                    --no_unroll --no_inline --no_tbaa --no_scheduling        #
+#                    --debug --endian little --cpu ARM7TDMI -e --fpu None     #
+#                    --dlib_config "C:\Program Files (x86)\IAR                #
+#                    Systems\Embedded Workbench 5.0\ARM\INC\DLib_Config_Norma #
+#                    l.h" -I "D:\Zeuron\Projekty\S300\S300-program v1.3       #
+#                    BETA- 14.03.2013\lib\AT91SAM7S256\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.3 BETA- 14.03.2013\cdc\" -I                           #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\core\" -I "D:\Zeuron\Projekty\S300\S300-progr #
+#                    am v1.3 BETA- 14.03.2013\startup\" -I                    #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\Framework\" -I "D:\Zeuron\Projekty\S300\S300- #
+#                    program v1.3 BETA- 14.03.2013\Framework\Configuration\"  #
+#                    -I "C:\Program Files (x86)\IAR Systems\Embedded          #
+#                    Workbench 5.0\ARM\INC\" --section .text=Debug.txt        #
+#                    --interwork --cpu_mode thumb -Om                         #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-          #
+#                    14.03.2013\TESTER S300i\List\LCD_light_PWM.lst           #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-          #
+#                    14.03.2013\TESTER S300i\Obj\LCD_light_PWM.o              #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v1.3 BETA- 14.03.2013\Framework\LCD_light_PWM.c
+      1                 
+      2          #include "Framework.h"
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PIO_CfgPeriph(AT91PS_PIO, unsigned int, unsigned int)
+   \                     AT91F_PIO_CfgPeriph:
+   \   00000000   0167               STR      R1,[R0, #+112]
+   \   00000002   4267               STR      R2,[R0, #+116]
+   \   00000004   0A43               ORRS     R2,R2,R1
+   \   00000006   4260               STR      R2,[R0, #+4]
+   \   00000008   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PMC_EnablePeriphClock(AT91PS_PMC, unsigned int)
+   \                     AT91F_PMC_EnablePeriphClock:
+   \   00000000   0161               STR      R1,[R0, #+16]
+   \   00000002   7047               BX       LR               ;; return
+      3          #include "core/device.h"                                                        //aduje bibliotreki dla odpowiedniego procesora
+      4          
+      5          
+      6          #define MCK 48054841
+      7          
+      8          // Include Standard files
+      9          //#include "Board.h"
+     10          /*  In this project we are assuming to have master clock equal to
+     11          47.9232 MHz
+     12              on the AT91SAM7SEK.*/
+     13          
+     14          /*    PWM Clock source Domain */
+     15          #define         MCKtoPWM      0
+     16          #define         MCK_2toPWM    1
+     17          #define         MCK_4toPWM    2
+     18          #define         MCK_8toPWM    3
+     19          #define         MCK_16toPWM   4
+     20          #define         MCK_32toPWM   5
+     21          #define         MCK_64toPWM   6
+     22          #define         MCK_128toPWM  7
+     23          #define         MCK_256toPWM  8
+     24          #define         MCK_512toPWM  9
+     25          #define         MCK_1024toPWM 10
+     26          #define         CLHAtoPWM     11
+     27          #define         CLHBtoPWM     12
+     28          
+     29          #define         CALG_OFF       0
+     30          #define         CALG_ON       1<<8  // The period is center aligned(OFF, left aligned)
+     31          
+     32          #define         CPOL_OFF      0<<0  // The ouput waveform starts at a high level (OFF, low level)
+     33          #define         CPOL_ON       1<<9  // The ouput waveform starts at a high level (OFF, low level)
+     34          
+     35          #define         CPD_ON        1<<10 // The period will be modified at the next period start event
+     36          #define         CPD_OFF       0<<10
+     37          
+     38          /* Select the wanted frequency in hertz.
+     39          This choice has to be in accordance with the selected clock source */
+     40          //#define   FREQUENCY    4792  // In Hertz
+     41          #define   FREQUENCY    500000  // In Hertz
+     42          
+     43          /* In our example, we are targetting to get out 100 Hertz frequency. In
+     44          this goal, we use MCK_256toPWM */
+     45          #define   PWM_PERIOD_VALUE            (MCK/(1*FREQUENCY))
+     46          
+     47          
+     48          
+     49          
+     50          //ustaw wype³nienie w procentach
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     51          int Set_LCD_Light_PWM_Fill(char FillProcent)
+     52          {
+   \                     Set_LCD_Light_PWM_Fill:
+   \   00000000   01B5               PUSH     {R0,LR}
+   \   00000002   0100               MOVS     R1,R0
+     53             //AT91C_BASE_PWMC->PWMC_DIS = 0x1;
+     54             AT91C_BASE_PWMC_CH0->PWMC_CDTYR = PWM_PERIOD_VALUE/(100/FillProcent);
+   \   00000004   6420               MOVS     R0,#+100
+   \   00000006   ........           BL       __aeabi_idivmod
+   \   0000000A   0100               MOVS     R1,R0
+   \   0000000C   6020               MOVS     R0,#+96
+   \   0000000E   ........           BL       __aeabi_idivmod
+   \   00000012   0249               LDR      R1,??Set_LCD_Light_PWM_Fill_0  ;; 0xfffcc204
+   \   00000014   0860               STR      R0,[R1, #+0]
+     55             //AT91C_BASE_PWMC->PWMC_ENA = 0x1;
+     56          }
+                 ^
+Warning[Pe940]: missing return statement at end of non-void function
+          "Set_LCD_Light_PWM_Fill"
+   \   00000016   08BC               POP      {R3}
+   \   00000018   01BC               POP      {R0}
+   \   0000001A   0047               BX       R0               ;; return
+   \                     ??Set_LCD_Light_PWM_Fill_0:
+   \   0000001C   04C2FCFF           DC32     0xfffcc204
+     57          
+     58          
+     59          
+     60          
+     61          
+     62          
+     63          //*--------------------------------------------------------------------------------------
+     64          //* Function Name       : Main
+     65          //* Object              : Software entry point
+     66          //* Input Parameters    : none.
+     67          //* Output Parameters   : none.
+     68          //*--------------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     69          int Init_LCD_Light_PWM(char Level)
+     70          {
+   \                     Init_LCD_Light_PWM:
+   \   00000000   10B5               PUSH     {R4,LR}
+     71                  /* Valid the PWM's Clock at PMC level */
+     72                  AT91F_PMC_EnablePeriphClock(AT91C_BASE_PMC,1<<AT91C_ID_PWMC);
+   \   00000002   8021               MOVS     R1,#+128
+   \   00000004   C900               LSLS     R1,R1,#+3        ;; #+1024
+   \   00000006   0F48               LDR      R0,??Init_LCD_Light_PWM_0  ;; 0xfffffc00
+   \   00000008   ........           BL       AT91F_PMC_EnablePeriphClock
+     73          
+     74                  /* Disable the PWM the channel 0 */
+     75                  AT91C_BASE_PWMC->PWMC_DIS = 0x1;
+   \   0000000C   0124               MOVS     R4,#+1
+   \   0000000E   0E48               LDR      R0,??Init_LCD_Light_PWM_0+0x4  ;; 0xfffcc008
+   \   00000010   0460               STR      R4,[R0, #+0]
+     76          
+     77                  /* Enabling a PWM output through the PA0: PWM Channel 0*/
+     78                  AT91F_PIO_CfgPeriph(AT91C_BASE_PIOA, AT91C_PA0_PWM0, 0);
+   \   00000012   0022               MOVS     R2,#+0
+   \   00000014   2100               MOVS     R1,R4
+   \   00000016   0D48               LDR      R0,??Init_LCD_Light_PWM_0+0x8  ;; 0xfffff400
+   \   00000018   ........           BL       AT91F_PIO_CfgPeriph
+     79          
+     80                  /* Period Updating */
+     81                  AT91C_BASE_PWMC_CH0->PWMC_CMR = (CPD_ON | CPOL_ON | CALG_ON | MCKtoPWM);
+   \   0000001C   0C48               LDR      R0,??Init_LCD_Light_PWM_0+0xC  ;; 0xfffcc200
+   \   0000001E   E021               MOVS     R1,#+224
+   \   00000020   C900               LSLS     R1,R1,#+3        ;; #+1792
+   \   00000022   0160               STR      R1,[R0, #+0]
+     82                  AT91C_BASE_PWMC_CH0->PWMC_CPRDR=PWM_PERIOD_VALUE; 
+   \   00000024   0B49               LDR      R1,??Init_LCD_Light_PWM_0+0x10  ;; 0xfffcc208
+   \   00000026   6022               MOVS     R2,#+96
+   \   00000028   0A60               STR      R2,[R1, #+0]
+     83          
+     84                  /* Duty Cycle Updating */
+     85                  AT91C_BASE_PWMC_CH0->PWMC_CMR = (CPD_OFF | CPOL_ON| CALG_ON | MCKtoPWM);
+   \   0000002A   D100               LSLS     R1,R2,#+3
+   \   0000002C   0160               STR      R1,[R0, #+0]
+     86                  Set_LCD_Light_PWM_Fill(100);//100% wype³nienia
+   \   0000002E   6420               MOVS     R0,#+100
+   \   00000030   ........           BL       Set_LCD_Light_PWM_Fill
+     87          
+     88                  /* Interrupt enabling at peripheral level only in order to have synchronisation between Software and the UP-DATE Register (to avoid over writting) */
+     89                  AT91C_BASE_PWMC->PWMC_IER = 1;
+   \   00000034   0848               LDR      R0,??Init_LCD_Light_PWM_0+0x14  ;; 0xfffcc010
+   \   00000036   0460               STR      R4,[R0, #+0]
+     90          
+     91                  /* Enable the PWM the channel 0*/
+     92                  AT91C_BASE_PWMC->PWMC_ENA = 0x1;
+   \   00000038   0848               LDR      R0,??Init_LCD_Light_PWM_0+0x18  ;; 0xfffcc004
+   \   0000003A   0460               STR      R4,[R0, #+0]
+     93          
+     94          }
+                  ^
+Warning[Pe001]: last line of file ends without a newline
+
+  }
+  ^
+"D:\Zeuron\Projekty\S300\S300-program v1.3 BETA- 14.03.2013\Framework\LCD_light_PWM.c",94  Warning[Pe940]: 
+          missing return statement at end of non-void function
+          "Init_LCD_Light_PWM"
+   \   0000003C   10BC               POP      {R4}
+   \   0000003E   01BC               POP      {R0}
+   \   00000040   0047               BX       R0               ;; return
+   \   00000042   C046               Nop      
+   \                     ??Init_LCD_Light_PWM_0:
+   \   00000044   00FCFFFF           DC32     0xfffffc00
+   \   00000048   08C0FCFF           DC32     0xfffcc008
+   \   0000004C   00F4FFFF           DC32     0xfffff400
+   \   00000050   00C2FCFF           DC32     0xfffcc200
+   \   00000054   08C2FCFF           DC32     0xfffcc208
+   \   00000058   10C0FCFF           DC32     0xfffcc010
+   \   0000005C   04C0FCFF           DC32     0xfffcc004
+
+   Maximum stack usage in bytes:
+
+     Function                    .cstack
+     --------                    -------
+     AT91F_PIO_CfgPeriph              0
+     AT91F_PMC_EnablePeriphClock      0
+     Init_LCD_Light_PWM               8
+     Set_LCD_Light_PWM_Fill           8
+
+
+   Section sizes:
+
+     Function/Label              Bytes
+     --------------              -----
+     AT91F_PIO_CfgPeriph           10
+     AT91F_PMC_EnablePeriphClock    4
+     Set_LCD_Light_PWM_Fill        32
+     Init_LCD_Light_PWM            96
+
+ 
+ 142 bytes in section Debug.txt
+ 
+ 128 bytes of CODE memory (+ 14 bytes shared)
+
+Errors: none
+Warnings: 3

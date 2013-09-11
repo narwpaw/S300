@@ -1,0 +1,1093 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           20/Mar/2013  07:53:32 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-          #
+#                    14.03.2013\Framework\SPI.c                               #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\Framework\SPI.c" -D AT91SAM7S256 -D           #
+#                    AT91SAM7SEK -D iH -D __ALARM -D __WIFI_MODULE -D S300i   #
+#                    -D _TESTER_ -lC "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.3 BETA- 14.03.2013\TESTER S300i\List\"                #
+#                    --diag_suppress Pa082 -o "D:\Zeuron\Projekty\S300\S300-p #
+#                    rogram v1.3 BETA- 14.03.2013\TESTER S300i\Obj\"          #
+#                    --no_unroll --no_inline --no_tbaa --no_scheduling        #
+#                    --debug --endian little --cpu ARM7TDMI -e --fpu None     #
+#                    --dlib_config "C:\Program Files (x86)\IAR                #
+#                    Systems\Embedded Workbench 5.0\ARM\INC\DLib_Config_Norma #
+#                    l.h" -I "D:\Zeuron\Projekty\S300\S300-program v1.3       #
+#                    BETA- 14.03.2013\lib\AT91SAM7S256\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.3 BETA- 14.03.2013\cdc\" -I                           #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\core\" -I "D:\Zeuron\Projekty\S300\S300-progr #
+#                    am v1.3 BETA- 14.03.2013\startup\" -I                    #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\Framework\" -I "D:\Zeuron\Projekty\S300\S300- #
+#                    program v1.3 BETA- 14.03.2013\Framework\Configuration\"  #
+#                    -I "C:\Program Files (x86)\IAR Systems\Embedded          #
+#                    Workbench 5.0\ARM\INC\" --section .text=Debug.txt        #
+#                    --interwork --cpu_mode thumb -Om                         #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-          #
+#                    14.03.2013\TESTER S300i\List\SPI.lst                     #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-          #
+#                    14.03.2013\TESTER S300i\Obj\SPI.o                        #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v1.3 BETA- 14.03.2013\Framework\SPI.c
+      1          //****************************************************************************//
+      2          //*--------------------------------------------------------------------------*//
+      3          //*                 IASE Microcontroller Software Support                    *//
+      4          //*--------------------------------------------------------------------------*//
+      5          //*--------------------------------------------------------------------------*//
+      6          //*  Nazwa pliku                  : SPI.c                                  *//
+      7          //*  Opis                         : G³ówny plik programu                     *//
+      8          //*  Autor                        : Pawe³ Narwojsz                           *//
+      9          //*  Data utrzorzenia             : 17.06.2008                               *//
+     10          //*  Data ostatniej modyfikacji   : --.--.----                               *//
+     11          //*--------------------------------------------------------------------------*//
+     12          //*                                                                          *//
+     13          //*--------------------------------------------------------------------------*//
+     14          //* Rejestr zmian  (data - opis):                                            *//
+     15          //*                                                                          *//
+     16          //*                               Brak zmian                                 *//
+     17          //*                                                                          *//
+     18          //*__________________________________________________________________________*//
+     19          //****************************************************************************//
+     20          //****************************************************************************//
+     21          
+     22          
+     23          
+     24          //Zmienne konfiguracyjne -------------------------------------------------------     
+     25          
+     26              //US0----------------------
+
+   \                                 In section .data, align 4
+     27                int  g_SPI_BAUDRATE             = 500000;                                   //prêdkoœæ transmisji US0
+   \                     g_SPI_BAUDRATE:
+   \   00000000   20A10700           DC32 500000
+
+   \                                 In section .data, align 4
+     28                int  SPI_Comm_TIMEOUT           = 500;                                      //(w ms) Czas oczekiwania na odpowiedŸ urz¹dzenia odpytywanego poprzez MODBUS
+   \                     SPI_Comm_TIMEOUT:
+   \   00000000   F4010000           DC32 500
+     29          
+     30                
+     31          //___________________________Koniec zmiennych lokalnych________________________
+     32          
+     33          
+     34          
+     35          
+     36          
+     37          //------------------------------------------------------------------------------
+     38          //      Includes
+     39          //------------------------------------------------------------------------------
+     40          #include "core/common.h"
+     41          #include "core/device.h"                                                        //aduje bibliotreki dla odpowiedniego procesora
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PDC_SetNextRx(AT91PS_PDC, char *, unsigned int)
+   \                     AT91F_PDC_SetNextRx:
+   \   00000000   0161               STR      R1,[R0, #+16]
+   \   00000002   4261               STR      R2,[R0, #+20]
+   \   00000004   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PDC_SetNextTx(AT91PS_PDC, char *, unsigned int)
+   \                     AT91F_PDC_SetNextTx:
+   \   00000000   8161               STR      R1,[R0, #+24]
+   \   00000002   C261               STR      R2,[R0, #+28]
+   \   00000004   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PDC_SetRx(AT91PS_PDC, char *, unsigned int)
+   \                     AT91F_PDC_SetRx:
+   \   00000000   0160               STR      R1,[R0, #+0]
+   \   00000002   4260               STR      R2,[R0, #+4]
+   \   00000004   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PDC_SetTx(AT91PS_PDC, char *, unsigned int)
+   \                     AT91F_PDC_SetTx:
+   \   00000000   8160               STR      R1,[R0, #+8]
+   \   00000002   C260               STR      R2,[R0, #+12]
+   \   00000004   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PDC_EnableTx(AT91PS_PDC)
+   \                     AT91F_PDC_EnableTx:
+   \   00000000   8021               MOVS     R1,#+128
+   \   00000002   4900               LSLS     R1,R1,#+1        ;; #+256
+   \   00000004   0162               STR      R1,[R0, #+32]
+   \   00000006   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PDC_EnableRx(AT91PS_PDC)
+   \                     AT91F_PDC_EnableRx:
+   \   00000000   0121               MOVS     R1,#+1
+   \   00000002   0162               STR      R1,[R0, #+32]
+   \   00000004   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PDC_DisableTx(AT91PS_PDC)
+   \                     AT91F_PDC_DisableTx:
+   \   00000000   8021               MOVS     R1,#+128
+   \   00000002   8900               LSLS     R1,R1,#+2        ;; #+512
+   \   00000004   0162               STR      R1,[R0, #+32]
+   \   00000006   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PDC_DisableRx(AT91PS_PDC)
+   \                     AT91F_PDC_DisableRx:
+   \   00000000   0221               MOVS     R1,#+2
+   \   00000002   0162               STR      R1,[R0, #+32]
+   \   00000004   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork int AT91F_PDC_IsTxEmpty(AT91PS_PDC)
+   \                     AT91F_PDC_IsTxEmpty:
+   \   00000000   C068               LDR      R0,[R0, #+12]
+   \   00000002   401E               SUBS     R0,R0,#+1
+   \   00000004   8041               SBCS     R0,R0,R0
+   \   00000006   C00F               LSRS     R0,R0,#+31
+   \   00000008   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork int AT91F_PDC_IsNextTxEmpty(AT91PS_PDC)
+   \                     AT91F_PDC_IsNextTxEmpty:
+   \   00000000   C069               LDR      R0,[R0, #+28]
+   \   00000002   401E               SUBS     R0,R0,#+1
+   \   00000004   8041               SBCS     R0,R0,R0
+   \   00000006   C00F               LSRS     R0,R0,#+31
+   \   00000008   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork int AT91F_PDC_IsRxEmpty(AT91PS_PDC)
+   \                     AT91F_PDC_IsRxEmpty:
+   \   00000000   4068               LDR      R0,[R0, #+4]
+   \   00000002   401E               SUBS     R0,R0,#+1
+   \   00000004   8041               SBCS     R0,R0,R0
+   \   00000006   C00F               LSRS     R0,R0,#+31
+   \   00000008   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork int AT91F_PDC_IsNextRxEmpty(AT91PS_PDC)
+   \                     AT91F_PDC_IsNextRxEmpty:
+   \   00000000   4069               LDR      R0,[R0, #+20]
+   \   00000002   401E               SUBS     R0,R0,#+1
+   \   00000004   8041               SBCS     R0,R0,R0
+   \   00000006   C00F               LSRS     R0,R0,#+31
+   \   00000008   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PDC_Open(AT91PS_PDC)
+   \                     AT91F_PDC_Open:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   0400               MOVS     R4,R0
+   \   00000004   ........           BL       AT91F_PDC_DisableRx
+   \   00000008   2000               MOVS     R0,R4
+   \   0000000A   ........           BL       AT91F_PDC_DisableTx
+   \   0000000E   0022               MOVS     R2,#+0
+   \   00000010   1100               MOVS     R1,R2
+   \   00000012   2000               MOVS     R0,R4
+   \   00000014   ........           BL       AT91F_PDC_SetNextTx
+   \   00000018   0022               MOVS     R2,#+0
+   \   0000001A   1100               MOVS     R1,R2
+   \   0000001C   2000               MOVS     R0,R4
+   \   0000001E   ........           BL       AT91F_PDC_SetNextRx
+   \   00000022   0022               MOVS     R2,#+0
+   \   00000024   1100               MOVS     R1,R2
+   \   00000026   2000               MOVS     R0,R4
+   \   00000028   ........           BL       AT91F_PDC_SetTx
+   \   0000002C   0022               MOVS     R2,#+0
+   \   0000002E   1100               MOVS     R1,R2
+   \   00000030   2000               MOVS     R0,R4
+   \   00000032   ........           BL       AT91F_PDC_SetRx
+   \   00000036   2000               MOVS     R0,R4
+   \   00000038   ........           BL       AT91F_PDC_EnableRx
+   \   0000003C   2000               MOVS     R0,R4
+   \   0000003E   ........           BL       AT91F_PDC_EnableTx
+   \   00000042   10BC               POP      {R4}
+   \   00000044   01BC               POP      {R0}
+   \   00000046   0047               BX       R0               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PDC_Close(AT91PS_PDC)
+   \                     AT91F_PDC_Close:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   0400               MOVS     R4,R0
+   \   00000004   ........           BL       AT91F_PDC_DisableRx
+   \   00000008   2000               MOVS     R0,R4
+   \   0000000A   ........           BL       AT91F_PDC_DisableTx
+   \   0000000E   0022               MOVS     R2,#+0
+   \   00000010   1100               MOVS     R1,R2
+   \   00000012   2000               MOVS     R0,R4
+   \   00000014   ........           BL       AT91F_PDC_SetNextTx
+   \   00000018   0022               MOVS     R2,#+0
+   \   0000001A   1100               MOVS     R1,R2
+   \   0000001C   2000               MOVS     R0,R4
+   \   0000001E   ........           BL       AT91F_PDC_SetNextRx
+   \   00000022   0022               MOVS     R2,#+0
+   \   00000024   1100               MOVS     R1,R2
+   \   00000026   2000               MOVS     R0,R4
+   \   00000028   ........           BL       AT91F_PDC_SetTx
+   \   0000002C   0022               MOVS     R2,#+0
+   \   0000002E   1100               MOVS     R1,R2
+   \   00000030   2000               MOVS     R0,R4
+   \   00000032   ........           BL       AT91F_PDC_SetRx
+   \   00000036   10BC               POP      {R4}
+   \   00000038   01BC               POP      {R0}
+   \   0000003A   0047               BX       R0               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork unsigned int AT91F_PDC_SendFrame(AT91PS_PDC, char *, unsigned int, char *, unsigned int)
+   \                     AT91F_PDC_SendFrame:
+   \   00000000   F8B5               PUSH     {R3-R7,LR}
+   \   00000002   0400               MOVS     R4,R0
+   \   00000004   0D00               MOVS     R5,R1
+   \   00000006   1600               MOVS     R6,R2
+   \   00000008   069F               LDR      R7,[SP, #+24]
+   \   0000000A   ........           BL       AT91F_PDC_IsTxEmpty
+   \   0000000E   0028               CMP      R0,#+0
+   \   00000010   0BD0               BEQ      ??AT91F_PDC_SendFrame_0
+   \   00000012   3200               MOVS     R2,R6
+   \   00000014   2900               MOVS     R1,R5
+   \   00000016   2000               MOVS     R0,R4
+   \   00000018   ........           BL       AT91F_PDC_SetTx
+   \   0000001C   3A00               MOVS     R2,R7
+   \   0000001E   0099               LDR      R1,[SP, #+0]
+   \   00000020   2000               MOVS     R0,R4
+   \   00000022   ........           BL       AT91F_PDC_SetNextTx
+   \   00000026   0220               MOVS     R0,#+2
+   \   00000028   0AE0               B        ??AT91F_PDC_SendFrame_1
+   \                     ??AT91F_PDC_SendFrame_0:
+   \   0000002A   2000               MOVS     R0,R4
+   \   0000002C   ........           BL       AT91F_PDC_IsNextTxEmpty
+   \   00000030   0028               CMP      R0,#+0
+   \   00000032   05D0               BEQ      ??AT91F_PDC_SendFrame_1
+   \   00000034   3200               MOVS     R2,R6
+   \   00000036   2900               MOVS     R1,R5
+   \   00000038   2000               MOVS     R0,R4
+   \   0000003A   ........           BL       AT91F_PDC_SetNextTx
+   \   0000003E   0120               MOVS     R0,#+1
+   \                     ??AT91F_PDC_SendFrame_1:
+   \   00000040   F8BC               POP      {R3-R7}
+   \   00000042   02BC               POP      {R1}
+   \   00000044   0847               BX       R1               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork unsigned int AT91F_PDC_ReceiveFrame(AT91PS_PDC, char *, unsigned int, char *, unsigned int)
+   \                     AT91F_PDC_ReceiveFrame:
+   \   00000000   F8B5               PUSH     {R3-R7,LR}
+   \   00000002   0400               MOVS     R4,R0
+   \   00000004   0D00               MOVS     R5,R1
+   \   00000006   1600               MOVS     R6,R2
+   \   00000008   069F               LDR      R7,[SP, #+24]
+   \   0000000A   ........           BL       AT91F_PDC_IsRxEmpty
+   \   0000000E   0028               CMP      R0,#+0
+   \   00000010   0BD0               BEQ      ??AT91F_PDC_ReceiveFrame_0
+   \   00000012   3200               MOVS     R2,R6
+   \   00000014   2900               MOVS     R1,R5
+   \   00000016   2000               MOVS     R0,R4
+   \   00000018   ........           BL       AT91F_PDC_SetRx
+   \   0000001C   3A00               MOVS     R2,R7
+   \   0000001E   0099               LDR      R1,[SP, #+0]
+   \   00000020   2000               MOVS     R0,R4
+   \   00000022   ........           BL       AT91F_PDC_SetNextRx
+   \   00000026   0220               MOVS     R0,#+2
+   \   00000028   0AE0               B        ??AT91F_PDC_ReceiveFrame_1
+   \                     ??AT91F_PDC_ReceiveFrame_0:
+   \   0000002A   2000               MOVS     R0,R4
+   \   0000002C   ........           BL       AT91F_PDC_IsNextRxEmpty
+   \   00000030   0028               CMP      R0,#+0
+   \   00000032   05D0               BEQ      ??AT91F_PDC_ReceiveFrame_1
+   \   00000034   3200               MOVS     R2,R6
+   \   00000036   2900               MOVS     R1,R5
+   \   00000038   2000               MOVS     R0,R4
+   \   0000003A   ........           BL       AT91F_PDC_SetNextRx
+   \   0000003E   0120               MOVS     R0,#+1
+   \                     ??AT91F_PDC_ReceiveFrame_1:
+   \   00000040   F8BC               POP      {R3-R7}
+   \   00000042   02BC               POP      {R1}
+   \   00000044   0847               BX       R1               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PIO_CfgPeriph(AT91PS_PIO, unsigned int, unsigned int)
+   \                     AT91F_PIO_CfgPeriph:
+   \   00000000   0167               STR      R1,[R0, #+112]
+   \   00000002   4267               STR      R2,[R0, #+116]
+   \   00000004   0A43               ORRS     R2,R2,R1
+   \   00000006   4260               STR      R2,[R0, #+4]
+   \   00000008   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PMC_EnablePeriphClock(AT91PS_PMC, unsigned int)
+   \                     AT91F_PMC_EnablePeriphClock:
+   \   00000000   0161               STR      R1,[R0, #+16]
+   \   00000002   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PMC_DisablePeriphClock(AT91PS_PMC, unsigned int)
+   \                     AT91F_PMC_DisablePeriphClock:
+   \   00000000   4161               STR      R1,[R0, #+20]
+   \   00000002   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_SPI_CfgCs(AT91PS_SPI, int, int)
+   \                     AT91F_SPI_CfgCs:
+   \   00000000   8900               LSLS     R1,R1,#+2
+   \   00000002   4018               ADDS     R0,R0,R1
+   \   00000004   0263               STR      R2,[R0, #+48]
+   \   00000006   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_SPI_Reset(AT91PS_SPI)
+   \                     AT91F_SPI_Reset:
+   \   00000000   8021               MOVS     R1,#+128
+   \   00000002   0160               STR      R1,[R0, #+0]
+   \   00000004   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_SPI_Enable(AT91PS_SPI)
+   \                     AT91F_SPI_Enable:
+   \   00000000   0121               MOVS     R1,#+1
+   \   00000002   0160               STR      R1,[R0, #+0]
+   \   00000004   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_SPI_CfgMode(AT91PS_SPI, int)
+   \                     AT91F_SPI_CfgMode:
+   \   00000000   4160               STR      R1,[R0, #+4]
+   \   00000002   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork unsigned int AT91F_SPI_ReceiveFrame(AT91PS_SPI, char *, unsigned int, char *, unsigned int)
+   \                     AT91F_SPI_ReceiveFrame:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   029C               LDR      R4,[SP, #+8]
+   \   00000004   82B0               SUB      SP,SP,#+8
+   \   00000006   0094               STR      R4,[SP, #+0]
+   \   00000008   8024               MOVS     R4,#+128
+   \   0000000A   6400               LSLS     R4,R4,#+1        ;; #+256
+   \   0000000C   0019               ADDS     R0,R0,R4
+   \   0000000E   ........           BL       AT91F_PDC_ReceiveFrame
+   \   00000012   02B0               ADD      SP,SP,#+8
+   \   00000014   10BC               POP      {R4}
+   \   00000016   02BC               POP      {R1}
+   \   00000018   0847               BX       R1               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork unsigned int AT91F_SPI_SendFrame(AT91PS_SPI, char *, unsigned int, char *, unsigned int)
+   \                     AT91F_SPI_SendFrame:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   029C               LDR      R4,[SP, #+8]
+   \   00000004   82B0               SUB      SP,SP,#+8
+   \   00000006   0094               STR      R4,[SP, #+0]
+   \   00000008   8024               MOVS     R4,#+128
+   \   0000000A   6400               LSLS     R4,R4,#+1        ;; #+256
+   \   0000000C   0019               ADDS     R0,R0,R4
+   \   0000000E   ........           BL       AT91F_PDC_SendFrame
+   \   00000012   02B0               ADD      SP,SP,#+8
+   \   00000014   10BC               POP      {R4}
+   \   00000016   02BC               POP      {R1}
+   \   00000018   0847               BX       R1               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork int AT91F_SPI_GetChar(AT91PS_SPI const)
+   \                     AT91F_SPI_GetChar:
+   \   00000000   8068               LDR      R0,[R0, #+8]
+   \   00000002   0004               LSLS     R0,R0,#+16
+   \   00000004   000C               LSRS     R0,R0,#+16
+   \   00000006   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_SPI_CfgPMC(void)
+   \                     AT91F_SPI_CfgPMC:
+   \   00000000   01B5               PUSH     {R0,LR}
+   \   00000002   2021               MOVS     R1,#+32
+   \   00000004   0248               LDR      R0,??AT91F_SPI_CfgPMC_0  ;; 0xfffffc00
+   \   00000006   ........           BL       AT91F_PMC_EnablePeriphClock
+   \   0000000A   08BC               POP      {R3}
+   \   0000000C   01BC               POP      {R0}
+   \   0000000E   0047               BX       R0               ;; return
+   \                     ??AT91F_SPI_CfgPMC_0:
+   \   00000010   00FCFFFF           DC32     0xfffffc00
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_SPI_CfgPIO(void)
+   \                     AT91F_SPI_CfgPIO:
+   \   00000000   01B5               PUSH     {R0,LR}
+   \   00000002   8022               MOVS     R2,#+128
+   \   00000004   9200               LSLS     R2,R2,#+2        ;; #+512
+   \   00000006   F021               MOVS     R1,#+240
+   \   00000008   C901               LSLS     R1,R1,#+7        ;; #+30720
+   \   0000000A   0348               LDR      R0,??AT91F_SPI_CfgPIO_0  ;; 0xfffff400
+   \   0000000C   ........           BL       AT91F_PIO_CfgPeriph
+   \   00000010   08BC               POP      {R3}
+   \   00000012   01BC               POP      {R0}
+   \   00000014   0047               BX       R0               ;; return
+   \   00000016   C046               Nop      
+   \                     ??AT91F_SPI_CfgPIO_0:
+   \   00000018   00F4FFFF           DC32     0xfffff400
+     42          #include "core/board.h"
+     43          //#include "core/trace.h"
+     44          #include "SPI_H.h"
+     45          
+     46          
+     47          
+     48          //Zmienne lokalne -------------------------------------------------------------
+     49              
+     50          //___________________________Koniec zmiennych lokalnych________________________
+     51          
+     52          
+     53              
+     54             // #define SPI_Read_BUFFER_SIZE             30                                 //bufor odbiorczy SPI   //14.03.2013 - zmniejszenie bufora do 30B
+     55             // #define SPI_Write_BUFFER_SIZE            30                                 //bufor nadawczy SPI    //14.03.2013 - zmniejszenie bufora do 30B
+     56          
+     57          //Zmienne globalne -------------------------------------------------------------
+     58              //unsigned char  SPI_Buffer_Rx[SPI_Read_BUFFER_SIZE];                         //bufor odbiorczy SPI 0
+     59              //unsigned char  SPI_Buffer_Tx[SPI_Write_BUFFER_SIZE];                        //bufor odbiorczy SPI 0
+     60              
+     61              
+     62          
+     63              
+     64          //___________________________Koniec zmiennych globalnych________________________
+     65              
+     66              
+     67          
+     68          //Zmienne zewnêtrzne -----------------------------------------------------------    
+     69          extern void Delay (unsigned long a);
+     70          //___________________________Koniec zmiennych zewnêtrznych______________________    
+     71           
+     72          
+     73              
+     74              
+     75              
+     76              
+     77          //-----------------------------------------------------------------------------
+     78          //!  Nazwa funkcji :    US0_init
+     79          //!  Funkcja inicjalizacji USART 0
+     80          //-----------------------------------------------------------------------------
+     81          //! 
+     82          //-----------------------------------------------------------------------------
+     83              
+     84              
+     85              
+     86              
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     87          void EnableSpi() 
+     88          { 
+   \                     EnableSpi:
+   \   00000000   01B5               PUSH     {R0,LR}
+     89             AT91F_PMC_EnablePeriphClock(AT91C_BASE_PMC, // PIO controller base address 
+     90                                  ((unsigned int) 1 << AT91C_ID_SPI)); 
+   \   00000002   2021               MOVS     R1,#+32
+   \   00000004   ....               LDR      R0,??DataTable2  ;; 0xfffffc00
+   \   00000006   ........           BL       AT91F_PMC_EnablePeriphClock
+     91             AT91F_SPI_Enable (AT91C_BASE_SPI); 
+   \   0000000A   ....               LDR      R0,??DataTable5  ;; 0xfffe0000
+   \   0000000C   ........           BL       AT91F_SPI_Enable
+     92          } 
+   \   00000010   08BC               POP      {R3}
+   \   00000012   01BC               POP      {R0}
+   \   00000014   0047               BX       R0               ;; return
+     93          
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     94          void DisableSpi() 
+     95          { 
+   \                     DisableSpi:
+   \   00000000   01B5               PUSH     {R0,LR}
+     96             AT91F_PMC_DisablePeriphClock(AT91C_BASE_PMC, // PIO controller base address 
+     97                                  ((unsigned int) 1 << AT91C_ID_SPI)); 
+   \   00000002   2021               MOVS     R1,#+32
+   \   00000004   ....               LDR      R0,??DataTable2  ;; 0xfffffc00
+   \   00000006   ........           BL       AT91F_PMC_DisablePeriphClock
+     98             
+     99          } 
+   \   0000000A   08BC               POP      {R3}
+   \   0000000C   01BC               POP      {R0}
+   \   0000000E   0047               BX       R0               ;; return
+    100          
+    101          #define MCK 48054841
+    102          #define spi AT91C_BASE_SPI
+    103          #define spi_pdc AT91C_BASE_PDC_SPI
+    104          #define SPIBAUD 1000000
+    105          #define CS_BAUD MCK / SPIBAUD
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    106          void SPI_init(void) 
+    107          { 
+   \                     SPI_init:
+   \   00000000   10B5               PUSH     {R4,LR}
+    108              //AT91F_SPI_Disable (AT91C_BASE_SPI);   
+    109              
+    110              
+    111              AT91F_SPI_CfgPIO();                 // Konfiguruj wejœcia  
+   \   00000002   ........           BL       AT91F_SPI_CfgPIO
+    112              AT91F_SPI_CfgPMC();                 // Konfiguracja PMC na uaktywnienie zegara peryferjów SPI 
+   \   00000006   ........           BL       AT91F_SPI_CfgPMC
+    113              AT91F_SPI_Reset (AT91C_BASE_SPI);   // Reset SPI
+   \   0000000A   ....               LDR      R4,??DataTable5  ;; 0xfffe0000
+   \   0000000C   2000               MOVS     R0,R4
+   \   0000000E   ........           BL       AT91F_SPI_Reset
+    114          
+    115             
+    116             //  spi->SPI_MR = ((32 << 24) | AT91C_SPI_MSTR | /* Master */
+    117             //                    AT91C_SPI_PS_FIXED); /* Fixed periheral (== 0) */
+    118             
+    119              
+    120             // AT91F_SPI_CfgMode (AT91C_BASE_SPI, AT91C_SPI_MSTR | AT91C_SPI_PS_FIXED | AT91C_SPI_PCSDEC); 
+    121              
+    122             // AT91F_SPI_CfgMode (AT91C_BASE_SPI, AT91C_SPI_MSTR | AT91C_SPI_PS_VARIABLE |AT91C_SPI_PCSDEC ); 
+    123              
+    124               
+    125          
+    126               
+    127          /*
+    128              AT91F_SPI_CfgCs(spi, 0,
+    129          AT91C_SPI_CPOL | 
+    130          (AT91C_SPI_BITS & AT91C_SPI_BITS_8) |
+    131          (AT91C_SPI_SCBR & (CS_BAUD << 8)) |
+    132          (AT91C_SPI_DLYBS & (128 << 16)) |
+    133          (AT91C_SPI_DLYBCT & (0 << 24)) 
+    134          );
+    135          */
+    136          
+    137           AT91F_SPI_CfgMode (AT91C_BASE_SPI, AT91C_SPI_MSTR | AT91C_SPI_PS_FIXED | AT91C_SPI_PCSDEC | 1<<16);    
+   \   00000012   0649               LDR      R1,??SPI_init_0  ;; 0x10005
+   \   00000014   2000               MOVS     R0,R4
+   \   00000016   ........           BL       AT91F_SPI_CfgMode
+    138              
+    139           
+    140           
+    141           AT91F_PDC_Open(spi_pdc);
+   \   0000001A   ....               LDR      R0,??DataTable6  ;; 0xfffe0100
+   \   0000001C   ........           BL       AT91F_PDC_Open
+    142          
+    143             
+    144              
+    145              
+    146              
+    147          
+    148              
+    149              EnableSpi(); 
+   \   00000020   ........           BL       EnableSpi
+    150          } 
+   \   00000024   10BC               POP      {R4}
+   \   00000026   01BC               POP      {R0}
+   \   00000028   0047               BX       R0               ;; return
+   \   0000002A   C046               Nop      
+   \                     ??SPI_init_0:
+   \   0000002C   05000100           DC32     0x10005
+    151          
+
+   \                                 In section .data, align 4
+    152          int TMPx=10000;
+   \                     TMPx:
+   \   00000000   10270000           DC32 10000
+    153          
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    154          void ReadWriteSpi (unsigned char* pReadBuffer, int nReadLen, unsigned char* pWriteBuffer, int nWriteLen, bool bHoldCS) 
+    155          { 
+   \                     ReadWriteSpi:
+   \   00000000   F5B5               PUSH     {R0,R2,R4-R7,LR}
+   \   00000002   81B0               SUB      SP,SP,#+4
+   \   00000004   0C00               MOVS     R4,R1
+   \   00000006   1D00               MOVS     R5,R3
+   \   00000008   08A8               ADD      R0,SP,#+32
+   \   0000000A   0078               LDRB     R0,[R0, #+0]
+    156             // Configure SPI 
+    157          
+    158           //   AT91C_BASE_PIOA->PIO_ODR = AT91C_PA12_MISO; //Configure in Input
+    159           // AT91C_BASE_PIOA->PIO_PPUER = AT91C_PA12_MISO; //Enable PA15
+    160            
+    161             //AT91F_SPI_CfgCs (AT91C_BASE_SPI, 0, AT91C_SPI_CPOL | AT91C_SPI_BITS_8 |  (AT91C_SPI_SCBR & (CS_BAUD << 8)) | (bHoldCS ? AT91C_SPI_CSAAT : 0) |0x01010000 );  
+    162             AT91F_SPI_CfgCs (AT91C_BASE_SPI, 1, AT91C_SPI_CPOL |  AT91C_SPI_BITS_8 |  (AT91C_SPI_SCBR & (CS_BAUD << 8)) | (bHoldCS ? AT91C_SPI_CSAAT : 0) | 0x01010000); 
+   \   0000000C   0028               CMP      R0,#+0
+   \   0000000E   00D0               BEQ      ??ReadWriteSpi_0
+   \   00000010   0820               MOVS     R0,#+8
+   \                     ??ReadWriteSpi_0:
+   \   00000012   ....               LDR      R6,??DataTable5  ;; 0xfffe0000
+   \   00000014   224A               LDR      R2,??ReadWriteSpi_1  ;; 0x1013001
+   \   00000016   0243               ORRS     R2,R2,R0
+   \   00000018   0121               MOVS     R1,#+1
+   \   0000001A   3000               MOVS     R0,R6
+   \   0000001C   ........           BL       AT91F_SPI_CfgCs
+    163            
+    164             //AT91F_SPI_CfgCs (AT91C_BASE_SPI, 0, AT91C_SPI_CPOL | AT91C_SPI_BITS_8 |  (AT91C_SPI_SCBR & (CS_BAUD << 8)) | (bHoldCS ? AT91C_SPI_CSAAT : 0));  
+    165             //AT91F_SPI_CfgCs (AT91C_BASE_SPI, 1, AT91C_SPI_CPOL |  AT91C_SPI_BITS_8 |  (AT91C_SPI_SCBR & (CS_BAUD << 8)) | (bHoldCS ? AT91C_SPI_CSAAT : 0)); 
+    166            
+    167             // AT91F_SPI_CfgCs (AT91C_BASE_SPI, 0, AT91C_SPI_NCPHA | AT91C_SPI_CPOL | AT91C_SPI_BITS_8 | (AT91C_SPI_SCBR & (CS_BAUD << 8)) | (bHoldCS ? AT91C_SPI_CSAAT : 0));  
+    168             // AT91F_SPI_CfgCs (AT91C_BASE_SPI, 1, AT91C_SPI_NCPHA | AT91C_SPI_CPOL |  AT91C_SPI_BITS_8 | (AT91C_SPI_SCBR & (CS_BAUD << 8)) | (bHoldCS ? AT91C_SPI_CSAAT : 0)); 
+    169             
+    170             // AT91F_SPI_CfgCs (AT91C_BASE_SPI, 0,  AT91C_SPI_NCPHA |  AT91C_SPI_BITS_8 |  (AT91C_SPI_SCBR & (CS_BAUD << 8)) | (bHoldCS ? AT91C_SPI_CSAAT : 0));  
+    171             // AT91F_SPI_CfgCs (AT91C_BASE_SPI, 1,  AT91C_SPI_NCPHA |  AT91C_SPI_BITS_8 |  (AT91C_SPI_SCBR & (CS_BAUD << 8)) | (bHoldCS ? AT91C_SPI_CSAAT : 0)); 
+    172                
+    173                
+    174             //AT91C_BASE_SPI->SPI_TDR |= 1<<16;
+    175          
+    176            
+    177             // Open the SPI - PDC (Reset) 
+    178             AT91F_PDC_Open (AT91C_BASE_PDC_SPI); 
+   \   00000020   ....               LDR      R7,??DataTable6  ;; 0xfffe0100
+   \   00000022   3800               MOVS     R0,R7
+   \   00000024   ........           BL       AT91F_PDC_Open
+    179              
+    180             // Disable Spi activity during initialization 
+    181             AT91F_PDC_DisableRx (AT91C_BASE_PDC_SPI); 
+   \   00000028   3800               MOVS     R0,R7
+   \   0000002A   ........           BL       AT91F_PDC_DisableRx
+    182             AT91F_PDC_DisableTx (AT91C_BASE_PDC_SPI); 
+   \   0000002E   3800               MOVS     R0,R7
+   \   00000030   ........           BL       AT91F_PDC_DisableTx
+    183          
+    184             // Initialize buffers 
+    185             const char* pWBuffer; 
+    186             if (nWriteLen == 0)     // Read-only 
+   \   00000034   002D               CMP      R5,#+0
+   \   00000036   02D1               BNE      ??ReadWriteSpi_2
+    187             { 
+    188                nWriteLen = nReadLen; 
+   \   00000038   2500               MOVS     R5,R4
+    189                pWBuffer = (char*) pReadBuffer; 
+   \   0000003A   0199               LDR      R1,[SP, #+4]
+   \   0000003C   00E0               B        ??ReadWriteSpi_3
+    190             } 
+    191              else 
+    192                pWBuffer = (const char*) pWriteBuffer;
+   \                     ??ReadWriteSpi_2:
+   \   0000003E   0299               LDR      R1,[SP, #+8]
+    193          
+    194             if (nWriteLen < nReadLen)
+   \                     ??ReadWriteSpi_3:
+   \   00000040   A542               CMP      R5,R4
+   \   00000042   00DA               BGE      ??ReadWriteSpi_4
+    195             {
+    196                nWriteLen = nReadLen;
+   \   00000044   2500               MOVS     R5,R4
+    197             }
+    198             
+    199          
+    200             AT91F_SPI_SendFrame (AT91C_BASE_SPI, (char*) pWBuffer, nWriteLen, 0, 0); 
+   \                     ??ReadWriteSpi_4:
+   \   00000046   82B0               SUB      SP,SP,#+8
+   \   00000048   0020               MOVS     R0,#+0
+   \   0000004A   0090               STR      R0,[SP, #+0]
+   \   0000004C   0300               MOVS     R3,R0
+   \   0000004E   2A00               MOVS     R2,R5
+   \   00000050   3000               MOVS     R0,R6
+   \   00000052   ........           BL       AT91F_SPI_SendFrame
+   \   00000056   02B0               ADD      SP,SP,#+8
+    201             
+    202             // Start transfers 
+    203             if (nReadLen != 0)      // Read-only 
+   \   00000058   002C               CMP      R4,#+0
+   \   0000005A   0CD0               BEQ      ??ReadWriteSpi_5
+    204             { 
+    205          
+    206                AT91F_SPI_ReceiveFrame (AT91C_BASE_SPI, (char*) pReadBuffer, nReadLen, 0, 0); 
+   \   0000005C   82B0               SUB      SP,SP,#+8
+   \   0000005E   0020               MOVS     R0,#+0
+   \   00000060   0090               STR      R0,[SP, #+0]
+   \   00000062   0300               MOVS     R3,R0
+   \   00000064   2200               MOVS     R2,R4
+   \   00000066   0399               LDR      R1,[SP, #+12]
+   \   00000068   3000               MOVS     R0,R6
+   \   0000006A   ........           BL       AT91F_SPI_ReceiveFrame
+   \   0000006E   02B0               ADD      SP,SP,#+8
+    207                AT91F_PDC_EnableRx (AT91C_BASE_PDC_SPI); 
+   \   00000070   3800               MOVS     R0,R7
+   \   00000072   ........           BL       AT91F_PDC_EnableRx
+    208             } 
+    209             
+    210              AT91F_PDC_EnableTx (AT91C_BASE_PDC_SPI); 
+   \                     ??ReadWriteSpi_5:
+   \   00000076   3800               MOVS     R0,R7
+   \   00000078   ........           BL       AT91F_PDC_EnableTx
+    211                
+    212          
+    213              //AT91C_BASE_SPI->SPI_IER = AT91C_SPI_ENDTX|AT91C_SPI_ENDRX; 
+    214              // Wait Until Last RX 
+    215          //    while (! (AT91C_BASE_SPI->SPI_SR & AT91C_SPI_ENDRX)); 
+    216          
+    217             
+    218             while ((AT91C_BASE_SPI->SPI_SR & AT91C_SPI_TXBUFE) == 0 && (AT91C_BASE_SPI->SPI_SR & AT91C_SPI_RXBUFF) == 0); 
+   \                     ??ReadWriteSpi_6:
+   \   0000007C   0948               LDR      R0,??ReadWriteSpi_1+0x4  ;; 0xfffe0010
+   \   0000007E   0168               LDR      R1,[R0, #+0]
+   \   00000080   0906               LSLS     R1,R1,#+24
+   \   00000082   02D4               BMI      ??ReadWriteSpi_7
+   \   00000084   0068               LDR      R0,[R0, #+0]
+   \   00000086   4006               LSLS     R0,R0,#+25
+   \   00000088   F8D5               BPL      ??ReadWriteSpi_6
+    219          
+    220          
+    221             
+    222             AT91F_PDC_Close (AT91C_BASE_PDC_SPI); 
+   \                     ??ReadWriteSpi_7:
+   \   0000008A   3800               MOVS     R0,R7
+   \   0000008C   ........           BL       AT91F_PDC_Close
+    223          
+    224          // Flush SPI RDR buffer (in case there is pending data) 
+    225             volatile int nRDR = AT91F_SPI_GetChar (AT91C_BASE_SPI); 
+   \   00000090   3000               MOVS     R0,R6
+   \   00000092   ........           BL       AT91F_SPI_GetChar
+   \   00000096   0090               STR      R0,[SP, #+0]
+    226          } 
+   \   00000098   FEBC               POP      {R1-R7}
+   \   0000009A   01BC               POP      {R0}
+   \   0000009C   0047               BX       R0               ;; return
+   \   0000009E   C046               Nop      
+   \                     ??ReadWriteSpi_1:
+   \   000000A0   01300101           DC32     0x1013001
+   \   000000A4   1000FEFF           DC32     0xfffe0010
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable2:
+   \   00000000   00FCFFFF           DC32     0xfffffc00
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable5:
+   \   00000000   0000FEFF           DC32     0xfffe0000
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable6:
+   \   00000000   0001FEFF           DC32     0xfffe0100
+    227          
+    228          
+    229          
+    230          
+    231          
+    232          
+    233          
+    234          
+    235          
+    236          
+    237          
+    238          
+    239          
+    240          
+    241          
+    242          
+    243          
+    244          
+    245          
+    246          
+    247            
+    248            
+    249            /*
+    250            
+    251            
+    252                // Configure USART
+    253                AT91F_US0_CfgPMC();
+    254                AT91F_PDC_DisableRx(AT91C_BASE_PDC_SPI);
+    255                AT91F_PDC_DisableTx(AT91C_BASE_PDC_SPI);
+    256                
+    257                AT91F_SPI_Configure(AT91C_BASE_US0, AT91C_MASTER_CLOCK, USART485_MODE_8_PA, g_US0_BAUDRATE, 0);
+    258          
+    259                AT91C_BASE_US0->US_CR = AT91C_US_STTTO;
+    260          
+    261                AT91F_US_EnableIt(AT91C_BASE_US0,AT91C_US_RXBUFF | AT91C_US_TIMEOUT );     //uruchomienie/ustawienie przerwania od przepe³nienia bufora oraz od time-out
+    262          
+    263                // konfiguracja przerqwania USART0 
+    264                AT91F_AIC_ConfigureIt ( AT91C_BASE_AIC, AT91C_ID_US0, USART0_INTERRUPT_LEVEL, AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL, Usart0_handler); 
+    265                  
+    266                AT91F_US_EnableRx(AT91C_BASE_US0);
+    267                AT91F_US_EnableTx(AT91C_BASE_US0);
+    268          
+    269                
+    270                AT91F_US0_CfgPIO();                                                       //konfiguracja pinów
+    271                
+    272                unsigned int xxx= AT91F_US_ReceiveFrame (                                 //Ustawienie bufora odbiorczego
+    273          	AT91C_BASE_US0,
+    274          	US0_Buffer,
+    275          	US_BUFFER_SIZE,
+    276          	0,
+    277          	0 );
+    278          
+    279                AT91C_BASE_US0->US_RTOR = TIME_OUT_US;                                    //ustawienie czasu time-out (w bitach)
+    280                AT91C_BASE_US0->US_CR = AT91C_US_STTTO;                                   //restart time-out
+    281                
+    282                AT91F_AIC_EnableIt (AT91C_BASE_AIC, AT91C_ID_US0);                        //uruchomienie przerwania od USARTA
+    283                
+    284                g_US0_OneByteTxTime  = 1000/ ((float) (g_US0_BAUDRATE /8));
+    285          }//_______________________ Koniec funkcji US0_init ____________________________ 
+    286          
+    287          
+    288          
+    289          
+    290          
+    291          
+    292          //-----------------------------------------------------------------------------
+    293          //! Nazwa funkcji :    Usart0_handler
+    294          //! Funkcja obs³ugi przerwania USART 0
+    295          //-----------------------------------------------------------------------------
+    296          //  
+    297          //----------------------------------------------------------------------------- 
+    298          void Usart0_handler(void)                        //timer isr 
+    299          { 
+    300            //char CheckNoZero;                          //sprawdza czy tabela odczytów TP nie ma zer
+    301              unsigned int dummy = AT91C_BASE_US0->US_CSR;                  //interrupts    
+    302          
+    303              AT91PS_USART USART_pt = AT91C_BASE_US0; 
+    304              unsigned int status; 
+    305              
+    306              
+    307              // get Usart status register 
+    308              status = USART_pt->US_CSR; 
+    309             
+    310               
+    311              if ( status & AT91C_US_TIMEOUT)       //wystapil timeout lub odebrano dane
+    312                {
+    313          
+    314                  AT91C_BASE_US0->US_CR = AT91C_US_STTTO;
+    315                  AT91C_BASE_US0->US_RCR = 0;
+    316          
+    317                  unsigned int xxx= AT91F_US_ReceiveFrame (
+    318          	USART_pt,
+    319          	US0_Buffer,
+    320          	US_BUFFER_SIZE,
+    321          	0,
+    322          	0 );
+    323                  
+    324                  SendModbusEnable=1;
+    325                  
+    326          
+    327                  if (US0_MasterMODBUS_ENABLE)                                            
+    328                  {
+    329                    if (ModBus_MASTER_Return(US0_Buffer,0))                             //je¿eli Modbus US0 w trybie master
+    330                    {
+    331                      g_US0_Connect_OK=2;        
+    332                      SendModbusEnable=1;
+    333                    }
+    334                    
+    335                  }
+    336                  else
+    337                  { 
+    338                    if (ModBus_CommS(US0_Buffer,0)) g_US0_Connect_OK=2;                 //je¿eli Modbus US0 w trybie slave
+    339                  }
+    340                    
+    341            
+    342            
+    343                  status = USART_pt->US_CSR; 
+    344          
+    345          
+    346                }
+    347          }//_______________________ Koniec funkcji Usart0_handler _________________________
+    348           
+    349          
+    350          
+    351          
+    352          
+    353          
+    354          
+    355          //-----------------------------------------------------------------------------
+    356          //!  Nazwa funkcji :    US1_init
+    357          //!  Funkcja inicjalizacji USART 1
+    358          //-----------------------------------------------------------------------------
+    359          //! 
+    360          //-----------------------------------------------------------------------------
+    361          void US1_init(void)
+    362          {
+    363                // Configure USART
+    364                AT91F_US1_CfgPMC();
+    365                AT91F_PDC_DisableRx(AT91C_BASE_PDC_US1);
+    366                AT91F_PDC_DisableTx(AT91C_BASE_PDC_US1);
+    367                
+    368                AT91F_US_Configure(AT91C_BASE_US1, AT91C_MASTER_CLOCK,
+    369                                 USART485_MODE, g_US1_BAUDRATE, 0);
+    370              
+    371                AT91C_BASE_US1->US_CR = AT91C_US_STTTO;
+    372          
+    373                AT91F_US_EnableIt(AT91C_BASE_US1,AT91C_US_RXBUFF | AT91C_US_TIMEOUT );     //uruchomienie/ustawienie przerwania od przepe³nienia bufora oraz od time-out
+    374          
+    375                // konfiguracja przerqwania USART0 
+    376                AT91F_AIC_ConfigureIt ( AT91C_BASE_AIC, AT91C_ID_US1, USART0_INTERRUPT_LEVEL, AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL, Usart1_handler); 
+    377                  
+    378                AT91F_US_EnableRx(AT91C_BASE_US1);
+    379                AT91F_US_EnableTx(AT91C_BASE_US1);
+    380          
+    381                
+    382                AT91F_US1_CfgPIO();                                                       //konfiguracja pinów
+    383                
+    384                unsigned int xxx= AT91F_US_ReceiveFrame (                                 //Ustawienie bufora odbiorczego
+    385          	AT91C_BASE_US1,
+    386          	US1_Buffer,
+    387          	US_BUFFER_SIZE,
+    388          	0,
+    389          	0 );
+    390          
+    391                AT91C_BASE_US1->US_RTOR = TIME_OUT_US;                                    //ustawienie czasu time-out (w bitach)
+    392                AT91C_BASE_US1->US_CR = AT91C_US_STTTO;                                   //restart time-out
+    393                
+    394                AT91F_AIC_EnableIt (AT91C_BASE_AIC, AT91C_ID_US1);                        //uruchomienie przerwania od USARTA
+    395                
+    396                g_US1_OneByteTxTime  = 1000/ ((float) (g_US1_BAUDRATE /8));
+    397          }//_______________________ Koniec funkcji US1_init ____________________________ 
+    398          
+    399          
+    400          
+    401          
+    402          
+    403          
+    404          //-----------------------------------------------------------------------------
+    405          //! Nazwa funkcji :    Usart1_handler 
+    406          //! Funkcja obs³ugi przerwania USART 1
+    407          //-----------------------------------------------------------------------------
+    408          //  
+    409          //----------------------------------------------------------------------------- 
+    410          void Usart1_handler(void)                        //timer isr 
+    411          { 
+    412            
+    413            
+    414            //char CheckNoZero;                          //sprawdza czy tabela odczytów TP nie ma zer
+    415              unsigned int dummy = AT91C_BASE_US1->US_CSR;                  //interrupts    
+    416          
+    417              AT91PS_USART USART_pt = AT91C_BASE_US1; 
+    418              unsigned int status; 
+    419              
+    420              
+    421              // get Usart status register 
+    422              status = USART_pt->US_CSR; 
+    423             
+    424             
+    425              if ( status & AT91C_US_TIMEOUT)       //wystapil timeout lub odebrano dane
+    426                {
+    427          
+    428                  AT91C_BASE_US1->US_CR = AT91C_US_STTTO;
+    429                  AT91C_BASE_US1->US_RCR = 0;
+    430          
+    431                  unsigned int xxx= AT91F_US_ReceiveFrame (
+    432          	USART_pt,
+    433          	US1_Buffer,
+    434          	US_BUFFER_SIZE,
+    435          	0,
+    436          	0 );
+    437                  
+    438                  SendModbusEnable=1;
+    439          
+    440                 
+    441                  if (US1_MasterMODBUS_ENABLE)                                            
+    442                  {
+    443                    //if //(ModBus_MASTER_Return(US1_Buffer,1))                             //je¿eli Modbus US1 w trybie master
+    444                    {
+    445                      g_US1_Connect_OK=2;        
+    446                      SendModbusEnable=1;
+    447                    }        
+    448                  }
+    449                  else
+    450                  { 
+    451                    //if (ModBus_CommS(US1_Buffer,1)) g_US1_Connect_OK=2;                 //je¿eli Modbus US1 w trybie slave
+    452                  }
+    453             
+    454          
+    455                  status = USART_pt->US_CSR; 
+    456          
+    457                }
+    458             
+    459          }//_______________________ Koniec funkcji Usart0_handler _________________________
+    460           
+    461          
+    462          */
+
+   Maximum stack usage in bytes:
+
+     Function                     .cstack
+     --------                     -------
+     AT91F_PDC_Close                   8
+     AT91F_PDC_DisableRx               0
+     AT91F_PDC_DisableTx               0
+     AT91F_PDC_EnableRx                0
+     AT91F_PDC_EnableTx                0
+     AT91F_PDC_IsNextRxEmpty           0
+     AT91F_PDC_IsNextTxEmpty           0
+     AT91F_PDC_IsRxEmpty               0
+     AT91F_PDC_IsTxEmpty               0
+     AT91F_PDC_Open                    8
+     AT91F_PDC_ReceiveFrame           24
+     AT91F_PDC_SendFrame              24
+     AT91F_PDC_SetNextRx               0
+     AT91F_PDC_SetNextTx               0
+     AT91F_PDC_SetRx                   0
+     AT91F_PDC_SetTx                   0
+     AT91F_PIO_CfgPeriph               0
+     AT91F_PMC_DisablePeriphClock      0
+     AT91F_PMC_EnablePeriphClock       0
+     AT91F_SPI_CfgCs                   0
+     AT91F_SPI_CfgMode                 0
+     AT91F_SPI_CfgPIO                  8
+     AT91F_SPI_CfgPMC                  8
+     AT91F_SPI_Enable                  0
+     AT91F_SPI_GetChar                 0
+     AT91F_SPI_ReceiveFrame           16
+     AT91F_SPI_Reset                   0
+     AT91F_SPI_SendFrame              16
+     DisableSpi                        8
+     EnableSpi                         8
+     ReadWriteSpi                     40
+     SPI_init                          8
+
+
+   Section sizes:
+
+     Function/Label               Bytes
+     --------------               -----
+     g_SPI_BAUDRATE                  4
+     SPI_Comm_TIMEOUT                4
+     AT91F_PDC_SetNextRx             6
+     AT91F_PDC_SetNextTx             6
+     AT91F_PDC_SetRx                 6
+     AT91F_PDC_SetTx                 6
+     AT91F_PDC_EnableTx              8
+     AT91F_PDC_EnableRx              6
+     AT91F_PDC_DisableTx             8
+     AT91F_PDC_DisableRx             6
+     AT91F_PDC_IsTxEmpty            10
+     AT91F_PDC_IsNextTxEmpty        10
+     AT91F_PDC_IsRxEmpty            10
+     AT91F_PDC_IsNextRxEmpty        10
+     AT91F_PDC_Open                 72
+     AT91F_PDC_Close                60
+     AT91F_PDC_SendFrame            70
+     AT91F_PDC_ReceiveFrame         70
+     AT91F_PIO_CfgPeriph            10
+     AT91F_PMC_EnablePeriphClock     4
+     AT91F_PMC_DisablePeriphClock    4
+     AT91F_SPI_CfgCs                 8
+     AT91F_SPI_Reset                 6
+     AT91F_SPI_Enable                6
+     AT91F_SPI_CfgMode               4
+     AT91F_SPI_ReceiveFrame         26
+     AT91F_SPI_SendFrame            26
+     AT91F_SPI_GetChar               8
+     AT91F_SPI_CfgPMC               20
+     AT91F_SPI_CfgPIO               28
+     EnableSpi                      22
+     DisableSpi                     16
+     SPI_init                       48
+     TMPx                            4
+     ReadWriteSpi                  168
+     ??DataTable2                    4
+     ??DataTable5                    4
+     ??DataTable6                    4
+
+ 
+  12 bytes in section .data
+ 780 bytes in section Debug.txt
+ 
+ 266 bytes of CODE memory (+ 514 bytes shared)
+  12 bytes of DATA memory
+
+Errors: none
+Warnings: none

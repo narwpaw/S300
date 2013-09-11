@@ -1,0 +1,2021 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           20/Mar/2013  07:53:32 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-          #
+#                    14.03.2013\Framework\RF_Exe.c                            #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\Framework\RF_Exe.c" -D AT91SAM7S256 -D        #
+#                    AT91SAM7SEK -D iH -D __ALARM -D __WIFI_MODULE -D S300i   #
+#                    -D _TESTER_ -lC "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.3 BETA- 14.03.2013\TESTER S300i\List\"                #
+#                    --diag_suppress Pa082 -o "D:\Zeuron\Projekty\S300\S300-p #
+#                    rogram v1.3 BETA- 14.03.2013\TESTER S300i\Obj\"          #
+#                    --no_unroll --no_inline --no_tbaa --no_scheduling        #
+#                    --debug --endian little --cpu ARM7TDMI -e --fpu None     #
+#                    --dlib_config "C:\Program Files (x86)\IAR                #
+#                    Systems\Embedded Workbench 5.0\ARM\INC\DLib_Config_Norma #
+#                    l.h" -I "D:\Zeuron\Projekty\S300\S300-program v1.3       #
+#                    BETA- 14.03.2013\lib\AT91SAM7S256\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.3 BETA- 14.03.2013\cdc\" -I                           #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\core\" -I "D:\Zeuron\Projekty\S300\S300-progr #
+#                    am v1.3 BETA- 14.03.2013\startup\" -I                    #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-         #
+#                    14.03.2013\Framework\" -I "D:\Zeuron\Projekty\S300\S300- #
+#                    program v1.3 BETA- 14.03.2013\Framework\Configuration\"  #
+#                    -I "C:\Program Files (x86)\IAR Systems\Embedded          #
+#                    Workbench 5.0\ARM\INC\" --section .text=Debug.txt        #
+#                    --interwork --cpu_mode thumb -Om                         #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-          #
+#                    14.03.2013\TESTER S300i\List\RF_Exe.lst                  #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 BETA-          #
+#                    14.03.2013\TESTER S300i\Obj\RF_Exe.o                     #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v1.3 BETA- 14.03.2013\Framework\RF_Exe.c
+      1          //****************************************************************************//
+      2          //*--------------------------------------------------------------------------*//
+      3          //*                  Microcontroller Software Support                        *//                       
+      4          //*--------------------------------------------------------------------------*//
+      5          //*--------------------------------------------------------------------------*//
+      6          //*  Nazwa pliku                  : RF_Exe.c                                 *//
+      7          //*  Opis                         : Plik wykonawczy komunikacji radiowej     *//
+      8          //*  Autor                        : Pawe³ Narwojsz                           *//
+      9          //*  Data utrzorzenia             : 31.06.2010                               *//
+     10          //*  Data ostatniej modyfikacji   : --.--.----                               *//
+     11          //*--------------------------------------------------------------------------*//
+     12          //*                                                                          *//
+     13          //*--------------------------------------------------------------------------*//
+     14          //* Rejestr zmian  (data - opis):                                            *//
+     15          //*                                                                          *//
+     16          //*                               Brak zmian                                 *//
+     17          //*                                                                          *//
+     18          //*__________________________________________________________________________*// 
+     19          //****************************************************************************//
+     20          //****************************************************************************//
+     21          
+     22          
+     23          #include "RF_Exe.h"
+     24          #include "Application_prog.h" 
+     25          #include "spi_main.h"  
+     26          
+     27          //tymczasowe
+     28          extern int licznik_cykli;
+     29          int poprawnych;
+     30          extern int odb[2];
+     31          extern char IndWys; 
+     32          extern volatile char SlaveMode;
+     33          extern long long int g_counter;
+     34          unsigned int        RF_Period;                                              //cykl transmisji
+     35          short int SymulacjaRejWej=0xAB;
+     36          short int SymulacjaRejWyj;
+     37          char IndWys=0; 
+     38          char IndWysNeg=1; 
+     39          int odb[2];
+     40          int licznik_cykli=0;
+     41          extern unsigned int CyklPerSekCount; 
+     42          extern unsigned long long g_NextTimeProgram; 
+     43          extern volatile char Busy_program;
+     44          extern _NeuronsListUnit NeuronsList[NumberNeurons];
+     45          //tymczasowo koniec-----------
+     46          extern volatile char ReciveFrameToMe;
+     47          
+     48          
+     49          #ifdef _LIVE_RJESTR
+     50          extern unsigned short LIVE_TAB[LIVE_TAB_SIZE];
+     51          extern char LIVE_TAB_IDX;
+     52          #endif
+     53          
+     54          
+     55          //Zmienne globalne -------------------------------------------------------------
+     56            
+
+   \                                 In section .bss, align 4
+     57            _RF_TaskTab  RF_TaskTab;
+   \                     RF_TaskTab:
+   \   00000000                      DS8 560
+     58            signed char           RF_CurrentTask=-1; 
+     59            signed char           RF_SpecialTask=-1; 
+     60            char g_RF_TimeOutCounter =0;  //bierz¹cy czas odliczania do timeout`u
+     61            
+
+   \                                 In section .bss, align 2
+     62            unsigned short       ReadNodeSoftVersion;
+   \                     ReadNodeSoftVersion:
+   \   00000000                      DS8 2
+     63            _RF_NodeTest         RF_NodeTest; 
+     64          //__________________________Koniec zmiennych globalnych________________________
+     65          
+     66          
+     67            
+     68            
+     69          //Zmienne globalne importowane--------------------------------------------------  
+     70            extern _RF_Status   RF_Status;
+     71            extern _MainStage  MainStage;
+     72            extern _TransQuality TransQuality;
+     73          //___________________________Koniec zmiennych globalnych importowanych_________
+     74          
+     75            
+
+   \                                 In section .rodata, align 4
+     76          const char NodeModelName[NODE_MODELS][10]=
+   \                     NodeModelName:
+   \   00000000   5333303000         DC8 "S300"
+   \   00000005   0000000000         DC8 0, 0, 0, 0, 0
+   \   0000000A   533330306900       DC8 "S300i"
+   \   00000010   00000000           DC8 0, 0, 0, 0
+   \   00000014   53333030694D       DC8 "S300iMax"
+   \              617800      
+   \   0000001D   00                 DC8 0
+   \   0000001E   4D473100           DC8 "MG1"
+   \   00000022   000000000000       DC8 0, 0, 0, 0, 0, 0
+   \   00000028   4D473200           DC8 "MG2"
+   \   0000002C   000000000000       DC8 0, 0, 0, 0, 0, 0
+   \   00000032   4D523100           DC8 "MR1"
+   \   00000036   000000000000       DC8 0, 0, 0, 0, 0, 0
+   \   0000003C   4D523200           DC8 "MR2"
+   \   00000040   000000000000       DC8 0, 0, 0, 0, 0, 0
+   \   00000046   4D475A3100         DC8 "MGZ1"
+   \   0000004B   0000000000         DC8 0, 0, 0, 0, 0
+   \   00000050   57423100           DC8 "WB1"
+   \   00000054   000000000000       DC8 0, 0, 0, 0, 0, 0
+   \   0000005A   57423200           DC8 "WB2"
+   \   0000005E   000000000000       DC8 0, 0, 0, 0, 0, 0
+   \   00000064   5050315F3700       DC8 "PP1_7"
+   \   0000006A   00000000           DC8 0, 0, 0, 0
+   \   0000006E   5044523100         DC8 "PDR1"
+   \   00000073   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000083   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000      
+     77          {
+     78            "S300",
+     79            "S300i",
+     80            "S300iMax",
+     81          
+     82            "MG1",
+     83            "MG2",
+     84            "MR1",
+     85            "MR2",
+     86            "MGZ1",
+     87            "WB1",
+     88            "WB2",
+     89            "PP1_7",
+     90            "PDR1"
+     91          };  
+     92            
+     93          
+     94          
+     95          //#define IncCurentRfTask  RF_CurrentTask++;  if ((RF_TaskTab[RF_CurrentTask].Node==0) || (RF_CurrentTask>=RF_Tasks))  {RF_CurrentTask=0; CyklPerSekCount++;}
+     96             
+     97          
+     98          
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     99          void SwitchToMaster(void)
+    100          {
+   \                     SwitchToMaster:
+   \   00000000   10B5               PUSH     {R4,LR}
+    101             SlaveMode=0;
+   \   00000002   0020               MOVS     R0,#+0
+   \   00000004   ....               LDR      R1,??DataTable30  ;; SlaveMode
+   \   00000006   0870               STRB     R0,[R1, #+0]
+    102             RF_Status.MasterMode=1;
+   \   00000008   ....               LDR      R2,??DataTable27  ;; RF_Status
+   \   0000000A   0121               MOVS     R1,#+1
+   \   0000000C   1173               STRB     R1,[R2, #+12]
+    103             ReciveFrameToMe=0;
+   \   0000000E   ....               LDR      R1,??DataTable31  ;; ReciveFrameToMe
+   \   00000010   0870               STRB     R0,[R1, #+0]
+    104             SPI_SendWord(0xA000 | RF_SetFreqReg(RF_Status.Ch),Cs_RF);  
+                    ^
+Warning[Pe223]: function "SPI_SendWord" declared implicitly
+   \   00000012   0221               MOVS     R1,#+2
+   \   00000014   0C00               MOVS     R4,R1
+   \   00000016   507B               LDRB     R0,[R2, #+13]
+   \   00000018   ........           BL       __aeabi_ui2d
+   \   0000001C   ....               LDR      R2,??DataTable11  ;; 0x33333333
+   \   0000001E   ....               LDR      R3,??DataTable12  ;; 0x3fd33333
+   \   00000020   ........           BL       __aeabi_dmul
+   \   00000024   ....               LDR      R2,??DataTable13  ;; 0x5c28f5c3
+   \   00000026   ....               LDR      R3,??DataTable14  ;; 0x408ae28f
+   \   00000028   ........           BL       __aeabi_dadd
+   \   0000002C   0022               MOVS     R2,#+0
+   \   0000002E   ....               LDR      R3,??DataTable15  ;; 0x40690000
+   \   00000030   ........           BL       __aeabi_dmul
+   \   00000034   0022               MOVS     R2,#+0
+   \   00000036   ....               LDR      R3,??DataTable16  ;; 0xc104ff00
+   \   00000038   ........           BL       __aeabi_dadd
+   \   0000003C   ........           BL       __aeabi_d2iz
+   \   00000040   0004               LSLS     R0,R0,#+16
+   \   00000042   0014               ASRS     R0,R0,#+16
+   \   00000044   A021               MOVS     R1,#+160
+   \   00000046   0902               LSLS     R1,R1,#+8        ;; #+40960
+   \   00000048   0143               ORRS     R1,R1,R0
+   \   0000004A   0800               MOVS     R0,R1
+   \   0000004C   2100               MOVS     R1,R4
+   \   0000004E   ........           BL       SPI_SendWord
+    105             //RF_Status.EnableRX();
+    106            
+    107          }
+   \   00000052   10BC               POP      {R4}
+   \   00000054   01BC               POP      {R0}
+   \   00000056   0047               BX       R0               ;; return
+    108          
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    109          void SwitchToSlave(void)
+    110          {
+   \                     SwitchToSlave:
+   \   00000000   31B5               PUSH     {R0,R4,R5,LR}
+    111             SlaveMode=1;
+   \   00000002   ....               LDR      R0,??DataTable30  ;; SlaveMode
+   \   00000004   0121               MOVS     R1,#+1
+   \   00000006   0170               STRB     R1,[R0, #+0]
+    112             RF_Status.MasterMode=0;
+   \   00000008   ....               LDR      R4,??DataTable27  ;; RF_Status
+   \   0000000A   0020               MOVS     R0,#+0
+   \   0000000C   2073               STRB     R0,[R4, #+12]
+    113             SPI_SendWord(0xA000 | RF_SetFreqReg(RF_Status.ChSlave),Cs_RF);  
+                    ^
+Warning[Pe223]: function "SPI_SendWord" declared implicitly
+   \   0000000E   0221               MOVS     R1,#+2
+   \   00000010   0D00               MOVS     R5,R1
+   \   00000012   A07B               LDRB     R0,[R4, #+14]
+   \   00000014   ........           BL       __aeabi_ui2d
+   \   00000018   0200               MOVS     R2,R0
+   \   0000001A   0B00               MOVS     R3,R1
+   \   0000001C   ....               LDR      R0,??DataTable11  ;; 0x33333333
+   \   0000001E   ....               LDR      R1,??DataTable12  ;; 0x3fd33333
+   \   00000020   ........           BL       __aeabi_dmul
+   \   00000024   0200               MOVS     R2,R0
+   \   00000026   0B00               MOVS     R3,R1
+   \   00000028   ....               LDR      R0,??DataTable13  ;; 0x5c28f5c3
+   \   0000002A   ....               LDR      R1,??DataTable14  ;; 0x408ae28f
+   \   0000002C   ........           BL       __aeabi_dadd
+   \   00000030   0200               MOVS     R2,R0
+   \   00000032   0B00               MOVS     R3,R1
+   \   00000034   0020               MOVS     R0,#+0
+   \   00000036   ....               LDR      R1,??DataTable15  ;; 0x40690000
+   \   00000038   ........           BL       __aeabi_dmul
+   \   0000003C   0200               MOVS     R2,R0
+   \   0000003E   0B00               MOVS     R3,R1
+   \   00000040   0020               MOVS     R0,#+0
+   \   00000042   ....               LDR      R1,??DataTable16  ;; 0xc104ff00
+   \   00000044   ........           BL       __aeabi_dadd
+   \   00000048   ........           BL       __aeabi_d2iz
+   \   0000004C   0004               LSLS     R0,R0,#+16
+   \   0000004E   0014               ASRS     R0,R0,#+16
+   \   00000050   A021               MOVS     R1,#+160
+   \   00000052   0902               LSLS     R1,R1,#+8        ;; #+40960
+   \   00000054   0143               ORRS     R1,R1,R0
+   \   00000056   0800               MOVS     R0,R1
+   \   00000058   2900               MOVS     R1,R5
+   \   0000005A   ........           BL       SPI_SendWord
+    114             RF_Status.EnableRX();
+   \   0000005E   E069               LDR      R0,[R4, #+28]
+   \   00000060   ........           BL       __iar_via_R0
+    115            
+    116          }
+   \   00000064   38BC               POP      {R3-R5}
+   \   00000066   01BC               POP      {R0}
+   \   00000068   0047               BX       R0               ;; return
+    117          
+    118          
+    119          //-----------------------------------------------------------------------------
+    120          //!  Nazwa funkcji :    RF_ExecuteOrder
+    121          //!  Funkcja interpretuje i realizuje otrzymany rozkaz
+    122          //-----------------------------------------------------------------------------
+    123          //  Res   - wskaŸnik na bufor danych
+    124          //  Size  - wielkoœæ bufora danych
+    125          //  Buff  - wskaŸnik na ostatni bajt danych 
+    126          //-----------------------------------------------------------------------------
+    127            _RF_Command  *pRF_Command;
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    128          char RF_ReciveFarm(char *Buff, char Size)
+    129          {
+   \                     RF_ReciveFarm:
+   \   00000000   F1B5               PUSH     {R0,R4-R7,LR}
+   \   00000002   0500               MOVS     R5,R0
+   \   00000004   0F00               MOVS     R7,R1
+   \   00000006   0024               MOVS     R4,#+0
+    130                    char FrameOk=0;
+    131                    
+    132                    if ((Size==8) && (FrameOk==0))
+   \   00000008   082F               CMP      R7,#+8
+   \   0000000A   10D1               BNE      ??RF_ReciveFarm_0
+    133                    {
+    134                       pRF_Command=(_pRF_Command)(Buff-7); //rzutowanie na strukturê rozkazu
+   \   0000000C   ....               LDR      R6,??DataTable21  ;; IndWys
+   \   0000000E   ED1F               SUBS     R5,R5,#+7
+   \   00000010   3563               STR      R5,[R6, #+48]
+    135                       if (pRF_Command->B8.CRC == crc16(pRF_Command->Streem, Size-2))  FrameOk=1;
+                                                         ^
+Warning[Pe223]: function "crc16" declared implicitly
+   \   00000012   0621               MOVS     R1,#+6
+   \   00000014   2800               MOVS     R0,R5
+   \   00000016   ........           BL       crc16
+   \   0000001A   316B               LDR      R1,[R6, #+48]
+   \   0000001C   8B79               LDRB     R3,[R1, #+6]
+   \   0000001E   CA79               LDRB     R2,[R1, #+7]
+   \   00000020   1206               LSLS     R2,R2,#+24
+   \   00000022   120C               LSRS     R2,R2,#+16
+   \   00000024   1343               ORRS     R3,R3,R2
+   \   00000026   8342               CMP      R3,R0
+   \   00000028   39D1               BNE      ??RF_ReciveFarm_1
+   \   0000002A   0124               MOVS     R4,#+1
+   \   0000002C   37E0               B        ??RF_ReciveFarm_1
+    136                    }
+    137                    else if (Size==6)
+   \                     ??RF_ReciveFarm_0:
+   \   0000002E   062F               CMP      R7,#+6
+   \   00000030   10D1               BNE      ??RF_ReciveFarm_2
+    138                    {
+    139                       pRF_Command=(_pRF_Command)(Buff-5); //rzutowanie na strukturê rozkazu
+   \   00000032   ....               LDR      R6,??DataTable21  ;; IndWys
+   \   00000034   6D1F               SUBS     R5,R5,#+5
+   \   00000036   3563               STR      R5,[R6, #+48]
+    140                       if (pRF_Command->B6.CRC == crc16(pRF_Command->Streem, Size-2))  FrameOk=1;
+                                                         ^
+Warning[Pe223]: function "crc16" declared implicitly
+   \   00000038   0421               MOVS     R1,#+4
+   \   0000003A   2800               MOVS     R0,R5
+   \   0000003C   ........           BL       crc16
+   \   00000040   316B               LDR      R1,[R6, #+48]
+   \   00000042   0B79               LDRB     R3,[R1, #+4]
+   \   00000044   4A79               LDRB     R2,[R1, #+5]
+   \   00000046   1206               LSLS     R2,R2,#+24
+   \   00000048   120C               LSRS     R2,R2,#+16
+   \   0000004A   1343               ORRS     R3,R3,R2
+   \   0000004C   8342               CMP      R3,R0
+   \   0000004E   26D1               BNE      ??RF_ReciveFarm_1
+   \   00000050   0124               MOVS     R4,#+1
+   \   00000052   24E0               B        ??RF_ReciveFarm_1
+    141                    }   
+    142                    else 
+    143                    { 
+    144                      if ((Size>8) && (FrameOk==0))
+   \                     ??RF_ReciveFarm_2:
+   \   00000054   092F               CMP      R7,#+9
+   \   00000056   0ED3               BCC      ??RF_ReciveFarm_3
+    145                      {
+    146                        pRF_Command=(_pRF_Command)(Buff-7); //rzutowanie na strukturê rozkazu
+   \   00000058   ....               LDR      R6,??DataTable21  ;; IndWys
+   \   0000005A   E81F               SUBS     R0,R5,#+7
+   \   0000005C   3063               STR      R0,[R6, #+48]
+    147                        if (pRF_Command->B8.CRC == crc16(pRF_Command->Streem, 6))  FrameOk=1;
+                                                          ^
+Warning[Pe223]: function "crc16" declared implicitly
+   \   0000005E   0621               MOVS     R1,#+6
+   \   00000060   ........           BL       crc16
+   \   00000064   316B               LDR      R1,[R6, #+48]
+   \   00000066   8B79               LDRB     R3,[R1, #+6]
+   \   00000068   CA79               LDRB     R2,[R1, #+7]
+   \   0000006A   1206               LSLS     R2,R2,#+24
+   \   0000006C   120C               LSRS     R2,R2,#+16
+   \   0000006E   1343               ORRS     R3,R3,R2
+   \   00000070   8342               CMP      R3,R0
+   \   00000072   00D1               BNE      ??RF_ReciveFarm_3
+   \   00000074   0124               MOVS     R4,#+1
+    148                      }
+    149                      
+    150                      if ((Size>6) && (FrameOk==0))
+   \                     ??RF_ReciveFarm_3:
+   \   00000076   072F               CMP      R7,#+7
+   \   00000078   11D3               BCC      ??RF_ReciveFarm_1
+   \   0000007A   2000               MOVS     R0,R4
+   \   0000007C   0FD1               BNE      ??RF_ReciveFarm_1
+    151                      {
+    152                       pRF_Command=(_pRF_Command)(Buff-5); //rzutowanie na strukturê rozkazu
+   \   0000007E   ....               LDR      R6,??DataTable21  ;; IndWys
+   \   00000080   6D1F               SUBS     R5,R5,#+5
+   \   00000082   3563               STR      R5,[R6, #+48]
+    153                       if (pRF_Command->B6.CRC == crc16(pRF_Command->Streem, 4)) FrameOk=1;
+                                                         ^
+Warning[Pe223]: function "crc16" declared implicitly
+   \   00000084   0421               MOVS     R1,#+4
+   \   00000086   2800               MOVS     R0,R5
+   \   00000088   ........           BL       crc16
+   \   0000008C   316B               LDR      R1,[R6, #+48]
+   \   0000008E   0B79               LDRB     R3,[R1, #+4]
+   \   00000090   4A79               LDRB     R2,[R1, #+5]
+   \   00000092   1206               LSLS     R2,R2,#+24
+   \   00000094   120C               LSRS     R2,R2,#+16
+   \   00000096   1343               ORRS     R3,R3,R2
+   \   00000098   8342               CMP      R3,R0
+   \   0000009A   00D1               BNE      ??RF_ReciveFarm_1
+   \   0000009C   0124               MOVS     R4,#+1
+    154                      } 
+    155                    
+    156                    }
+    157                   
+    158                    
+    159                    char swithToMaster=0;
+   \                     ??RF_ReciveFarm_1:
+   \   0000009E   0025               MOVS     R5,#+0
+    160                    
+    161                    //je¿eli ramka poprawna
+    162                    if (FrameOk==1)
+   \   000000A0   ....               LDR      R6,??DataTable21  ;; IndWys
+   \   000000A2   306B               LDR      R0,[R6, #+48]
+   \   000000A4   ....               LDR      R7,??DataTable22  ;; 0xfffff
+   \   000000A6   2100               MOVS     R1,R4
+   \   000000A8   0129               CMP      R1,#+1
+   \   000000AA   37D1               BNE      ??RF_ReciveFarm_4
+    163                    {  
+    164                        
+    165                        
+    166                            //Sprawdzenie zgodnoœci ID 
+    167                            if(((pRF_Command->ID==RF_TaskTab[RF_CurrentTask].Command.ID) && (!SlaveMode)) ||
+    168                               ((pRF_Command->ID==RF_ID) && (SlaveMode))
+    169                               ) 
+   \   000000AC   ........           BL       __aeabi_uread4
+   \   000000B0   3840               ANDS     R0,R0,R7
+   \   000000B2   0121               MOVS     R1,#+1
+   \   000000B4   7156               LDRSB    R1,[R6, R1]
+   \   000000B6   C900               LSLS     R1,R1,#+3
+   \   000000B8   ....               LDR      R2,??DataTable23  ;; RF_TaskTab
+   \   000000BA   5118               ADDS     R1,R2,R1
+   \   000000BC   4968               LDR      R1,[R1, #+4]
+   \   000000BE   3940               ANDS     R1,R1,R7
+   \   000000C0   8842               CMP      R0,R1
+   \   000000C2   03D1               BNE      ??RF_ReciveFarm_5
+   \   000000C4   ....               LDR      R0,??DataTable30  ;; SlaveMode
+   \   000000C6   0078               LDRB     R0,[R0, #+0]
+   \   000000C8   0028               CMP      R0,#+0
+   \   000000CA   0AD0               BEQ      ??RF_ReciveFarm_6
+   \                     ??RF_ReciveFarm_5:
+   \   000000CC   306B               LDR      R0,[R6, #+48]
+   \   000000CE   ........           BL       __aeabi_uread4
+   \   000000D2   0740               ANDS     R7,R7,R0
+   \   000000D4   ....               LDR      R0,??DataTable29  ;; 0x1872d
+   \   000000D6   8742               CMP      R7,R0
+   \   000000D8   16D1               BNE      ??RF_ReciveFarm_7
+   \   000000DA   ....               LDR      R0,??DataTable30  ;; SlaveMode
+   \   000000DC   0078               LDRB     R0,[R0, #+0]
+   \   000000DE   0028               CMP      R0,#+0
+   \   000000E0   12D0               BEQ      ??RF_ReciveFarm_7
+    170                            {
+    171                              if(RF_Status.ConfResive==1) RF_Status.ConfResive=2;  //znacznik odebrania danych (dla kontroli kana³u)
+   \                     ??RF_ReciveFarm_6:
+   \   000000E2   ....               LDR      R0,??DataTable27  ;; RF_Status
+   \   000000E4   C17A               LDRB     R1,[R0, #+11]
+   \   000000E6   0129               CMP      R1,#+1
+   \   000000E8   01D1               BNE      ??RF_ReciveFarm_8
+   \   000000EA   0221               MOVS     R1,#+2
+   \   000000EC   C172               STRB     R1,[R0, #+11]
+    172                              RF_ExecuteOrder(pRF_Command);   //realizacja rozkazu   
+   \                     ??RF_ReciveFarm_8:
+   \   000000EE   306B               LDR      R0,[R6, #+48]
+   \   000000F0   ........           BL       RF_ExecuteOrder
+    173                              if (ReciveFrameToMe==0)
+   \   000000F4   ....               LDR      R0,??DataTable31  ;; ReciveFrameToMe
+   \   000000F6   0178               LDRB     R1,[R0, #+0]
+   \   000000F8   0029               CMP      R1,#+0
+   \   000000FA   02D1               BNE      ??RF_ReciveFarm_9
+    174                              {
+    175                                ReciveFrameToMe=1; 
+   \   000000FC   0121               MOVS     R1,#+1
+   \   000000FE   0170               STRB     R1,[R0, #+0]
+   \   00000100   02E0               B        ??RF_ReciveFarm_7
+    176                              }else{
+    177                                ReciveFrameToMe=0;
+   \                     ??RF_ReciveFarm_9:
+   \   00000102   2900               MOVS     R1,R5
+   \   00000104   0170               STRB     R1,[R0, #+0]
+    178                                swithToMaster=1;
+   \   00000106   0125               MOVS     R5,#+1
+    179                              }
+    180                            }  
+    181          
+    182                            poprawnych++;
+   \                     ??RF_ReciveFarm_7:
+   \   00000108   F069               LDR      R0,[R6, #+28]
+   \   0000010A   401C               ADDS     R0,R0,#+1
+   \   0000010C   F061               STR      R0,[R6, #+28]
+    183                            odb[IndWys]++;
+   \   0000010E   3078               LDRB     R0,[R6, #+0]
+   \   00000110   8000               LSLS     R0,R0,#+2
+   \   00000112   3018               ADDS     R0,R6,R0
+   \   00000114   416A               LDR      R1,[R0, #+36]
+   \   00000116   491C               ADDS     R1,R1,#+1
+   \   00000118   4162               STR      R1,[R0, #+36]
+   \   0000011A   0EE0               B        ??RF_ReciveFarm_10
+    184                    }else{
+    185                       if  ((pRF_Command->ID==RF_ID) && (SlaveMode) && (ReciveFrameToMe==1))
+   \                     ??RF_ReciveFarm_4:
+   \   0000011C   ........           BL       __aeabi_uread4
+   \   00000120   0740               ANDS     R7,R7,R0
+   \   00000122   ....               LDR      R0,??DataTable29  ;; 0x1872d
+   \   00000124   8742               CMP      R7,R0
+   \   00000126   08D1               BNE      ??RF_ReciveFarm_10
+   \   00000128   ....               LDR      R0,??DataTable30  ;; SlaveMode
+   \   0000012A   0078               LDRB     R0,[R0, #+0]
+   \   0000012C   0028               CMP      R0,#+0
+   \   0000012E   04D0               BEQ      ??RF_ReciveFarm_10
+   \   00000130   ....               LDR      R0,??DataTable31  ;; ReciveFrameToMe
+   \   00000132   0078               LDRB     R0,[R0, #+0]
+   \   00000134   0128               CMP      R0,#+1
+   \   00000136   00D1               BNE      ??RF_ReciveFarm_10
+    186                       {
+    187                         swithToMaster=1;
+   \   00000138   0125               MOVS     R5,#+1
+    188                       }
+    189                      
+    190                    }
+    191            
+    192                    unsigned long T=g_counter;
+    193                    if (swithToMaster)
+   \                     ??RF_ReciveFarm_10:
+   \   0000013A   002D               CMP      R5,#+0
+   \   0000013C   04D0               BEQ      ??RF_ReciveFarm_11
+    194                    {
+    195                      //while (T+10>g_counter) {}
+    196                      Delay(0xFFFF);
+                             ^
+Warning[Pe223]: function "Delay" declared implicitly
+
+            unsigned long T=g_counter;
+                          ^
+"D:\Zeuron\Projekty\S300\S300-program v1.3 BETA- 14.03.2013\Framework\RF_Exe.c",192  Warning[Pe177]: 
+          variable "T" was declared but never referenced
+   \   0000013E   ....               LDR      R0,??DataTable32  ;; 0xffff
+   \   00000140   ........           BL       Delay
+    197                      SwitchToMaster();
+   \   00000144   ........           BL       SwitchToMaster
+    198                    }
+    199                    return FrameOk;
+   \                     ??RF_ReciveFarm_11:
+   \   00000148   2000               MOVS     R0,R4
+   \   0000014A   F8BC               POP      {R3-R7}
+   \   0000014C   02BC               POP      {R1}
+   \   0000014E   0847               BX       R1               ;; return
+    200          
+    201          }
+    202          
+    203          
+    204          
+    205          
+    206          
+    207          //-----------------------------------------------------------------------------
+    208          //!  Nazwa funkcji :    RF_ExecuteOrder
+    209          //!  Funkcja interpretuje i realizuje otrzymany rozkaz
+    210          //-----------------------------------------------------------------------------
+    211          //-----------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    212          void RF_ExecuteOrder(_RF_Command *Command)
+    213          {
+   \                     RF_ExecuteOrder:
+   \   00000000   F1B5               PUSH     {R0,R4-R7,LR}
+   \   00000002   84B0               SUB      SP,SP,#+16
+    214           // TRACE_INFO("Id: %X,  Ord: %X,  Reg: %X,  Val: %X \n\r", Command->ID, Command->Order, Command->Auxi, Command->B8.Val); 
+    215             licznik_cykli=0;  
+   \   00000004   AA4C               LDR      R4,??RF_ExecuteOrder_1  ;; IndWys
+   \   00000006   0025               MOVS     R5,#+0
+   \   00000008   E562               STR      R5,[R4, #+44]
+    216                         
+    217                        
+    218             _RF_Command  CommandToSend;
+    219             
+    220             //czêœæ wspólna wszystkich odpowiedzi
+    221             CommandToSend.ID     = RF_ID;
+   \   0000000A   0198               LDR      R0,[SP, #+4]
+   \   0000000C   000D               LSRS     R0,R0,#+20
+   \   0000000E   0005               LSLS     R0,R0,#+20
+   \   00000010   A849               LDR      R1,??RF_ExecuteOrder_1+0x4  ;; 0x1872d
+   \   00000012   0143               ORRS     R1,R1,R0
+   \   00000014   0191               STR      R1,[SP, #+4]
+    222             CommandToSend.Auxi   = Command->Auxi;
+   \   00000016   01AE               ADD      R6,SP,#+4
+   \   00000018   3000               MOVS     R0,R6
+   \   0000001A   C01C               ADDS     R0,R0,#+3
+   \   0000001C   ........           BL       __aeabi_uread4
+   \   00000020   0700               MOVS     R7,R0
+   \   00000022   0498               LDR      R0,[SP, #+16]
+   \   00000024   C01C               ADDS     R0,R0,#+3
+   \   00000026   ........           BL       __aeabi_uread4
+   \   0000002A   3100               MOVS     R1,R6
+   \   0000002C   C91C               ADDS     R1,R1,#+3
+   \   0000002E   FF22               MOVS     R2,#+255
+   \   00000030   9743               BICS     R7,R7,R2
+   \   00000032   0006               LSLS     R0,R0,#+24
+   \   00000034   000E               LSRS     R0,R0,#+24
+   \   00000036   3843               ORRS     R0,R0,R7
+   \   00000038   ........           BL       __aeabi_uwrite4
+    223             
+    224                 
+    225              char ByteToSend=0;          
+   \   0000003C   6846               MOV      R0,SP
+   \   0000003E   2900               MOVS     R1,R5
+   \   00000040   0170               STRB     R1,[R0, #+0]
+    226              char NextModule=0;
+   \   00000042   2F00               MOVS     R7,R5
+    227              switch (Command->Order)
+   \   00000044   0498               LDR      R0,[SP, #+16]
+   \   00000046   801C               ADDS     R0,R0,#+2
+   \   00000048   ........           BL       __aeabi_uread4
+   \   0000004C   F021               MOVS     R1,#+240
+   \   0000004E   0140               ANDS     R1,R1,R0
+   \   00000050   0800               MOVS     R0,R1
+   \   00000052   0009               LSRS     R0,R0,#+4
+   \   00000054   401E               SUBS     R0,R0,#+1
+   \   00000056   0C28               CMP      R0,#+12
+   \   00000058   28D8               BHI      ??RF_ExecuteOrder_2
+   \   0000005A   02A1               ADR      R1,??RF_ExecuteOrder_0
+   \   0000005C   4000               LSLS     R0,R0,#+1
+   \   0000005E   095A               LDRH     R1,[R1, R0]
+   \   00000060   8F44               ADD      PC,PC,R1
+   \   00000062   C046               Nop      
+   \                     ??RF_ExecuteOrder_0:
+   \   00000064   1A007C004800       DC16     +26,+124,+72,+72
+   \              4800        
+   \   0000006C   480048004800       DC16     +72,+72,+72,+72
+   \              4800        
+   \   00000074   B6007C014800       DC16     +182,+380,+72,+470
+   \              D601        
+   \   0000007C   1C02               DC16     +540
+    228              {  
+    229               
+    230                 //Rozkazy dla Slave ------------------------------------------------------------
+    231                
+    232                      case R_RegOrd :  //Odczyt pojedyñczego rejestru - rozkaz
+    233                               //wykonanie ------
+    234                               CommandToSend.B8.Val  =  SymulacjaRejWej;                     // przepisz dane z rejestru nr: Command.Auxi  (tymczasowo  SymulacjaRej)
+   \                     ??RF_ExecuteOrder_3:
+   \   0000007E   608B               LDRH     R0,[R4, #+26]
+   \   00000080   B080               STRH     R0,[R6, #+4]
+    235               
+    236                               //odpowiedŸ ------
+    237                               CommandToSend.Order  = R_RegRes;
+   \   00000082   3000               MOVS     R0,R6
+   \   00000084   801C               ADDS     R0,R0,#+2
+   \   00000086   ........           BL       __aeabi_uread4
+   \   0000008A   0200               MOVS     R2,R0
+   \   0000008C   3100               MOVS     R1,R6
+   \   0000008E   891C               ADDS     R1,R1,#+2
+   \   00000090   F020               MOVS     R0,#+240
+   \   00000092   8243               BICS     R2,R2,R0
+   \   00000094   9020               MOVS     R0,#+144
+   \   00000096   1043               ORRS     R0,R0,R2
+   \   00000098   ........           BL       __aeabi_uwrite4
+    238                               CommandToSend.B8.CRC = crc16(CommandToSend.Streem,6);    
+                                                             ^
+Warning[Pe223]: function "crc16" declared implicitly
+   \   0000009C   0621               MOVS     R1,#+6
+   \   0000009E   01A8               ADD      R0,SP,#+4
+   \   000000A0   ........           BL       crc16
+   \   000000A4   F080               STRH     R0,[R6, #+6]
+    239                               ByteToSend =8;
+   \   000000A6   6846               MOV      R0,SP
+   \   000000A8   0821               MOVS     R1,#+8
+   \   000000AA   0170               STRB     R1,[R0, #+0]
+    240                           break;
+    241                           
+    242                      case W_RegOrd :  //Zapis pojedyñczego rejestru  -rozkaz
+    243                               //wykonanie ------
+    244                               SymulacjaRejWyj=Command->B8.Val;                                    //Ustaw rejestr nr: Command.Auxi 
+    245                               //odpowiedŸ ------
+    246                               CommandToSend.Order  = W_RegRes;
+    247                               CommandToSend.B6.CRC = crc16(CommandToSend.Streem,4);    
+    248                               ByteToSend =6;
+    249                           break;
+    250          
+    251                           
+    252                   //Odpowiedzi rozkazów od slave do sterownika ------------------------------------------------------------   
+    253                      
+    254                      case R_RegRes :  //Odczyt pojedyñczego rejestru - odp
+    255                               //wykonanie ------
+    256                               //CommandToSend.B8.Val  =  0xCC;                            // przepisz dane z rejestru nr: Command.Auxi  (tymczasowo  0xCC)
+    257          
+    258          #ifdef _LIVE_RJESTR  
+    259                             LIVE_TAB[LIVE_TAB_IDX]=0xB000 | (((RF_TaskTab[RF_CurrentTask].Node)&0xF)<<8) | ((Command->B8.Val)&0xFF);
+    260                             if (LIVE_TAB_IDX<LIVE_TAB_SIZE) LIVE_TAB_IDX++; else LIVE_TAB_IDX=0;
+    261          #endif              
+    262                        
+    263                              //przyœpieszenie wykonania programu
+    264                              if ((RF_TaskTab[RF_CurrentTask].Command.Auxi==0) && (MainStage.StageI[RF_TaskTab[RF_CurrentTask].Node].Value[RF_TaskTab[RF_CurrentTask].Command.Auxi]!=Command->B8.Val) && (Busy_program==0))
+    265                              {   
+    266                                g_NextTimeProgram=g_counter+1;
+    267                                
+    268                           
+    269                                //sygna³ dzwiêkowy je¿eli odczytano zmianê stanu na 1
+    270                            /*    
+    271                                 if ((Command->B8.Val>MainStage.StageI[RF_TaskTab[RF_CurrentTask].Node].Value[RF_TaskTab[RF_CurrentTask].Command.Auxi]) && (NeuronsList[RF_TaskTab[RF_CurrentTask].Node-1].NeuronType==NodeRF_Remote) && (!(AT91C_IFLASH_MEM->Config.SoundOff)))
+    272                                 {
+    273                                    AT91C_BASE_PIOA->PIO_SODR =SpeakerPin;  
+    274                                    ButtonBipCounter=g_counter+1;
+    275                                 }
+    276                             */
+    277                                
+    278                                
+    279                                  #ifdef _LIVE_RJESTR    
+    280                                      LIVE_TAB[LIVE_TAB_IDX]=0xFFFF;
+    281                                    if (LIVE_TAB_IDX<LIVE_TAB_SIZE) LIVE_TAB_IDX++; else LIVE_TAB_IDX=0;
+    282                                #endif   
+    283                              
+    284                              }
+    285          
+    286                              MainStage.StageI[RF_TaskTab[RF_CurrentTask].Node].Value[RF_TaskTab[RF_CurrentTask].Command.Auxi]=Command->B8.Val; 
+    287                              
+    288                              
+    289                              #ifdef  DIRECT_Q_MESURE
+    290                               TransQuality.DirectkMensur[RF_TaskTab[RF_CurrentTask].Node-1]--; 
+    291                               #endif
+    292                              
+    293                   
+    294                               TransQuality.Mensur[RF_TaskTab[RF_CurrentTask].Node-1] |= 0x1 << TransQuality.MensurIndex;   //wpis do tablicy jakoœci
+    295                               TransQuality.QuickMensur[RF_TaskTab[RF_CurrentTask].Node-1] |= 0x1 << TransQuality.QuickMensurIndex;   //wpis do tablicy jakoœci 
+    296                               TransQuality.SlowMensur[RF_TaskTab[RF_CurrentTask].Node-1] |= 0x1 << TransQuality.SlowMensurIndex;   //wpis do tablicy jakoœci d³ugotrwa³ej
+    297                                
+    298                               
+    299                               if ((RF_NodeTest.NodeNr==RF_TaskTab[RF_CurrentTask].Node) && (RF_NodeTest.Sent>0))
+    300                                {
+    301                                    RF_NodeTest.Recived++; 
+    302                                    RF_NodeTest.SentSyn=RF_NodeTest.Sent;
+    303                                }
+    304                               
+    305                               NextModule=1;
+    306                               
+    307                               
+    308                              // //Reakcja na rz¹danie linku
+    309                              // NeuronsList[RF_TaskTab[RF_CurrentTask].Node].Link
+    310                               
+    311                               
+    312                           break;
+    313                           
+    314                      case W_RegRes :  //Zapis pojedyñczego rejestru  -odp
+    315                               //wykonanie ------
+    316                        
+    317                             
+    318                                 MainStage.SendStageChange[RF_TaskTab[RF_CurrentTask].Node]=0;
+    319                                 RF_SpecialTask=-1;
+    320                             
+    321                                if (RF_TaskTab[RF_CurrentTask].Node-1<=NumberNeurons)
+    322                                {
+    323                                    TransQuality.Mensur[RF_TaskTab[RF_CurrentTask].Node-1] |= 0x1 << TransQuality.MensurIndex;   //wpis do tablicy jakoœci
+    324                                    TransQuality.QuickMensur[RF_TaskTab[RF_CurrentTask].Node-1] |= 0x1 << TransQuality.QuickMensurIndex;   //wpis do tablicy jakoœci 
+    325                                    TransQuality.SlowMensur[RF_TaskTab[RF_CurrentTask].Node-1] |= 0x1 << TransQuality.SlowMensurIndex;   //wpis do tablicy jakoœci d³ugotrwa³ej
+    326                                }
+    327                                
+    328                                if ((RF_NodeTest.NodeNr==RF_TaskTab[RF_CurrentTask].Node) && (RF_NodeTest.Sent>0))
+    329                                {
+    330                                    RF_NodeTest.Recived++;
+    331                                    RF_NodeTest.SentSyn=RF_NodeTest.Sent;
+    332                                }
+    333                                
+    334                                    
+    335                            //   g_RF_TimeOutCounter=0;
+    336                               
+    337                               NextModule=1;
+    338                            #ifdef _LIVE_RJESTR            
+    339                               LIVE_TAB[LIVE_TAB_IDX]=0xD000 | (((RF_TaskTab[RF_CurrentTask].Node)&0xF)<<8) | 0xFF;
+    340                             if (LIVE_TAB_IDX<LIVE_TAB_SIZE) LIVE_TAB_IDX++; else LIVE_TAB_IDX=0;
+    341                            #endif   
+    342                             
+    343                             
+    344                             #ifdef  DIRECT_Q_MESURE
+    345                               TransQuality.DirectkMensur[RF_TaskTab[RF_CurrentTask].Node-1]--; 
+    346                               #endif
+    347                             /*
+    348                             if (RF_TaskTab[RF_CurrentTask].Node==6)
+    349                             {
+    350                                AT91C_BASE_PIOA->PIO_CODR =SpeakerPin; 
+    351                                Delay(0xFFF);
+    352                                AT91C_BASE_PIOA->PIO_SODR =SpeakerPin;
+    353                             }
+    354                             */
+    355                         break;
+    356                         
+    357                         
+    358                         
+    359                         
+    360                         case R_Iam :  //odpowiedŸ z ramki rozg³oœnej 
+    361               
+    362                              //Uwaga!!! ramka nie jest obs³ugiwana
+    363                              
+    364                              #ifdef  DIRECT_Q_MESURE
+    365                               TransQuality.DirectkMensur[RF_TaskTab[RF_CurrentTask].Node-1]--; 
+    366                               #endif
+    367                   
+    368                               TransQuality.Mensur[RF_TaskTab[RF_CurrentTask].Node-1] |= 0x1 << TransQuality.MensurIndex;   //wpis do tablicy jakoœci
+    369                               TransQuality.QuickMensur[RF_TaskTab[RF_CurrentTask].Node-1] |= 0x1 << TransQuality.QuickMensurIndex;   //wpis do tablicy jakoœci 
+    370                               TransQuality.SlowMensur[RF_TaskTab[RF_CurrentTask].Node-1] |= 0x1 << TransQuality.SlowMensurIndex;   //wpis do tablicy jakoœci d³ugotrwa³ej
+    371                                
+    372                               
+    373                               if ((RF_NodeTest.NodeNr==RF_TaskTab[RF_CurrentTask].Node) && (RF_NodeTest.Sent>0))
+    374                                {
+    375                                    RF_NodeTest.Recived++; 
+    376                                    RF_NodeTest.SentSyn=RF_NodeTest.Sent;
+    377                                }
+    378                               
+    379                               NextModule=1;
+    380                         break;  
+    381                         
+    382                         
+    383                        case W_NewIdRes :  //odpowiedŸ/potwierdzenie nadania nowego ID
+    384                               
+    385                              TransQuality.Mensur[0]=0;
+    386                               
+    387                               //wyczyœæ zadania
+    388                               for (char i=0; i<RF_Tasks; i++) 
+    389                               {
+    390                                  if(RF_TaskTab[i].Command.Order==SNewId)
+    391                                  {
+    392                                    RF_TaskTab[i].Node=0;
+    393                                    RF_TaskTab[i].Command.ID=0;
+    394                                    RF_TaskTab[i].Command.Order=0;
+    395                                    RF_TaskTab[i].Command.Auxi=0;
+    396                                  }
+    397                               }
+    398                         
+    399                               
+    400                               NextModule=1;
+    401                         break;  
+    402                         
+    403                         
+    404                         
+    405                         
+    406                         
+    407                
+    408              }
+    409              
+    410                       
+    411                      //Wyœlij odpowiedŸ
+    412                      if (ByteToSend)
+   \                     ??RF_ExecuteOrder_2:
+   \   000000AC   6846               MOV      R0,SP
+   \   000000AE   0078               LDRB     R0,[R0, #+0]
+   \   000000B0   0028               CMP      R0,#+0
+   \   000000B2   0BD0               BEQ      ??RF_ExecuteOrder_4
+    413                      {
+    414                          RF_Status.EnableTX();
+   \   000000B4   804D               LDR      R5,??RF_ExecuteOrder_1+0x8  ;; RF_Status
+   \   000000B6   A869               LDR      R0,[R5, #+24]
+   \   000000B8   ........           BL       __iar_via_R0
+    415                           RF_SendData(CommandToSend.Streem, ByteToSend);
+                                              ^
+Warning[Pe167]: argument of type "char *" is incompatible with parameter of
+          type "unsigned char *"
+   \   000000BC   6846               MOV      R0,SP
+   \   000000BE   0178               LDRB     R1,[R0, #+0]
+   \   000000C0   01A8               ADD      R0,SP,#+4
+   \   000000C2   ........           BL       RF_SendData
+    416                          RF_Status.EnableRX();
+   \   000000C6   E869               LDR      R0,[R5, #+28]
+   \   000000C8   ........           BL       __iar_via_R0
+    417                         
+    418                      }           
+    419             
+    420                      //odpytaj kolejny modu³
+    421                      if (NextModule)
+   \                     ??RF_ExecuteOrder_4:
+   \   000000CC   002F               CMP      R7,#+0
+   \   000000CE   03D0               BEQ      ??RF_ExecuteOrder_5
+    422                      {
+    423                         g_RF_TimeOutCounter=RF_TimeOut; 
+   \   000000D0   0920               MOVS     R0,#+9
+   \   000000D2   E070               STRB     R0,[R4, #+3]
+    424                         RF_MasterExecut();
+   \   000000D4   ........           BL       RF_MasterExecut
+    425                        /*
+    426                        if (RF_Status.MasterMode)
+    427                          {
+    428                            //if ((!SlaveMode) && (g_Stop_Program==0))
+    429                            if (g_RF_TimeOutCounter>0)
+    430                            {
+    431                            }else{
+    432                               CyklPerSekCount++;
+    433                               g_RF_TimeOutCounter=RF_TimeOut; 
+    434                               RF_MasterExecut();
+    435                        
+    436                            }
+    437                          }
+    438                        */
+    439                      }
+    440            
+    441            
+    442          }
+   \                     ??RF_ExecuteOrder_5:
+   \   000000D8   05B0               ADD      SP,SP,#+20
+   \   000000DA   F0BC               POP      {R4-R7}
+   \   000000DC   01BC               POP      {R0}
+   \   000000DE   0047               BX       R0               ;; return
+   \                     ??RF_ExecuteOrder_6:
+   \   000000E0   0498               LDR      R0,[SP, #+16]
+   \   000000E2   0279               LDRB     R2,[R0, #+4]
+   \   000000E4   4179               LDRB     R1,[R0, #+5]
+   \   000000E6   0906               LSLS     R1,R1,#+24
+   \   000000E8   090C               LSRS     R1,R1,#+16
+   \   000000EA   0A43               ORRS     R2,R2,R1
+   \   000000EC   2283               STRH     R2,[R4, #+24]
+   \   000000EE   3000               MOVS     R0,R6
+   \   000000F0   801C               ADDS     R0,R0,#+2
+   \   000000F2   ........           BL       __aeabi_uread4
+   \   000000F6   0200               MOVS     R2,R0
+   \   000000F8   3100               MOVS     R1,R6
+   \   000000FA   891C               ADDS     R1,R1,#+2
+   \   000000FC   F020               MOVS     R0,#+240
+   \   000000FE   8243               BICS     R2,R2,R0
+   \   00000100   A020               MOVS     R0,#+160
+   \   00000102   1043               ORRS     R0,R0,R2
+   \   00000104   ........           BL       __aeabi_uwrite4
+   \   00000108   0421               MOVS     R1,#+4
+   \   0000010A   01A8               ADD      R0,SP,#+4
+   \   0000010C   ........           BL       crc16
+   \   00000110   B080               STRH     R0,[R6, #+4]
+   \   00000112   6846               MOV      R0,SP
+   \   00000114   0621               MOVS     R1,#+6
+   \   00000116   0170               STRB     R1,[R0, #+0]
+   \   00000118   C8E7               B        ??RF_ExecuteOrder_2
+   \                     ??RF_ExecuteOrder_7:
+   \   0000011A   684A               LDR      R2,??RF_ExecuteOrder_1+0xC  ;; MainStage
+   \   0000011C   684B               LDR      R3,??RF_ExecuteOrder_1+0x10  ;; RF_TaskTab
+   \   0000011E   0120               MOVS     R0,#+1
+   \   00000120   2056               LDRSB    R0,[R4, R0]
+   \   00000122   C000               LSLS     R0,R0,#+3
+   \   00000124   1818               ADDS     R0,R3,R0
+   \   00000126   4068               LDR      R0,[R0, #+4]
+   \   00000128   000E               LSRS     R0,R0,#+24
+   \   0000012A   20D1               BNE      ??RF_ExecuteOrder_8
+   \   0000012C   0499               LDR      R1,[SP, #+16]
+   \   0000012E   0879               LDRB     R0,[R1, #+4]
+   \   00000130   4D79               LDRB     R5,[R1, #+5]
+   \   00000132   2D06               LSLS     R5,R5,#+24
+   \   00000134   2D0C               LSRS     R5,R5,#+16
+   \   00000136   2843               ORRS     R0,R0,R5
+   \   00000138   0121               MOVS     R1,#+1
+   \   0000013A   6156               LDRSB    R1,[R4, R1]
+   \   0000013C   C900               LSLS     R1,R1,#+3
+   \   0000013E   5918               ADDS     R1,R3,R1
+   \   00000140   A025               MOVS     R5,#+160
+   \   00000142   4E68               LDR      R6,[R1, #+4]
+   \   00000144   360E               LSRS     R6,R6,#+24
+   \   00000146   7600               LSLS     R6,R6,#+1
+   \   00000148   0978               LDRB     R1,[R1, #+0]
+   \   0000014A   1627               MOVS     R7,#+22
+   \   0000014C   7943               MULS     R1,R7,R1
+   \   0000014E   5118               ADDS     R1,R2,R1
+   \   00000150   8919               ADDS     R1,R1,R6
+   \   00000152   495F               LDRSH    R1,[R1, R5]
+   \   00000154   8142               CMP      R1,R0
+   \   00000156   0AD0               BEQ      ??RF_ExecuteOrder_8
+   \   00000158   5A48               LDR      R0,??RF_ExecuteOrder_1+0x14  ;; Busy_program
+   \   0000015A   0078               LDRB     R0,[R0, #+0]
+   \   0000015C   0028               CMP      R0,#+0
+   \   0000015E   06D1               BNE      ??RF_ExecuteOrder_8
+   \   00000160   594D               LDR      R5,??RF_ExecuteOrder_1+0x18  ;; g_NextTimeProgram
+   \   00000162   5A48               LDR      R0,??RF_ExecuteOrder_1+0x1C  ;; g_counter
+   \   00000164   03C8               LDM      R0!,{R0,R1}
+   \   00000166   0026               MOVS     R6,#+0
+   \   00000168   401C               ADDS     R0,R0,#+1
+   \   0000016A   7141               ADCS     R1,R1,R6
+   \   0000016C   03C5               STM      R5!,{R0,R1}
+   \                     ??RF_ExecuteOrder_8:
+   \   0000016E   0499               LDR      R1,[SP, #+16]
+   \   00000170   0879               LDRB     R0,[R1, #+4]
+   \   00000172   4D79               LDRB     R5,[R1, #+5]
+   \   00000174   2D06               LSLS     R5,R5,#+24
+   \   00000176   2D0C               LSRS     R5,R5,#+16
+   \   00000178   2843               ORRS     R0,R0,R5
+   \   0000017A   0121               MOVS     R1,#+1
+   \   0000017C   6156               LDRSB    R1,[R4, R1]
+   \   0000017E   C900               LSLS     R1,R1,#+3
+   \   00000180   5918               ADDS     R1,R3,R1
+   \   00000182   4B68               LDR      R3,[R1, #+4]
+   \   00000184   1B0E               LSRS     R3,R3,#+24
+   \   00000186   5B00               LSLS     R3,R3,#+1
+   \   00000188   0D78               LDRB     R5,[R1, #+0]
+   \   0000018A   1626               MOVS     R6,#+22
+   \   0000018C   7543               MULS     R5,R6,R5
+   \   0000018E   5219               ADDS     R2,R2,R5
+   \   00000190   D218               ADDS     R2,R2,R3
+   \   00000192   A032               ADDS     R2,R2,#+160
+   \   00000194   1080               STRH     R0,[R2, #+0]
+   \   00000196   0878               LDRB     R0,[R1, #+0]
+   \   00000198   4D49               LDR      R1,??RF_ExecuteOrder_1+0x20  ;; TransQuality
+   \   0000019A   8200               LSLS     R2,R0,#+2
+   \   0000019C   8A18               ADDS     R2,R1,R2
+   \   0000019E   936C               LDR      R3,[R2, #+72]
+   \   000001A0   0125               MOVS     R5,#+1
+   \   000001A2   0E78               LDRB     R6,[R1, #+0]
+   \   000001A4   B540               LSLS     R5,R5,R6
+   \   000001A6   1D43               ORRS     R5,R5,R3
+   \   000001A8   9564               STR      R5,[R2, #+72]
+   \   000001AA   0A18               ADDS     R2,R1,R0
+   \   000001AC   2523               MOVS     R3,#+37
+   \   000001AE   1D00               MOVS     R5,R3
+   \   000001B0   555D               LDRB     R5,[R2, R5]
+   \   000001B2   0126               MOVS     R6,#+1
+   \   000001B4   8F78               LDRB     R7,[R1, #+2]
+   \   000001B6   BE40               LSLS     R6,R6,R7
+   \   000001B8   2E43               ORRS     R6,R6,R5
+   \   000001BA   D654               STRB     R6,[R2, R3]
+   \   000001BC   9378               LDRB     R3,[R2, #+2]
+   \   000001BE   0125               MOVS     R5,#+1
+   \   000001C0   4978               LDRB     R1,[R1, #+1]
+   \   000001C2   8D40               LSLS     R5,R5,R1
+   \   000001C4   1D43               ORRS     R5,R5,R3
+   \   000001C6   9570               STRB     R5,[R2, #+2]
+   \   000001C8   217A               LDRB     R1,[R4, #+8]
+   \   000001CA   8142               CMP      R1,R0
+   \   000001CC   06D1               BNE      ??RF_ExecuteOrder_9
+   \                     ??RF_ExecuteOrder_10:
+   \   000001CE   E068               LDR      R0,[R4, #+12]
+   \   000001D0   0028               CMP      R0,#+0
+   \   000001D2   03D0               BEQ      ??RF_ExecuteOrder_9
+   \   000001D4   6169               LDR      R1,[R4, #+20]
+   \   000001D6   491C               ADDS     R1,R1,#+1
+   \   000001D8   6161               STR      R1,[R4, #+20]
+   \   000001DA   2061               STR      R0,[R4, #+16]
+   \                     ??RF_ExecuteOrder_9:
+   \   000001DC   0127               MOVS     R7,#+1
+   \   000001DE   65E7               B        ??RF_ExecuteOrder_2
+   \                     ??RF_ExecuteOrder_11:
+   \   000001E0   374B               LDR      R3,??RF_ExecuteOrder_1+0x10  ;; RF_TaskTab
+   \   000001E2   0120               MOVS     R0,#+1
+   \   000001E4   2056               LDRSB    R0,[R4, R0]
+   \   000001E6   C000               LSLS     R0,R0,#+3
+   \   000001E8   1818               ADDS     R0,R3,R0
+   \   000001EA   0078               LDRB     R0,[R0, #+0]
+   \   000001EC   0200               MOVS     R2,R0
+   \   000001EE   3949               LDR      R1,??RF_ExecuteOrder_1+0x24  ;; 0x6eb
+   \   000001F0   324B               LDR      R3,??RF_ExecuteOrder_1+0xC  ;; MainStage
+   \   000001F2   9B18               ADDS     R3,R3,R2
+   \   000001F4   5D54               STRB     R5,[R3, R1]
+   \   000001F6   0021               MOVS     R1,#+0
+   \   000001F8   C943               MVNS     R1,R1            ;; #-1
+   \   000001FA   A170               STRB     R1,[R4, #+2]
+   \   000001FC   511E               SUBS     R1,R2,#+1
+   \   000001FE   2429               CMP      R1,#+36
+   \   00000200   17DA               BGE      ??RF_ExecuteOrder_12
+   \   00000202   3349               LDR      R1,??RF_ExecuteOrder_1+0x20  ;; TransQuality
+   \   00000204   9300               LSLS     R3,R2,#+2
+   \   00000206   CB18               ADDS     R3,R1,R3
+   \   00000208   9D6C               LDR      R5,[R3, #+72]
+   \   0000020A   0126               MOVS     R6,#+1
+   \   0000020C   0F78               LDRB     R7,[R1, #+0]
+   \   0000020E   BE40               LSLS     R6,R6,R7
+   \   00000210   2E43               ORRS     R6,R6,R5
+   \   00000212   9E64               STR      R6,[R3, #+72]
+   \   00000214   8A18               ADDS     R2,R1,R2
+   \   00000216   2523               MOVS     R3,#+37
+   \   00000218   1D00               MOVS     R5,R3
+   \   0000021A   555D               LDRB     R5,[R2, R5]
+   \   0000021C   0126               MOVS     R6,#+1
+   \   0000021E   8F78               LDRB     R7,[R1, #+2]
+   \   00000220   BE40               LSLS     R6,R6,R7
+   \   00000222   2E43               ORRS     R6,R6,R5
+   \   00000224   D654               STRB     R6,[R2, R3]
+   \   00000226   9378               LDRB     R3,[R2, #+2]
+   \   00000228   0125               MOVS     R5,#+1
+   \   0000022A   4978               LDRB     R1,[R1, #+1]
+   \   0000022C   8D40               LSLS     R5,R5,R1
+   \   0000022E   1D43               ORRS     R5,R5,R3
+   \   00000230   9570               STRB     R5,[R2, #+2]
+   \                     ??RF_ExecuteOrder_12:
+   \   00000232   217A               LDRB     R1,[R4, #+8]
+   \   00000234   8142               CMP      R1,R0
+   \   00000236   D1D1               BNE      ??RF_ExecuteOrder_9
+   \   00000238   C9E7               B        ??RF_ExecuteOrder_10
+   \                     ??RF_ExecuteOrder_13:
+   \   0000023A   214B               LDR      R3,??RF_ExecuteOrder_1+0x10  ;; RF_TaskTab
+   \   0000023C   0120               MOVS     R0,#+1
+   \   0000023E   2056               LDRSB    R0,[R4, R0]
+   \   00000240   C000               LSLS     R0,R0,#+3
+   \   00000242   1818               ADDS     R0,R3,R0
+   \   00000244   0078               LDRB     R0,[R0, #+0]
+   \   00000246   0200               MOVS     R2,R0
+   \   00000248   2149               LDR      R1,??RF_ExecuteOrder_1+0x20  ;; TransQuality
+   \   0000024A   9300               LSLS     R3,R2,#+2
+   \   0000024C   CB18               ADDS     R3,R1,R3
+   \   0000024E   9D6C               LDR      R5,[R3, #+72]
+   \   00000250   0126               MOVS     R6,#+1
+   \   00000252   0F78               LDRB     R7,[R1, #+0]
+   \   00000254   BE40               LSLS     R6,R6,R7
+   \   00000256   2E43               ORRS     R6,R6,R5
+   \   00000258   9E64               STR      R6,[R3, #+72]
+   \   0000025A   8A18               ADDS     R2,R1,R2
+   \   0000025C   2523               MOVS     R3,#+37
+   \   0000025E   1D00               MOVS     R5,R3
+   \   00000260   555D               LDRB     R5,[R2, R5]
+   \   00000262   0126               MOVS     R6,#+1
+   \   00000264   8F78               LDRB     R7,[R1, #+2]
+   \   00000266   BE40               LSLS     R6,R6,R7
+   \   00000268   2E43               ORRS     R6,R6,R5
+   \   0000026A   D654               STRB     R6,[R2, R3]
+   \   0000026C   9378               LDRB     R3,[R2, #+2]
+   \   0000026E   0125               MOVS     R5,#+1
+   \   00000270   4978               LDRB     R1,[R1, #+1]
+   \   00000272   8D40               LSLS     R5,R5,R1
+   \   00000274   1D43               ORRS     R5,R5,R3
+   \   00000276   9570               STRB     R5,[R2, #+2]
+   \   00000278   217A               LDRB     R1,[R4, #+8]
+   \   0000027A   8142               CMP      R1,R0
+   \   0000027C   AED1               BNE      ??RF_ExecuteOrder_9
+   \   0000027E   A6E7               B        ??RF_ExecuteOrder_10
+   \                     ??RF_ExecuteOrder_14:
+   \   00000280   1548               LDR      R0,??RF_ExecuteOrder_1+0x28  ;; TransQuality + 76
+   \   00000282   0560               STR      R5,[R0, #+0]
+   \   00000284   2800               MOVS     R0,R5
+   \                     ??RF_ExecuteOrder_15:
+   \   00000286   0100               MOVS     R1,R0
+   \   00000288   4629               CMP      R1,#+70
+   \   0000028A   A7D2               BCS      ??RF_ExecuteOrder_9
+   \   0000028C   0C4B               LDR      R3,??RF_ExecuteOrder_1+0x10  ;; RF_TaskTab
+   \   0000028E   C900               LSLS     R1,R1,#+3
+   \   00000290   5918               ADDS     R1,R3,R1
+   \   00000292   4A68               LDR      R2,[R1, #+4]
+   \   00000294   F023               MOVS     R3,#+240
+   \   00000296   1B04               LSLS     R3,R3,#+16       ;; #+15728640
+   \   00000298   1340               ANDS     R3,R3,R2
+   \   0000029A   1A00               MOVS     R2,R3
+   \   0000029C   120D               LSRS     R2,R2,#+20
+   \   0000029E   042A               CMP      R2,#+4
+   \   000002A0   02D1               BNE      ??RF_ExecuteOrder_16
+   \   000002A2   2A00               MOVS     R2,R5
+   \   000002A4   0A70               STRB     R2,[R1, #+0]
+   \   000002A6   4D60               STR      R5,[R1, #+4]
+   \                     ??RF_ExecuteOrder_16:
+   \   000002A8   401C               ADDS     R0,R0,#+1
+   \   000002AA   0006               LSLS     R0,R0,#+24
+   \   000002AC   000E               LSRS     R0,R0,#+24
+   \   000002AE   EAE7               B        ??RF_ExecuteOrder_15
+   \                     ??RF_ExecuteOrder_1:
+   \   000002B0   ........           DC32     IndWys
+   \   000002B4   2D870100           DC32     0x1872d
+   \   000002B8   ........           DC32     RF_Status
+   \   000002BC   ........           DC32     MainStage
+   \   000002C0   ........           DC32     RF_TaskTab
+   \   000002C4   ........           DC32     Busy_program
+   \   000002C8   ........           DC32     g_NextTimeProgram
+   \   000002CC   ........           DC32     g_counter
+   \   000002D0   ........           DC32     TransQuality
+   \   000002D4   EB060000           DC32     0x6eb
+   \   000002D8   ........           DC32     TransQuality + 76
+    443          //_____________________________________________________________________________
+    444          
+    445          
+    446          
+    447          
+    448          
+    449          
+    450          
+    451          
+    452          
+    453          //-----------------------------------------------------------------------------
+    454          //!  Nazwa funkcji :    RF_SendData
+    455          //!  Funkcja wysy³a dane przez RF12
+    456          //-----------------------------------------------------------------------------
+    457          //  *data - wska¿nik na pierwszy bajt
+    458          //  *size - iloœæ bajtów do wys³ania
+    459          //-----------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    460          void RF_SendData(unsigned char *data, char size)
+    461          {
+   \                     RF_SendData:
+   \   00000000   01B5               PUSH     {R0,LR}
+    462              RF_SendFarm(data, size);
+   \   00000002   ........           BL       RF_SendFarm
+    463          }
+   \   00000006   08BC               POP      {R3}
+   \   00000008   01BC               POP      {R0}
+   \   0000000A   0047               BX       R0               ;; return
+    464          //------------------------------------------------------------------------------
+    465          
+    466          
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    467          char IncCurentRfTask(void)
+    468          {
+   \                     IncCurentRfTask:
+   \   00000000   01B5               PUSH     {R0,LR}
+    469               RF_CurrentTask++;  
+   \   00000002   0E48               LDR      R0,??IncCurentRfTask_0  ;; IndWys
+   \   00000004   0121               MOVS     R1,#+1
+   \   00000006   4156               LDRSB    R1,[R0, R1]
+   \   00000008   491C               ADDS     R1,R1,#+1
+   \   0000000A   4170               STRB     R1,[R0, #+1]
+    470              if ((RF_TaskTab[RF_CurrentTask].Node==0) || (RF_CurrentTask>=RF_Tasks))  
+   \   0000000C   0906               LSLS     R1,R1,#+24
+   \   0000000E   0916               ASRS     R1,R1,#+24
+   \   00000010   CA00               LSLS     R2,R1,#+3
+   \   00000012   0B4B               LDR      R3,??IncCurentRfTask_0+0x4  ;; RF_TaskTab
+   \   00000014   9A5C               LDRB     R2,[R3, R2]
+   \   00000016   002A               CMP      R2,#+0
+   \   00000018   01D0               BEQ      ??IncCurentRfTask_1
+   \   0000001A   4629               CMP      R1,#+70
+   \   0000001C   0BDB               BLT      ??IncCurentRfTask_2
+    471              {
+    472                RF_CurrentTask=0; CyklPerSekCount++;
+   \                     ??IncCurentRfTask_1:
+   \   0000001E   0021               MOVS     R1,#+0
+   \   00000020   4170               STRB     R1,[R0, #+1]
+   \   00000022   0848               LDR      R0,??IncCurentRfTask_0+0x8  ;; CyklPerSekCount
+   \   00000024   0168               LDR      R1,[R0, #+0]
+   \   00000026   491C               ADDS     R1,R1,#+1
+   \   00000028   0160               STR      R1,[R0, #+0]
+    473                if (AT91C_IFLASH_MEM->Config.SlaveMode)
+   \   0000002A   0748               LDR      R0,??IncCurentRfTask_0+0xC  ;; 0x13d7e8
+   \   0000002C   0078               LDRB     R0,[R0, #+0]
+   \   0000002E   0028               CMP      R0,#+0
+   \   00000030   01D0               BEQ      ??IncCurentRfTask_2
+    474                {
+    475                   SwitchToSlave();
+   \   00000032   ........           BL       SwitchToSlave
+    476                }
+    477              }
+    478          }
+                 ^
+Warning[Pe940]: missing return statement at end of non-void function
+          "IncCurentRfTask"
+   \                     ??IncCurentRfTask_2:
+   \   00000036   08BC               POP      {R3}
+   \   00000038   01BC               POP      {R0}
+   \   0000003A   0047               BX       R0               ;; return
+   \                     ??IncCurentRfTask_0:
+   \   0000003C   ........           DC32     IndWys
+   \   00000040   ........           DC32     RF_TaskTab
+   \   00000044   ........           DC32     CyklPerSekCount
+   \   00000048   E8D71300           DC32     0x13d7e8
+    479          
+    480          #define SpeedExePeriods 0
+    481          
+    482          
+    483          //-----------------------------------------------------------------------------
+    484          //!  Nazwa funkcji :    RF_MasterExecut
+    485          //!  Funkcja wysy³a dane wed³ug tablicy rozkazów RF_TaskTab
+    486          //-----------------------------------------------------------------------------
+    487          //-----------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    488          void RF_MasterExecut(void)
+    489          {
+   \                     RF_MasterExecut:
+   \   00000000   F7B5               PUSH     {R0-R2,R4-R7,LR}
+   \   00000002   6846               MOV      R0,SP
+   \   00000004   0021               MOVS     R1,#+0
+   \   00000006   0172               STRB     R1,[R0, #+8]
+    490          
+    491            
+    492            char ByteToSend=0;
+    493            //char TaskNr;
+    494            
+    495            unsigned int SendOrder=0;    //flaga wys³ania
+   \   00000008   0F00               MOVS     R7,R1
+    496           
+    497            
+    498          
+    499          
+    500            
+    501            //wyszukanie rozkazów priorytetowych
+    502            char Nd=0;
+   \   0000000A   0020               MOVS     R0,#+0
+   \   0000000C   C043               MVNS     R0,R0            ;; #-1
+   \   0000000E   27E0               B        ??RF_MasterExecut_0
+    503            unsigned char Tn=0;
+    504            static signed char  RF_RememberTask=-1;
+    505            
+    506            
+    507            signed char TMP_RF_SpecialTask=-1;
+    508            
+    509            while ((Nd<NumberNeurons) && (TMP_RF_SpecialTask==-1))
+    510            {
+    511                if ((MainStage.SendStageChange[Nd]>=ChangeStageFlag-SpeedExePeriods))    
+    512                {
+    513                  
+    514                  Tn=0;
+    515                  while (((RF_TaskTab[Tn].Node!=0) && (Tn<RF_Tasks) && (TMP_RF_SpecialTask==-1)))
+    516                  {
+    517                     if ((RF_TaskTab[Tn].Command.Order==W_RegOrd) &&  (RF_TaskTab[Tn].Command.Auxi==0) && (RF_TaskTab[Tn].Node==Nd)) 
+   \                     ??RF_MasterExecut_1:
+   \   00000010   6568               LDR      R5,[R4, #+4]
+   \   00000012   F026               MOVS     R6,#+240
+   \   00000014   3604               LSLS     R6,R6,#+16       ;; #+15728640
+   \   00000016   2E40               ANDS     R6,R6,R5
+   \   00000018   360D               LSRS     R6,R6,#+20
+   \   0000001A   022E               CMP      R6,#+2
+   \   0000001C   0CD1               BNE      ??RF_MasterExecut_2
+   \   0000001E   2D0E               LSRS     R5,R5,#+24
+   \   00000020   0AD1               BNE      ??RF_MasterExecut_2
+   \   00000022   2478               LDRB     R4,[R4, #+0]
+   \   00000024   0D00               MOVS     R5,R1
+   \   00000026   AC42               CMP      R4,R5
+   \   00000028   06D1               BNE      ??RF_MasterExecut_2
+    518                     {
+    519                         TMP_RF_SpecialTask=Tn;
+   \   0000002A   1000               MOVS     R0,R2
+   \   0000002C   0006               LSLS     R0,R0,#+24
+   \   0000002E   0016               ASRS     R0,R0,#+24
+    520                         SendOrder=1;
+   \   00000030   0127               MOVS     R7,#+1
+    521                         MainStage.SendStageChange[Nd]--;
+   \   00000032   1C78               LDRB     R4,[R3, #+0]
+   \   00000034   641E               SUBS     R4,R4,#+1
+   \   00000036   1C70               STRB     R4,[R3, #+0]
+    522                     }
+    523                     Tn++;
+   \                     ??RF_MasterExecut_2:
+   \   00000038   521C               ADDS     R2,R2,#+1
+   \   0000003A   1206               LSLS     R2,R2,#+24
+   \   0000003C   120E               LSRS     R2,R2,#+24
+    524                  }
+   \                     ??RF_MasterExecut_3:
+   \   0000003E   B94D               LDR      R5,??RF_MasterExecut_4  ;; RF_TaskTab
+   \   00000040   1400               MOVS     R4,R2
+   \   00000042   E400               LSLS     R4,R4,#+3
+   \   00000044   2C19               ADDS     R4,R5,R4
+   \   00000046   2578               LDRB     R5,[R4, #+0]
+   \   00000048   002D               CMP      R5,#+0
+   \   0000004A   06D0               BEQ      ??RF_MasterExecut_5
+   \   0000004C   1500               MOVS     R5,R2
+   \   0000004E   462D               CMP      R5,#+70
+   \   00000050   03D2               BCS      ??RF_MasterExecut_5
+   \   00000052   0025               MOVS     R5,#+0
+   \   00000054   ED43               MVNS     R5,R5            ;; #-1
+   \   00000056   A842               CMP      R0,R5
+   \   00000058   DAD0               BEQ      ??RF_MasterExecut_1
+    525                  
+    526                }
+    527                
+    528                
+    529                Nd++;  
+   \                     ??RF_MasterExecut_5:
+   \   0000005A   491C               ADDS     R1,R1,#+1
+   \   0000005C   0906               LSLS     R1,R1,#+24
+   \   0000005E   090E               LSRS     R1,R1,#+24
+   \                     ??RF_MasterExecut_0:
+   \   00000060   0A00               MOVS     R2,R1
+   \   00000062   232A               CMP      R2,#+35
+   \   00000064   0DD2               BCS      ??RF_MasterExecut_6
+   \   00000066   0022               MOVS     R2,#+0
+   \   00000068   D243               MVNS     R2,R2            ;; #-1
+   \   0000006A   9042               CMP      R0,R2
+   \   0000006C   09D1               BNE      ??RF_MasterExecut_6
+   \   0000006E   AE4A               LDR      R2,??RF_MasterExecut_4+0x4  ;; MainStage
+   \   00000070   AE4B               LDR      R3,??RF_MasterExecut_4+0x8  ;; 0x6eb
+   \   00000072   0C00               MOVS     R4,R1
+   \   00000074   1219               ADDS     R2,R2,R4
+   \   00000076   D318               ADDS     R3,R2,R3
+   \   00000078   1A78               LDRB     R2,[R3, #+0]
+   \   0000007A   0A2A               CMP      R2,#+10
+   \   0000007C   EDD3               BCC      ??RF_MasterExecut_5
+   \   0000007E   0022               MOVS     R2,#+0
+   \   00000080   DDE7               B        ??RF_MasterExecut_3
+    530            }  
+    531            
+    532            RF_SpecialTask=TMP_RF_SpecialTask;
+   \                     ??RF_MasterExecut_6:
+   \   00000082   AB4C               LDR      R4,??RF_MasterExecut_4+0xC  ;; IndWys
+   \   00000084   A070               STRB     R0,[R4, #+2]
+    533            
+    534            if (RF_SpecialTask>=0)
+   \   00000086   0220               MOVS     R0,#+2
+   \   00000088   2056               LDRSB    R0,[R4, R0]
+   \   0000008A   0028               CMP      R0,#+0
+   \   0000008C   03D4               BMI      ??RF_MasterExecut_7
+    535            {
+    536              RF_RememberTask=RF_CurrentTask;
+   \   0000008E   6178               LDRB     R1,[R4, #+1]
+   \   00000090   2171               STRB     R1,[R4, #+4]
+    537              RF_CurrentTask=RF_SpecialTask;
+   \   00000092   6070               STRB     R0,[R4, #+1]
+   \   00000094   5BE0               B        ??RF_MasterExecut_8
+    538          
+    539          
+    540                                    
+    541                        
+    542            }else{
+    543              if (RF_RememberTask>=0) 
+   \                     ??RF_MasterExecut_7:
+   \   00000096   0420               MOVS     R0,#+4
+   \   00000098   2056               LDRSB    R0,[R4, R0]
+   \   0000009A   0028               CMP      R0,#+0
+   \   0000009C   03D4               BMI      ??RF_MasterExecut_9
+    544              {
+    545               RF_CurrentTask=RF_RememberTask;
+   \   0000009E   6070               STRB     R0,[R4, #+1]
+    546               RF_RememberTask=-1;  
+   \   000000A0   0020               MOVS     R0,#+0
+   \   000000A2   C043               MVNS     R0,R0            ;; #-1
+   \   000000A4   2071               STRB     R0,[R4, #+4]
+    547              }
+    548              
+    549              IncCurentRfTask();
+   \                     ??RF_MasterExecut_9:
+   \   000000A6   ........           BL       IncCurentRfTask
+   \   000000AA   44E0               B        ??RF_MasterExecut_10
+    550          
+    551             
+    552          
+    553            
+    554              
+    555              //wykluczenie rozkazów ustawiania stanów oraz odczytu rejestrów je¿eli brak transmisji
+    556              while (((RF_TaskTab[RF_CurrentTask].Node!=0) && (RF_CurrentTask<RF_Tasks)) && (SendOrder==0))
+    557              {
+    558                 if (((RF_TaskTab[RF_CurrentTask].Command.Order==W_RegOrd) &&  ((RF_TaskTab[RF_CurrentTask].Command.Auxi==0) && (MainStage.SendStageChange[RF_TaskTab[RF_CurrentTask].Node]==0) && (NeuronsList[RF_TaskTab[RF_CurrentTask].Node-1].NeuronType!=NodeRF_Period) && (NeuronsList[RF_TaskTab[RF_CurrentTask].Node-1].NeuronType!=NodeRF_Remote) ))  ||
+    559                    ((RF_TaskTab[RF_CurrentTask].Command.Order==R_RegOrd) &&  (RF_TaskTab[RF_CurrentTask].Command.Auxi>0) && (TransQuality.QuickMensur[RF_TaskTab[RF_CurrentTask].Node-1]==0)))
+   \                     ??RF_MasterExecut_11:
+   \   000000AC   4A68               LDR      R2,[R1, #+4]
+   \   000000AE   F020               MOVS     R0,#+240
+   \   000000B0   0004               LSLS     R0,R0,#+16       ;; #+15728640
+   \   000000B2   0300               MOVS     R3,R0
+   \   000000B4   1340               ANDS     R3,R3,R2
+   \   000000B6   1B0D               LSRS     R3,R3,#+20
+   \   000000B8   022B               CMP      R3,#+2
+   \   000000BA   12D1               BNE      ??RF_MasterExecut_12
+   \   000000BC   120E               LSRS     R2,R2,#+24
+   \   000000BE   10D1               BNE      ??RF_MasterExecut_12
+   \   000000C0   0A78               LDRB     R2,[R1, #+0]
+   \   000000C2   9A4B               LDR      R3,??RF_MasterExecut_4+0x8  ;; 0x6eb
+   \   000000C4   984D               LDR      R5,??RF_MasterExecut_4+0x4  ;; MainStage
+   \   000000C6   AD18               ADDS     R5,R5,R2
+   \   000000C8   EB5C               LDRB     R3,[R5, R3]
+   \   000000CA   002B               CMP      R3,#+0
+   \   000000CC   09D1               BNE      ??RF_MasterExecut_12
+   \   000000CE   994E               LDR      R6,??RF_MasterExecut_4+0x10  ;; NeuronsList
+   \   000000D0   0C23               MOVS     R3,#+12
+   \   000000D2   5A43               MULS     R2,R3,R2
+   \   000000D4   B218               ADDS     R2,R6,R2
+   \   000000D6   0C3A               SUBS     R2,R2,#+12
+   \   000000D8   1278               LDRB     R2,[R2, #+0]
+   \   000000DA   052A               CMP      R2,#+5
+   \   000000DC   01D0               BEQ      ??RF_MasterExecut_12
+   \   000000DE   042A               CMP      R2,#+4
+   \   000000E0   E1D1               BNE      ??RF_MasterExecut_9
+   \                     ??RF_MasterExecut_12:
+   \   000000E2   4A68               LDR      R2,[R1, #+4]
+   \   000000E4   0300               MOVS     R3,R0
+   \   000000E6   1340               ANDS     R3,R3,R2
+   \   000000E8   1B0D               LSRS     R3,R3,#+20
+   \   000000EA   012B               CMP      R3,#+1
+   \   000000EC   08D1               BNE      ??RF_MasterExecut_13
+   \   000000EE   120E               LSRS     R2,R2,#+24
+   \   000000F0   06D0               BEQ      ??RF_MasterExecut_13
+   \   000000F2   0A78               LDRB     R2,[R1, #+0]
+   \   000000F4   904B               LDR      R3,??RF_MasterExecut_4+0x14  ;; TransQuality
+   \   000000F6   9A18               ADDS     R2,R3,R2
+   \   000000F8   2532               ADDS     R2,R2,#+37
+   \   000000FA   1278               LDRB     R2,[R2, #+0]
+   \   000000FC   002A               CMP      R2,#+0
+   \   000000FE   D2D0               BEQ      ??RF_MasterExecut_9
+    560                 {
+    561                      IncCurentRfTask();   
+    562                   
+    563                 }else{ 
+    564                    if ((RF_TaskTab[RF_CurrentTask].Command.Order==W_RegOrd) &&  (RF_TaskTab[RF_CurrentTask].Command.Auxi==0) && ((MainStage.SendStageChange[RF_TaskTab[RF_CurrentTask].Node]>0)|| (NeuronsList[RF_TaskTab[RF_CurrentTask].Node-1].NeuronType==NodeRF_Remote)))  MainStage.SendStageChange[RF_TaskTab[RF_CurrentTask].Node]--;
+   \                     ??RF_MasterExecut_13:
+   \   00000100   4A68               LDR      R2,[R1, #+4]
+   \   00000102   1040               ANDS     R0,R0,R2
+   \   00000104   000D               LSRS     R0,R0,#+20
+   \   00000106   0228               CMP      R0,#+2
+   \   00000108   14D1               BNE      ??RF_MasterExecut_14
+   \   0000010A   1000               MOVS     R0,R2
+   \   0000010C   000E               LSRS     R0,R0,#+24
+   \   0000010E   11D1               BNE      ??RF_MasterExecut_14
+   \   00000110   0878               LDRB     R0,[R1, #+0]
+   \   00000112   854A               LDR      R2,??RF_MasterExecut_4+0x4  ;; MainStage
+   \   00000114   8549               LDR      R1,??RF_MasterExecut_4+0x8  ;; 0x6eb
+   \   00000116   1218               ADDS     R2,R2,R0
+   \   00000118   5118               ADDS     R1,R2,R1
+   \   0000011A   0A78               LDRB     R2,[R1, #+0]
+   \   0000011C   002A               CMP      R2,#+0
+   \   0000011E   07D1               BNE      ??RF_MasterExecut_15
+   \   00000120   0C23               MOVS     R3,#+12
+   \   00000122   5843               MULS     R0,R3,R0
+   \   00000124   834B               LDR      R3,??RF_MasterExecut_4+0x10  ;; NeuronsList
+   \   00000126   1818               ADDS     R0,R3,R0
+   \   00000128   0C38               SUBS     R0,R0,#+12
+   \   0000012A   0078               LDRB     R0,[R0, #+0]
+   \   0000012C   0428               CMP      R0,#+4
+   \   0000012E   01D1               BNE      ??RF_MasterExecut_14
+   \                     ??RF_MasterExecut_15:
+   \   00000130   501E               SUBS     R0,R2,#+1
+   \   00000132   0870               STRB     R0,[R1, #+0]
+    565                    SendOrder=1;   
+   \                     ??RF_MasterExecut_14:
+   \   00000134   0127               MOVS     R7,#+1
+    566                 }
+    567              }
+   \                     ??RF_MasterExecut_10:
+   \   00000136   0120               MOVS     R0,#+1
+   \   00000138   2056               LDRSB    R0,[R4, R0]
+   \   0000013A   7A4D               LDR      R5,??RF_MasterExecut_4  ;; RF_TaskTab
+   \   0000013C   C100               LSLS     R1,R0,#+3
+   \   0000013E   6918               ADDS     R1,R5,R1
+   \   00000140   0A78               LDRB     R2,[R1, #+0]
+   \   00000142   002A               CMP      R2,#+0
+   \   00000144   03D0               BEQ      ??RF_MasterExecut_8
+   \   00000146   4628               CMP      R0,#+70
+   \   00000148   01DA               BGE      ??RF_MasterExecut_8
+   \   0000014A   002F               CMP      R7,#+0
+   \   0000014C   AED0               BEQ      ??RF_MasterExecut_11
+    568            //  TaskNr=RF_CurrentTask; 
+    569            }
+    570            
+    571            
+    572            if (RF_Status.MasterMode==0) return;
+   \                     ??RF_MasterExecut_8:
+   \   0000014E   7B48               LDR      R0,??RF_MasterExecut_4+0x18  ;; RF_Status + 12
+   \   00000150   0078               LDRB     R0,[R0, #+0]
+   \   00000152   0028               CMP      R0,#+0
+   \   00000154   00D1               BNE      .+4
+   \   00000156   E2E0               B        ??RF_MasterExecut_16
+    573          
+    574               
+    575            
+    576            if (SendOrder)
+   \   00000158   002F               CMP      R7,#+0
+   \   0000015A   00D1               BNE      .+4
+   \   0000015C   D5E0               B        ??RF_MasterExecut_17
+    577            {
+    578              
+    579              
+    580                _RF_Command  RF_Command;
+    581                RF_Command.ID     = RF_TaskTab[RF_CurrentTask].Command.ID;
+   \   0000015E   714D               LDR      R5,??RF_MasterExecut_4  ;; RF_TaskTab
+   \   00000160   0098               LDR      R0,[SP, #+0]
+   \   00000162   000D               LSRS     R0,R0,#+20
+   \   00000164   0005               LSLS     R0,R0,#+20
+   \   00000166   0121               MOVS     R1,#+1
+   \   00000168   6156               LDRSB    R1,[R4, R1]
+   \   0000016A   C900               LSLS     R1,R1,#+3
+   \   0000016C   6918               ADDS     R1,R5,R1
+   \   0000016E   4968               LDR      R1,[R1, #+4]
+   \   00000170   0903               LSLS     R1,R1,#+12
+   \   00000172   090B               LSRS     R1,R1,#+12
+   \   00000174   0143               ORRS     R1,R1,R0
+   \   00000176   0091               STR      R1,[SP, #+0]
+   \   00000178   6846               MOV      R0,SP
+   \   0000017A   801C               ADDS     R0,R0,#+2
+   \   0000017C   ........           BL       __aeabi_uread4
+   \   00000180   6946               MOV      R1,SP
+   \   00000182   891C               ADDS     R1,R1,#+2
+   \   00000184   F022               MOVS     R2,#+240
+   \   00000186   9043               BICS     R0,R0,R2
+   \   00000188   0122               MOVS     R2,#+1
+   \   0000018A   A256               LDRSB    R2,[R4, R2]
+   \   0000018C   D200               LSLS     R2,R2,#+3
+   \   0000018E   AA18               ADDS     R2,R5,R2
+   \   00000190   5268               LDR      R2,[R2, #+4]
+   \   00000192   120D               LSRS     R2,R2,#+20
+   \   00000194   1301               LSLS     R3,R2,#+4
+   \   00000196   F022               MOVS     R2,#+240
+   \   00000198   1A40               ANDS     R2,R2,R3
+   \   0000019A   0243               ORRS     R2,R2,R0
+   \   0000019C   1000               MOVS     R0,R2
+   \   0000019E   ........           BL       __aeabi_uwrite4
+    582                RF_Command.Order  = RF_TaskTab[RF_CurrentTask].Command.Order;
+    583                RF_Command.Auxi   = RF_TaskTab[RF_CurrentTask].Command.Auxi;
+   \   000001A2   6846               MOV      R0,SP
+   \   000001A4   C01C               ADDS     R0,R0,#+3
+   \   000001A6   ........           BL       __aeabi_uread4
+   \   000001AA   6946               MOV      R1,SP
+   \   000001AC   C91C               ADDS     R1,R1,#+3
+   \   000001AE   FF22               MOVS     R2,#+255
+   \   000001B0   9043               BICS     R0,R0,R2
+   \   000001B2   0122               MOVS     R2,#+1
+   \   000001B4   A256               LDRSB    R2,[R4, R2]
+   \   000001B6   D200               LSLS     R2,R2,#+3
+   \   000001B8   AA18               ADDS     R2,R5,R2
+   \   000001BA   5268               LDR      R2,[R2, #+4]
+   \   000001BC   120E               LSRS     R2,R2,#+24
+   \   000001BE   0243               ORRS     R2,R2,R0
+   \   000001C0   1000               MOVS     R0,R2
+   \   000001C2   ........           BL       __aeabi_uwrite4
+    584                
+    585          
+    586                if (RF_TaskTab[RF_CurrentTask].Command.Order==W_NewIdOrd)                 //rozkaz specjalny zmiany ID
+   \   000001C6   0120               MOVS     R0,#+1
+   \   000001C8   2056               LDRSB    R0,[R4, R0]
+   \   000001CA   C000               LSLS     R0,R0,#+3
+   \   000001CC   2918               ADDS     R1,R5,R0
+   \   000001CE   F020               MOVS     R0,#+240
+   \   000001D0   0004               LSLS     R0,R0,#+16       ;; #+15728640
+   \   000001D2   4A68               LDR      R2,[R1, #+4]
+   \   000001D4   1040               ANDS     R0,R0,R2
+   \   000001D6   000D               LSRS     R0,R0,#+20
+   \   000001D8   0528               CMP      R0,#+5
+   \   000001DA   67D1               BNE      ??RF_MasterExecut_18
+    587                {
+    588                   ByteToSend=8;
+   \   000001DC   6846               MOV      R0,SP
+   \   000001DE   0821               MOVS     R1,#+8
+   \   000001E0   0172               STRB     R1,[R0, #+8]
+    589                   RF_Command.CHID_CUR_ID=NeuronsList[0].NeuronID;
+   \   000001E2   ........           BL       __aeabi_uread8
+   \   000001E6   534E               LDR      R6,??RF_MasterExecut_4+0x10  ;; NeuronsList
+   \   000001E8   6A46               MOV      R2,SP
+   \   000001EA   9446               MOV      R12,R2
+   \   000001EC   0200               MOVS     R2,R0
+   \   000001EE   0B00               MOVS     R3,R1
+   \   000001F0   5348               LDR      R0,??RF_MasterExecut_4+0x1C  ;; 0xfff00000
+   \   000001F2   0021               MOVS     R1,#+0
+   \   000001F4   C943               MVNS     R1,R1            ;; #-1
+   \   000001F6   1040               ANDS     R0,R0,R2
+   \   000001F8   1940               ANDS     R1,R1,R3
+   \   000001FA   03B4               PUSH     {R0,R1}
+   \   000001FC   7068               LDR      R0,[R6, #+4]
+   \   000001FE   0200               MOVS     R2,R0
+   \   00000200   5048               LDR      R0,??RF_MasterExecut_4+0x20  ;; 0xfffff
+   \   00000202   0021               MOVS     R1,#+0
+   \   00000204   1040               ANDS     R0,R0,R2
+   \   00000206   0CBC               POP      {R2,R3}
+   \   00000208   1043               ORRS     R0,R0,R2
+   \   0000020A   1943               ORRS     R1,R1,R3
+   \   0000020C   6246               MOV      R2,R12
+   \   0000020E   ........           BL       __aeabi_uwrite8
+    590                   RF_Command.CHID_KODE=0xC;
+   \   00000212   6846               MOV      R0,SP
+   \   00000214   C01C               ADDS     R0,R0,#+3
+   \   00000216   ........           BL       __aeabi_uread8
+   \   0000021A   6A46               MOV      R2,SP
+   \   0000021C   D21C               ADDS     R2,R2,#+3
+   \   0000021E   9446               MOV      R12,R2
+   \   00000220   0200               MOVS     R2,R0
+   \   00000222   0B00               MOVS     R3,R1
+   \   00000224   0F20               MOVS     R0,#+15
+   \   00000226   C043               MVNS     R0,R0            ;; #-16
+   \   00000228   1040               ANDS     R0,R0,R2
+   \   0000022A   0200               MOVS     R2,R0
+   \   0000022C   0C20               MOVS     R0,#+12
+   \   0000022E   0021               MOVS     R1,#+0
+   \   00000230   1043               ORRS     R0,R0,R2
+   \   00000232   1943               ORRS     R1,R1,R3
+   \   00000234   6246               MOV      R2,R12
+   \   00000236   ........           BL       __aeabi_uwrite8
+    591                   RF_Command.CHID_NEW_ID=NeuronsList[1].NeuronID;
+   \   0000023A   6846               MOV      R0,SP
+   \   0000023C   C01C               ADDS     R0,R0,#+3
+   \   0000023E   ........           BL       __aeabi_uread8
+   \   00000242   6A46               MOV      R2,SP
+   \   00000244   D21C               ADDS     R2,R2,#+3
+   \   00000246   9446               MOV      R12,R2
+   \   00000248   0200               MOVS     R2,R0
+   \   0000024A   0B00               MOVS     R3,R1
+   \   0000024C   3E48               LDR      R0,??RF_MasterExecut_4+0x24  ;; 0xff00000f
+   \   0000024E   0021               MOVS     R1,#+0
+   \   00000250   C943               MVNS     R1,R1            ;; #-1
+   \   00000252   1040               ANDS     R0,R0,R2
+   \   00000254   1940               ANDS     R1,R1,R3
+   \   00000256   03B4               PUSH     {R0,R1}
+   \   00000258   3269               LDR      R2,[R6, #+16]
+   \   0000025A   1201               LSLS     R2,R2,#+4
+   \   0000025C   3B48               LDR      R0,??RF_MasterExecut_4+0x28  ;; 0xfffff0
+   \   0000025E   0021               MOVS     R1,#+0
+   \   00000260   1040               ANDS     R0,R0,R2
+   \   00000262   0CBC               POP      {R2,R3}
+   \   00000264   1043               ORRS     R0,R0,R2
+   \   00000266   1943               ORRS     R1,R1,R3
+   \   00000268   6246               MOV      R2,R12
+   \   0000026A   ........           BL       __aeabi_uwrite8
+    592                   RF_Command.CHID_CRC=crc16(RF_Command.Streem,6);
+                                              ^
+Warning[Pe223]: function "crc16" declared implicitly
+   \   0000026E   0621               MOVS     R1,#+6
+   \   00000270   6846               MOV      R0,SP
+   \   00000272   ........           BL       crc16
+   \   00000276   0600               MOVS     R6,R0
+   \   00000278   6846               MOV      R0,SP
+   \   0000027A   801D               ADDS     R0,R0,#+6
+   \   0000027C   ........           BL       __aeabi_uread8
+   \   00000280   6A46               MOV      R2,SP
+   \   00000282   921D               ADDS     R2,R2,#+6
+   \   00000284   9446               MOV      R12,R2
+   \   00000286   0200               MOVS     R2,R0
+   \   00000288   0B00               MOVS     R3,R1
+   \   0000028A   3148               LDR      R0,??RF_MasterExecut_4+0x2C  ;; 0xffff0000
+   \   0000028C   0021               MOVS     R1,#+0
+   \   0000028E   C943               MVNS     R1,R1            ;; #-1
+   \   00000290   1040               ANDS     R0,R0,R2
+   \   00000292   1940               ANDS     R1,R1,R3
+   \   00000294   03B4               PUSH     {R0,R1}
+   \   00000296   3200               MOVS     R2,R6
+   \   00000298   2E48               LDR      R0,??RF_MasterExecut_4+0x30  ;; 0xffff
+   \   0000029A   0021               MOVS     R1,#+0
+   \   0000029C   1040               ANDS     R0,R0,R2
+   \   0000029E   0CBC               POP      {R2,R3}
+   \   000002A0   1043               ORRS     R0,R0,R2
+   \   000002A2   1943               ORRS     R1,R1,R3
+   \   000002A4   6246               MOV      R2,R12
+   \   000002A6   ........           BL       __aeabi_uwrite8
+   \   000002AA   20E0               B        ??RF_MasterExecut_19
+    593                
+    594                }else if (RF_TaskTab[RF_CurrentTask].Command.Order==R_RegOrd) 
+   \                     ??RF_MasterExecut_18:
+   \   000002AC   0128               CMP      R0,#+1
+   \   000002AE   08D1               BNE      ??RF_MasterExecut_20
+    595                {
+    596                    ByteToSend=6;
+   \   000002B0   6846               MOV      R0,SP
+   \   000002B2   0621               MOVS     R1,#+6
+   \   000002B4   0172               STRB     R1,[R0, #+8]
+    597                    RF_Command.B6.CRC = crc16(RF_Command.Streem,4);
+                                               ^
+Warning[Pe223]: function "crc16" declared implicitly
+   \   000002B6   0421               MOVS     R1,#+4
+   \   000002B8   ........           BL       crc16
+   \   000002BC   6946               MOV      R1,SP
+   \   000002BE   8880               STRH     R0,[R1, #+4]
+   \   000002C0   15E0               B        ??RF_MasterExecut_19
+    598          
+    599                    
+    600                }else if (RF_TaskTab[RF_CurrentTask].Command.Order==W_RegOrd)  
+   \                     ??RF_MasterExecut_20:
+   \   000002C2   0228               CMP      R0,#+2
+   \   000002C4   13D1               BNE      ??RF_MasterExecut_19
+    601                {  
+    602                    ByteToSend=8;
+   \   000002C6   6846               MOV      R0,SP
+   \   000002C8   0822               MOVS     R2,#+8
+   \   000002CA   0272               STRB     R2,[R0, #+8]
+    603                    RF_Command.B8.Val = MainStage.StageQ[RF_TaskTab[RF_CurrentTask].Node].Value[RF_TaskTab[RF_CurrentTask].Command.Auxi];
+   \   000002CC   224A               LDR      R2,??RF_MasterExecut_4+0x34  ;; 0x3a2
+   \   000002CE   4B68               LDR      R3,[R1, #+4]
+   \   000002D0   1B0E               LSRS     R3,R3,#+24
+   \   000002D2   5B00               LSLS     R3,R3,#+1
+   \   000002D4   0978               LDRB     R1,[R1, #+0]
+   \   000002D6   1626               MOVS     R6,#+22
+   \   000002D8   7143               MULS     R1,R6,R1
+   \   000002DA   134E               LDR      R6,??RF_MasterExecut_4+0x4  ;; MainStage
+   \   000002DC   7118               ADDS     R1,R6,R1
+   \   000002DE   C918               ADDS     R1,R1,R3
+   \   000002E0   895A               LDRH     R1,[R1, R2]
+   \   000002E2   8180               STRH     R1,[R0, #+4]
+    604                    RF_Command.B8.CRC = crc16(RF_Command.Streem,6);
+                                               ^
+Warning[Pe223]: function "crc16" declared implicitly
+   \   000002E4   0621               MOVS     R1,#+6
+   \   000002E6   ........           BL       crc16
+   \   000002EA   6946               MOV      R1,SP
+   \   000002EC   C880               STRH     R0,[R1, #+6]
+    605                    
+    606                    #ifdef _DEBUG_
+    607                       AT91C_BASE_PIOA->PIO_SODR =SpeakerPin;  
+    608                       ButtonBipCounter=g_counter+1;       
+    609                    #endif
+    610              
+    611                }
+    612              
+    613                 #ifdef  DIRECT_Q_MESURE
+    614                               TransQuality.DirectkMensur[RF_TaskTab[RF_CurrentTask].Node-1]++; 
+    615                 #endif
+    616                
+    617                
+    618                if (RF_NodeTest.NodeNr==RF_TaskTab[RF_CurrentTask].Node)
+   \                     ??RF_MasterExecut_19:
+   \   000002EE   207A               LDRB     R0,[R4, #+8]
+   \   000002F0   0121               MOVS     R1,#+1
+   \   000002F2   6156               LDRSB    R1,[R4, R1]
+   \   000002F4   C900               LSLS     R1,R1,#+3
+   \   000002F6   695C               LDRB     R1,[R5, R1]
+   \   000002F8   8842               CMP      R0,R1
+   \   000002FA   02D1               BNE      ??RF_MasterExecut_21
+    619                {
+    620                  RF_NodeTest.Sent++; 
+   \   000002FC   E068               LDR      R0,[R4, #+12]
+   \   000002FE   401C               ADDS     R0,R0,#+1
+   \   00000300   E060               STR      R0,[R4, #+12]
+    621                }
+    622                
+    623                
+    624                
+    625                //RF_Status.EnableTX();
+    626                RF_SendData(RF_Command.Streem, ByteToSend);
+                                   ^
+Warning[Pe167]: argument of type "char *" is incompatible with parameter of
+          type "unsigned char *"
+   \                     ??RF_MasterExecut_21:
+   \   00000302   6846               MOV      R0,SP
+   \   00000304   017A               LDRB     R1,[R0, #+8]
+   \   00000306   ........           BL       RF_SendData
+    627                //RF_Status.EnableRX();
+    628                
+    629          
+    630               
+    631                
+    632          
+    633                
+    634                
+    635              
+    636            }
+    637            
+    638            static int RF_LastPerTime;
+    639              if (RF_CurrentTask==0){
+   \                     ??RF_MasterExecut_17:
+   \   0000030A   0120               MOVS     R0,#+1
+   \   0000030C   2056               LDRSB    R0,[R4, R0]
+   \   0000030E   0028               CMP      R0,#+0
+   \   00000310   05D1               BNE      ??RF_MasterExecut_16
+    640                RF_Period=g_counter-RF_LastPerTime;
+   \   00000312   1248               LDR      R0,??RF_MasterExecut_4+0x38  ;; g_counter
+   \   00000314   03C8               LDM      R0!,{R0,R1}
+   \   00000316   626B               LDR      R2,[R4, #+52]
+   \   00000318   821A               SUBS     R2,R0,R2
+   \   0000031A   2262               STR      R2,[R4, #+32]
+    641                RF_LastPerTime=g_counter;
+   \   0000031C   6063               STR      R0,[R4, #+52]
+   \                     ??RF_MasterExecut_16:
+   \   0000031E   FEBC               POP      {R1-R7}
+   \   00000320   01BC               POP      {R0}
+   \   00000322   0047               BX       R0               ;; return
+   \                     ??RF_MasterExecut_4:
+   \   00000324   ........           DC32     RF_TaskTab
+   \   00000328   ........           DC32     MainStage
+   \   0000032C   EB060000           DC32     0x6eb
+   \   00000330   ........           DC32     IndWys
+   \   00000334   ........           DC32     NeuronsList
+   \   00000338   ........           DC32     TransQuality
+   \   0000033C   ........           DC32     RF_Status + 12
+   \   00000340   0000F0FF           DC32     0xfff00000
+   \   00000344   FFFF0F00           DC32     0xfffff
+   \   00000348   0F0000FF           DC32     0xff00000f
+   \   0000034C   F0FFFF00           DC32     0xfffff0
+   \   00000350   0000FFFF           DC32     0xffff0000
+   \   00000354   FFFF0000           DC32     0xffff
+   \   00000358   A2030000           DC32     0x3a2
+   \   0000035C   ........           DC32     g_counter
+    642              }
+    643            
+    644          
+    645          
+    646                   #ifdef _LIVE_RJESTR  
+    647               if (RF_TaskTab[RF_CurrentTask].Command.Order==R_RegOrd) 
+    648                {
+    649                   LIVE_TAB[LIVE_TAB_IDX]=0xA000 | (((RF_TaskTab[RF_CurrentTask].Node)&0xF)<<8) | ((MainStage.StageQ[RF_TaskTab[RF_CurrentTask].Node].Port)&0xFF);
+    650                   if (LIVE_TAB_IDX<LIVE_TAB_SIZE) LIVE_TAB_IDX++; else LIVE_TAB_IDX=0;
+    651          
+    652                }else if (RF_TaskTab[RF_CurrentTask].Command.Order==W_RegOrd)  
+    653                {  
+    654                   LIVE_TAB[LIVE_TAB_IDX]=0xC000 | (((RF_TaskTab[RF_CurrentTask].Node)&0xF)<<8) | ((MainStage.StageQ[RF_TaskTab[RF_CurrentTask].Node].Port)&0xFF);
+    655                   if (LIVE_TAB_IDX<LIVE_TAB_SIZE) LIVE_TAB_IDX++; else LIVE_TAB_IDX=0;
+    656                }
+    657               #endif
+    658          
+    659            
+    660          }
+
+   \                                 In section .data, align 4
+   \                     IndWys:
+   \   00000000   00                 DC8 0
+   \                     RF_CurrentTask:
+   \   00000001   FF                 DC8 -1
+   \                     RF_SpecialTask:
+   \   00000002   FF                 DC8 -1
+   \                     g_RF_TimeOutCounter:
+   \   00000003   00                 DC8 0
+   \   00000004   FF                 DC8 -1
+   \   00000005   000000             DC8 0, 0, 0
+   \                     RF_NodeTest:
+   \   00000008   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \                     SymulacjaRejWyj:
+   \   00000018   0000               DC8 0, 0
+   \                     SymulacjaRejWej:
+   \   0000001A   AB00               DC16 171
+   \                     poprawnych:
+   \   0000001C   00000000           DC8 0, 0, 0, 0
+   \                     RF_Period:
+   \   00000020   00000000           DC8 0, 0, 0, 0
+   \                     odb:
+   \   00000024   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0
+   \              0000        
+   \                     licznik_cykli:
+   \   0000002C   00000000           DC32 0
+   \                     pRF_Command:
+   \   00000030   00000000           DC8 0, 0, 0, 0
+   \   00000034   00000000           DC8 0, 0, 0, 0
+
+   \                                 In section .data, align 1
+   \                     IndWysNeg:
+   \   00000000   01                 DC8 1
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable11:
+   \   00000000   33333333           DC32     0x33333333
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable12:
+   \   00000000   3333D33F           DC32     0x3fd33333
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable13:
+   \   00000000   C3F5285C           DC32     0x5c28f5c3
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable14:
+   \   00000000   8FE28A40           DC32     0x408ae28f
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable15:
+   \   00000000   00006940           DC32     0x40690000
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable16:
+   \   00000000   00FF04C1           DC32     0xc104ff00
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable21:
+   \   00000000   ........           DC32     IndWys
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable22:
+   \   00000000   FFFF0F00           DC32     0xfffff
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable23:
+   \   00000000   ........           DC32     RF_TaskTab
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable27:
+   \   00000000   ........           DC32     RF_Status
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable29:
+   \   00000000   2D870100           DC32     0x1872d
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable30:
+   \   00000000   ........           DC32     SlaveMode
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable31:
+   \   00000000   ........           DC32     ReciveFrameToMe
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable32:
+   \   00000000   FFFF0000           DC32     0xffff
+    661          
+    662          
+
+   Maximum stack usage in bytes:
+
+     Function        .cstack
+     --------        -------
+     IncCurentRfTask      8
+     RF_ExecuteOrder     40
+     RF_MasterExecut     40
+     RF_ReciveFarm       24
+     RF_SendData          8
+     SwitchToMaster       8
+     SwitchToSlave       16
+
+
+   Section sizes:
+
+     Function/Label      Bytes
+     --------------      -----
+     RF_TaskTab           560
+     ReadNodeSoftVersion    2
+     NodeModelName        140
+     SwitchToMaster        88
+     SwitchToSlave        106
+     RF_ReciveFarm        336
+     RF_ExecuteOrder      732
+     RF_SendData           12
+     IncCurentRfTask       76
+     RF_MasterExecut      864
+     IndWys                56
+     IndWysNeg              1
+     ??DataTable11          4
+     ??DataTable12          4
+     ??DataTable13          4
+     ??DataTable14          4
+     ??DataTable15          4
+     ??DataTable16          4
+     ??DataTable21          4
+     ??DataTable22          4
+     ??DataTable23          4
+     ??DataTable27          4
+     ??DataTable29          4
+     ??DataTable30          4
+     ??DataTable31          4
+     ??DataTable32          4
+      Others                2
+
+ 
+   562 bytes in section .bss
+    57 bytes in section .data
+   140 bytes in section .rodata
+ 2 272 bytes in section Debug.txt
+ 
+ 2 270 bytes of CODE  memory (+ 2 bytes shared)
+   140 bytes of CONST memory
+   619 bytes of DATA  memory
+
+Errors: none
+Warnings: 15

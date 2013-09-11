@@ -1,0 +1,68 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+UXMessageText(1, "Working...")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+Sleep(100)
+SerialPortClose(@COM)
+Sleep(100)
+
+UXConsoleText(4, "Writing the WLAN firmware.", 0, 1, 1)
+
+ifFALSE RedirectDosCommand("gs_flashprogram -S@COM -ew -w .\\AppFWFile\\WFW.bin", ">", 60000)
+{
+	UXConsoleText(2, "[DOS Command Error]", 0, 1, 1)
+	goto TEST-ERROR	
+}
+ifFALSE RedirectFindString("Programming WLAN Flash (WF) with file", "", 1, 1)
+{
+	UXConsoleText(2, "[DOS Command Error]", 0, 1, 1)
+	goto TEST-ERROR	
+}
+ifTRUE RedirectFindString("error", "", 1, 1)
+{
+	UXConsoleText(2, "[DOS Command Error]", 0, 1, 1)
+	goto TEST-ERROR	
+}
+Sleep(1000)
+
+UXConsoleText(4, "", 0, 0, 1)
+UXConsoleText(4, "Writing the APP firmware.", 0, 1, 1)
+
+;ifFALSE RedirectDosCommand("gs_flashprogram -S@COM -0 .\\AppFWFile\\s2w-app1.bin -1 .\\AppFWFile\\s2w-app2.bin", ">", 60000)
+ifFALSE RedirectDosCommand("gs_flashprogram -S@COM -e0 -e1 -0 .\\AppFWFile\\s2w-app1.bin -1 .\\AppFWFile\\s2w-app2.bin", ">", 60000)
+{
+	UXConsoleText(2, "[DOS Command Error]", 0, 1, 1)
+	goto TEST-ERROR	
+}
+ifFALSE RedirectFindString("Programming APP Flash 1 (AF1) with file", "Programming APP Flash 0 (AF0) with file", 1, 1)
+{
+	UXConsoleText(2, "[DOS Command Error]", 0, 1, 1)
+	goto TEST-ERROR	
+}
+ifTRUE RedirectFindString("error", "", 1, 1)
+{
+	UXConsoleText(2, "[DOS Command Error]", 0, 1, 1)
+	goto TEST-ERROR	
+}
+Sleep(100)
+
+UXConsoleText(4, "", 0, 0, 1)
+UXConsoleText(4, "Writing the firmware is completed. ", 0, 1, 1)
+UXConsoleText(4, "Change the switch to the Run Mode and reset the module", 0, 0, 1)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+:TEST-OK
+UXMessageText(1, "OK")
+goto TEST-END
+
+:TEST-ERROR
+UXMessageText(2, "Error")
+
+:TEST-END
+Sleep(10)
+SerialPortClose(@COM)
+Sleep(10)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

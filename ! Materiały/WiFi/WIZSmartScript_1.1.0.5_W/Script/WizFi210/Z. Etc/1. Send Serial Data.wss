@@ -1,0 +1,33 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+UXMessageText(1, "Working...")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+UXConsoleText(3, "[UserData1에 Send할 Data를 입력하세요.]", 0, 1, 0);
+UXConsoleText(3, "", 0, 0, 1);
+
+
+ifFALSE SerialPortOpen(@COM, @BAUD, 0)
+{
+	UXConsoleText(2, "[SerialPortOpen Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+SerialStartMonitor(@COM)
+
+SerialClearBuffer(@COM)
+SerialSendString(@COM, @USERDATA1, 3)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+:TEST-OK
+UXMessageText(1, "OK")
+goto TEST-END
+
+:TEST-ERROR
+UXMessageText(2, "Error")
+
+:TEST-END
+Sleep(10)
+SerialPortClose(@COM)
+Sleep(10)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

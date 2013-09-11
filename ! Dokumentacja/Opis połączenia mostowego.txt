@@ -1,0 +1,14 @@
+Po³¹czenie mostowe - jest to typ po³¹czenia sterownika z wêz³em za poœrednictwem innego wêz³a.
+
+Po³¹czenie mostowe jest wywo³ywane je¿eli sterownik nie nawi¹¿e po³¹czenia z modu³em w okresie 1min od uruchomienia w przypadku wêz³ów o sta³ej komunikacji lub 8 minut w przypadku wêz³ów o komunikacji d³ugookresowej.
+Drugi przypadek wywo³ania po³¹czenia mostowego  wystêpuje je¿eli wêze³ zerwie po³¹czenie i nie nawi¹¿e ponownego w okresie 8 minut.
+
+
+NEGOCJACJE
+	Sterownik wysy³a do wszystkich modu³ów ramkê rozg³oœn¹ z pytaniem "kto ma wêze³". Jednoczeœnie wstrzymuje odpytywanie szukanego wêz³a. Modu³y które posiadaj¹ funkcjê pracy Slave (i maj¹ jeszcze miejsce na liæsie wêz³ów i w tablicy zadañ) dodaj¹ numer wêz³a  do swojej listy odpytywania. Je¿eli któryœ wêze³ nawi¹¿e po³¹czenie to przy kolejnym pytaniu sterownika odpowiada ramk¹ potwierdzaj¹c¹ z w³asnym numerem ID oraz z numerem znalezionego wêz³a.
+Sterownik usuwa wtedy pytanie rozg³oœnie o znaleziony ju¿ wêze³ ze swojej listy i przywraca odpytywanie brakuj¹cego wêz³a.
+Wêze³ mostowy odpytuje wêze³ dziedziczony wêze³ na swoim kanale odpytywania nastêpnie prze³¹cza siê na kana³ sterownika i odpowiada sterownikowi zarówno na pytania o swoje rejestry jak i o rejestry dziedziczonego wêz³a. Je¿eli zapytanie sterownika dotyczy dziedziczonego wêz³a to modu³ "udaje go" i odpowiada jego adresem ID.
+
+!! Uwaga.
+	- Po³¹czenie mostowe nie jest ustanawiane dla wêz³ów wybudzanych zdarzeniowo takich jak piloty.
+	- Po³¹czenie mostowe jest ustanawiane tylko je¿eli w tablicy zadañ modu³u mostowego zmieszcz¹ siê wszystkie zadania sterownika dla dziedzieczonego wêzla

@@ -1,0 +1,69 @@
+
+
+//------------------------------------------------------------------------------
+//! \brief  Handler for the VBus state change interrupt
+//!
+//!         This method calls the USB_Attach function to perform the necessary
+//!         operations.
+//------------------------------------------------------------------------------
+//#if !defined(IR_BUS_DEF)
+void IR_action(void)
+{
+//  USB_Attach(&sUsb);
+
+ 
+   // Acknowledge the interrupt
+
+  AT91F_PIO_GetInterruptStatus(IR_PIO_BUS);
+
+ if ((( AT91C_BASE_PIOA->PIO_PDSR) & IR_BUS))
+  {
+  
+      TRACE_INFO("\n\r - Przerwanie IR \n\r" ); 
+      
+      for (int i=0; i<=100000; i++) {}
+
+  }
+ 
+ 
+  
+
+
+}//_____________________________________________________________________________
+//#endif // !defined(USB_BUS_POWERED)
+
+
+
+
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+//! Inicjalozasja przerwania od IR
+//!
+//------------------------------------------------------------------------------
+void IR_Init(void)
+{
+
+    TRACE_INFO("\n\r   Inicjalizacja przerwania IR  \n\r" ); 
+
+    
+#ifndef IR_BUS_DEF
+    // Configure IrBus monitoring
+    
+    ConfigureIrBus();
+ 
+    AT91F_AIC_ConfigureIt(AT91C_BASE_AIC,
+                          IR_ID_BUS,
+                          AT91C_AIC_PRIOR_HIGHEST,
+                          AT91C_AIC_SRCTYPE_POSITIVE_EDGE, //AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL,
+                          IR_action);
+
+
+    AT91F_PIO_InterruptEnable(IR_PIO_BUS, IR_BUS);
+    AT91F_AIC_EnableIt(AT91C_BASE_AIC, IR_ID_BUS);
+ 
+    //USB_Attach(pUsb);
+  
+#endif
+}//_____________________________________________________________________________
+  

@@ -1,0 +1,1019 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           23/Oct/2012  20:59:04 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v0.9 -              #
+#                    23.10.2012\core\standard.c                               #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v0.9 -             #
+#                    23.10.2012\core\standard.c" -D AT91SAM7S256 -D           #
+#                    AT91SAM7SEK -D iH -D __ALARM -D S300 -lC                 #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.9 -             #
+#                    23.10.2012\S300\List\" --diag_suppress Pa082 -o          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.9 -             #
+#                    23.10.2012\S300\Obj\" --no_unroll --no_inline --no_tbaa  #
+#                    --no_scheduling --debug --endian little --cpu ARM7TDMI   #
+#                    -e --fpu None --dlib_config "C:\Program Files\IAR        #
+#                    Systems\Embedded Workbench 5.0\ARM\INC\DLib_Config_Norma #
+#                    l.h" -I "D:\Zeuron\Projekty\S300\S300-program v0.9 -     #
+#                    23.10.2012\lib\AT91SAM7S256\" -I                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.9 -             #
+#                    23.10.2012\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.9 -             #
+#                    23.10.2012\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v0.9 - 23.10.2012\cdc\" -I "D:\Zeuron\Projekty\S300\S300 #
+#                    -program v0.9 - 23.10.2012\core\" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.9 -             #
+#                    23.10.2012\startup\" -I "D:\Zeuron\Projekty\S300\S300-pr #
+#                    ogram v0.9 - 23.10.2012\Framework\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.9 -             #
+#                    23.10.2012\Framework\Configuration\" -I "C:\Program      #
+#                    Files\IAR Systems\Embedded Workbench 5.0\ARM\INC\"       #
+#                    --section .text=Debug.txt --interwork --cpu_mode thumb   #
+#                    -Om                                                      #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v0.9 -              #
+#                    23.10.2012\S300\List\standard.lst                        #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v0.9 -              #
+#                    23.10.2012\S300\Obj\standard.o                           #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v0.9 - 23.10.2012\core\standard.c
+      1          /* ----------------------------------------------------------------------------
+      2           *         ATMEL Microcontroller Software Support  -  ROUSSET  -
+      3           * ----------------------------------------------------------------------------
+      4           * Copyright (c) 2006, Atmel Corporation
+      5          
+      6           * All rights reserved.
+      7           *
+      8           * Redistribution and use in source and binary forms, with or without
+      9           * modification, are permitted provided that the following conditions are met:
+     10           *
+     11           * - Redistributions of source code must retain the above copyright notice,
+     12           * this list of conditions and the disclaiimer below.
+     13           *
+     14           * - Redistributions in binary form must reproduce the above copyright notice,
+     15           * this list of conditions and the disclaimer below in the documentation and/or
+     16           * other materials provided with the distribution.
+     17           *
+     18           * Atmel's name may not be used to endorse or promote products derived from
+     19           * this software without specific prior written permission.
+     20           *
+     21           * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR
+     22           * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     23           * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+     24           * DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,
+     25           * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+     26           * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+     27           * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+     28           * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     29           * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+     30           * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     31           * ----------------------------------------------------------------------------
+     32           */
+     33          
+     34          /*
+     35          $Id: standard.c,v 1.1.2.1 2006/12/05 08:33:25 danielru Exp $
+     36          */
+     37          
+     38          //------------------------------------------------------------------------------
+     39          //      Includes
+     40          //------------------------------------------------------------------------------
+     41          
+     42          #include "common.h"
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork unsigned int min(unsigned int, unsigned int)
+   \                     min:
+   \   00000000   8842               CMP      R0,R1
+   \   00000002   00D9               BLS      ??min_0
+   \   00000004   0800               MOVS     R0,R1
+   \                     ??min_0:
+   \   00000006   7047               BX       LR               ;; return
+     43          #include "device.h"
+     44          #include "board.h"
+     45          #include "trace.h"
+     46          #include "usb.h"
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork struct <unnamed> *USB_GetSetup(S_usb const *)
+   \                     USB_GetSetup:
+   \   00000000   0069               LDR      R0,[R0, #+16]
+   \   00000002   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork char USB_Write(S_usb const *, unsigned char, void const *, unsigned int, Callback_f, void *)
+   \                     USB_Write:
+   \   00000000   31B5               PUSH     {R0,R4,R5,LR}
+   \   00000002   0400               MOVS     R4,R0
+   \   00000004   0D00               MOVS     R5,R1
+   \   00000006   0498               LDR      R0,[SP, #+16]
+   \   00000008   0599               LDR      R1,[SP, #+20]
+   \   0000000A   03B4               PUSH     {R0,R1}
+   \   0000000C   2900               MOVS     R1,R5
+   \   0000000E   2000               MOVS     R0,R4
+   \   00000010   2468               LDR      R4,[R4, #+0]
+   \   00000012   6469               LDR      R4,[R4, #+20]
+   \   00000014   6468               LDR      R4,[R4, #+4]
+   \   00000016   ........           BL       __iar_via_R4
+   \   0000001A   02B0               ADD      SP,SP,#+8
+   \   0000001C   38BC               POP      {R3-R5}
+   \   0000001E   02BC               POP      {R1}
+   \   00000020   0847               BX       R1               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork char USB_SendZLP0(S_usb const *, Callback_f, void *)
+   \                     USB_SendZLP0:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   0400               MOVS     R4,R0
+   \   00000004   0800               MOVS     R0,R1
+   \   00000006   1100               MOVS     R1,R2
+   \   00000008   03B4               PUSH     {R0,R1}
+   \   0000000A   0023               MOVS     R3,#+0
+   \   0000000C   1A00               MOVS     R2,R3
+   \   0000000E   1100               MOVS     R1,R2
+   \   00000010   2000               MOVS     R0,R4
+   \   00000012   ........           BL       USB_Write
+   \   00000016   02B0               ADD      SP,SP,#+8
+   \   00000018   10BC               POP      {R4}
+   \   0000001A   02BC               POP      {R1}
+   \   0000001C   0847               BX       R1               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork char USB_Stall(S_usb const *, unsigned char)
+   \                     USB_Stall:
+   \   00000000   01B5               PUSH     {R0,LR}
+   \   00000002   0268               LDR      R2,[R0, #+0]
+   \   00000004   5269               LDR      R2,[R2, #+20]
+   \   00000006   D268               LDR      R2,[R2, #+12]
+   \   00000008   ........           BL       __iar_via_R2
+   \   0000000C   08BC               POP      {R3}
+   \   0000000E   02BC               POP      {R1}
+   \   00000010   0847               BX       R1               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork bool USB_Halt(S_usb const *, unsigned char, unsigned char)
+   \                     USB_Halt:
+   \   00000000   01B5               PUSH     {R0,LR}
+   \   00000002   4906               LSLS     R1,R1,#+25
+   \   00000004   490E               LSRS     R1,R1,#+25
+   \   00000006   0368               LDR      R3,[R0, #+0]
+   \   00000008   5B69               LDR      R3,[R3, #+20]
+   \   0000000A   1B69               LDR      R3,[R3, #+16]
+   \   0000000C   ........           BL       __iar_via_R3
+   \   00000010   08BC               POP      {R3}
+   \   00000012   02BC               POP      {R1}
+   \   00000014   0847               BX       R1               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void USB_SetAddress(S_usb const *)
+   \                     USB_SetAddress:
+   \   00000000   01B5               PUSH     {R0,LR}
+   \   00000002   0168               LDR      R1,[R0, #+0]
+   \   00000004   4969               LDR      R1,[R1, #+20]
+   \   00000006   096A               LDR      R1,[R1, #+32]
+   \   00000008   ........           BL       __iar_via_R1
+   \   0000000C   08BC               POP      {R3}
+   \   0000000E   01BC               POP      {R0}
+   \   00000010   0047               BX       R0               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void USB_SetConfiguration(S_usb const *)
+   \                     USB_SetConfiguration:
+   \   00000000   01B5               PUSH     {R0,LR}
+   \   00000002   0168               LDR      R1,[R0, #+0]
+   \   00000004   4969               LDR      R1,[R1, #+20]
+   \   00000006   496A               LDR      R1,[R1, #+36]
+   \   00000008   ........           BL       __iar_via_R1
+   \   0000000C   08BC               POP      {R3}
+   \   0000000E   01BC               POP      {R0}
+   \   00000010   0047               BX       R0               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork bool USB_ConfigureEndpoint(S_usb const *, struct <unnamed> const *)
+   \                     USB_ConfigureEndpoint:
+   \   00000000   01B5               PUSH     {R0,LR}
+   \   00000002   0268               LDR      R2,[R0, #+0]
+   \   00000004   5269               LDR      R2,[R2, #+20]
+   \   00000006   9269               LDR      R2,[R2, #+24]
+   \   00000008   ........           BL       __iar_via_R2
+   \   0000000C   08BC               POP      {R3}
+   \   0000000E   02BC               POP      {R1}
+   \   00000010   0847               BX       R1               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork unsigned int USB_GetState(S_usb const *)
+   \                     USB_GetState:
+   \   00000000   4069               LDR      R0,[R0, #+20]
+   \   00000002   0068               LDR      R0,[R0, #+0]
+   \   00000004   0004               LSLS     R0,R0,#+16
+   \   00000006   000C               LSRS     R0,R0,#+16
+   \   00000008   7047               BX       LR               ;; return
+     47          #include "standard.h"
+     48          
+     49          //------------------------------------------------------------------------------
+     50          //      Internal functions
+     51          //------------------------------------------------------------------------------
+     52          //------------------------------------------------------------------------------
+     53          // \brief  Callback for the STD_SetConfiguration function.
+     54          //
+     55          //         Configures the device and the endpoints
+     56          // \param  pClass Pointer to a class driver instance
+     57          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     58          static void STD_ConfigureEndpoints(const S_std_class *pClass)
+     59          {
+   \                     STD_ConfigureEndpoints:
+   \   00000000   31B5               PUSH     {R0,R4,R5,LR}
+   \   00000002   0400               MOVS     R4,R0
+     60              unsigned char i;
+     61          
+     62              // Enter the Configured state
+     63              USB_SetConfiguration(pClass->pUsb);
+   \   00000004   2068               LDR      R0,[R4, #+0]
+   \   00000006   ........           BL       USB_SetConfiguration
+     64          
+     65              // Configure endpoints
+     66              for (i = 0; i < (pClass->pUsb->dNumEndpoints-1); i++) {
+   \   0000000A   0025               MOVS     R5,#+0
+   \   0000000C   0AE0               B        ??STD_ConfigureEndpoints_0
+     67          
+     68                  USB_ConfigureEndpoint(pClass->pUsb,
+     69                                        pClass->pDescriptors->pEndpoints[i]);
+   \                     ??STD_ConfigureEndpoints_1:
+   \   0000000E   2800               MOVS     R0,R5
+   \   00000010   8000               LSLS     R0,R0,#+2
+   \   00000012   6168               LDR      R1,[R4, #+4]
+   \   00000014   C968               LDR      R1,[R1, #+12]
+   \   00000016   0958               LDR      R1,[R1, R0]
+   \   00000018   2068               LDR      R0,[R4, #+0]
+   \   0000001A   ........           BL       USB_ConfigureEndpoint
+     70              }
+   \   0000001E   6D1C               ADDS     R5,R5,#+1
+   \   00000020   2D06               LSLS     R5,R5,#+24
+   \   00000022   2D0E               LSRS     R5,R5,#+24
+   \                     ??STD_ConfigureEndpoints_0:
+   \   00000024   2068               LDR      R0,[R4, #+0]
+   \   00000026   8068               LDR      R0,[R0, #+8]
+   \   00000028   401E               SUBS     R0,R0,#+1
+   \   0000002A   8542               CMP      R5,R0
+   \   0000002C   EFD3               BCC      ??STD_ConfigureEndpoints_1
+     71          }
+   \   0000002E   38BC               POP      {R3-R5}
+   \   00000030   01BC               POP      {R0}
+   \   00000032   0047               BX       R0               ;; return
+     72          
+     73          //------------------------------------------------------------------------------
+     74          // \brief  Sends a zero-length packet and starts the configuration procedure.
+     75          // \param  pClass          Pointer to a class driver instance
+     76          // \param  bConfiguration  Newly selected configuration
+     77          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     78          static void STD_SetConfiguration(S_std_class   *pClass,
+     79                                           unsigned char bConfiguration)
+     80          {
+   \                     STD_SetConfiguration:
+   \   00000000   01B5               PUSH     {R0,LR}
+     81              USB_SendZLP0(pClass->pUsb,
+     82                           (Callback_f) STD_ConfigureEndpoints,
+     83                           pClass);
+   \   00000002   0200               MOVS     R2,R0
+   \   00000004   0349               LDR      R1,??STD_SetConfiguration_0  ;; STD_ConfigureEndpoints
+   \   00000006   0068               LDR      R0,[R0, #+0]
+   \   00000008   ........           BL       USB_SendZLP0
+     84          }
+   \   0000000C   08BC               POP      {R3}
+   \   0000000E   01BC               POP      {R0}
+   \   00000010   0047               BX       R0               ;; return
+   \   00000012   C046               Nop      
+   \                     ??STD_SetConfiguration_0:
+   \   00000014   ........           DC32     STD_ConfigureEndpoints
+     85          
+     86          //------------------------------------------------------------------------------
+     87          // \brief  Sends the currently selected configuration to the host.
+     88          // \param  pClass Pointer to a class driver instance
+     89          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     90          static void STD_GetConfiguration(S_std_class *pClass)
+     91          {
+   \                     STD_GetConfiguration:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   0400               MOVS     R4,R0
+     92              if (ISSET(USB_GetState(pClass->pUsb), USB_STATE_CONFIGURED)) {
+   \   00000004   2068               LDR      R0,[R4, #+0]
+   \   00000006   ........           BL       USB_GetState
+   \   0000000A   1021               MOVS     R1,#+16
+   \   0000000C   0140               ANDS     R1,R1,R0
+   \   0000000E   481E               SUBS     R0,R1,#+1
+   \   00000010   8041               SBCS     R0,R0,R0
+   \   00000012   C043               MVNS     R0,R0
+   \   00000014   C00F               LSRS     R0,R0,#+31
+   \   00000016   6081               STRH     R0,[R4, #+10]
+     93          
+     94                  pClass->wData = 1;
+     95              }
+     96              else {
+     97          
+     98                  pClass->wData = 0;
+     99              }
+    100          
+    101              USB_Write(pClass->pUsb, 0, &(pClass->wData), 1, 0, 0);
+   \   00000018   0021               MOVS     R1,#+0
+   \   0000001A   0800               MOVS     R0,R1
+   \   0000001C   03B4               PUSH     {R0,R1}
+   \   0000001E   0123               MOVS     R3,#+1
+   \   00000020   2200               MOVS     R2,R4
+   \   00000022   0A32               ADDS     R2,R2,#+10
+   \   00000024   2068               LDR      R0,[R4, #+0]
+   \   00000026   ........           BL       USB_Write
+   \   0000002A   02B0               ADD      SP,SP,#+8
+    102          }
+   \   0000002C   10BC               POP      {R4}
+   \   0000002E   01BC               POP      {R0}
+   \   00000030   0047               BX       R0               ;; return
+    103          
+    104          //------------------------------------------------------------------------------
+    105          // \brief  Sends the current device status to the host.
+    106          // \param  pClass Pointer to a class driver interface
+    107          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    108          static void STD_GetDeviceStatus(S_std_class *pClass)
+    109          {
+   \                     STD_GetDeviceStatus:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   0400               MOVS     R4,R0
+    110              // Bus or self-powered ?
+    111              if (ISSET(pClass->pDescriptors->pConfiguration->bmAttibutes,
+    112                        USB_CONFIG_SELF_NOWAKEUP)) {
+   \   00000004   6068               LDR      R0,[R4, #+4]
+   \   00000006   4068               LDR      R0,[R0, #+4]
+   \   00000008   C079               LDRB     R0,[R0, #+7]
+   \   0000000A   C021               MOVS     R1,#+192
+   \   0000000C   0140               ANDS     R1,R1,R0
+   \   0000000E   C029               CMP      R1,#+192
+   \   00000010   2089               LDRH     R0,[R4, #+8]
+   \   00000012   03D1               BNE      ??STD_GetDeviceStatus_0
+    113          
+    114                  // Self powered device
+    115                  pClass->wDeviceStatus |= SELF_POWERED;
+   \   00000014   0121               MOVS     R1,#+1
+   \   00000016   0143               ORRS     R1,R1,R0
+   \   00000018   2181               STRH     R1,[R4, #+8]
+   \   0000001A   02E0               B        ??STD_GetDeviceStatus_1
+    116              }
+    117              else {
+    118          
+    119                  // Bus powered device
+    120                  pClass->wDeviceStatus &= ~SELF_POWERED;
+   \                     ??STD_GetDeviceStatus_0:
+   \   0000001C   0749               LDR      R1,??STD_GetDeviceStatus_2  ;; 0xfffe
+   \   0000001E   0140               ANDS     R1,R1,R0
+   \   00000020   2181               STRH     R1,[R4, #+8]
+    121              }
+    122          
+    123              // Return the device status
+    124              USB_Write(pClass->pUsb, 0, &(pClass->wDeviceStatus), 2, 0, 0);
+   \                     ??STD_GetDeviceStatus_1:
+   \   00000022   0021               MOVS     R1,#+0
+   \   00000024   0800               MOVS     R0,R1
+   \   00000026   03B4               PUSH     {R0,R1}
+   \   00000028   0223               MOVS     R3,#+2
+   \   0000002A   2200               MOVS     R2,R4
+   \   0000002C   0832               ADDS     R2,R2,#+8
+   \   0000002E   2068               LDR      R0,[R4, #+0]
+   \   00000030   ........           BL       USB_Write
+   \   00000034   02B0               ADD      SP,SP,#+8
+    125          }
+   \   00000036   10BC               POP      {R4}
+   \   00000038   01BC               POP      {R0}
+   \   0000003A   0047               BX       R0               ;; return
+   \                     ??STD_GetDeviceStatus_2:
+   \   0000003C   FEFF0000           DC32     0xfffe
+    126          
+    127          //------------------------------------------------------------------------------
+    128          // \brief  Sends the current status of specified endpoint to the host.
+    129          // \param  pClass    Pointer to a class driver instance
+    130          // \param  bEndpoint Endpoint number
+    131          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    132          static void STD_GetEndpointStatus(S_std_class   *pClass,
+    133                                            unsigned char bEndpoint)
+    134          {
+   \                     STD_GetEndpointStatus:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   0400               MOVS     R4,R0
+    135              //! Retrieve the endpoint current status
+    136              pClass->wData = (unsigned short) USB_Halt(pClass->pUsb,
+    137                                                        bEndpoint,
+    138                                                        USB_GET_STATUS);
+   \   00000004   0022               MOVS     R2,#+0
+   \   00000006   2068               LDR      R0,[R4, #+0]
+   \   00000008   ........           BL       USB_Halt
+   \   0000000C   6081               STRH     R0,[R4, #+10]
+    139          
+    140              //! Return the endpoint status
+    141              USB_Write(pClass->pUsb, 0, &(pClass->wData), 2, 0, 0);
+   \   0000000E   0021               MOVS     R1,#+0
+   \   00000010   0800               MOVS     R0,R1
+   \   00000012   03B4               PUSH     {R0,R1}
+   \   00000014   0223               MOVS     R3,#+2
+   \   00000016   2200               MOVS     R2,R4
+   \   00000018   0A32               ADDS     R2,R2,#+10
+   \   0000001A   2068               LDR      R0,[R4, #+0]
+   \   0000001C   ........           BL       USB_Write
+   \   00000020   02B0               ADD      SP,SP,#+8
+    142          }
+   \   00000022   10BC               POP      {R4}
+   \   00000024   01BC               POP      {R0}
+   \   00000026   0047               BX       R0               ;; return
+    143          
+    144          //------------------------------------------------------------------------------
+    145          // \brief  Sends the device descriptor to the host.
+    146          //
+    147          //         The number of bytes actually sent depends on both the length
+    148          //         requested by the host and the actual length of the descriptor.
+    149          // \param  pClass  Pointer to a class driver instance
+    150          // \param  wLength Number of bytes requested by the host
+    151          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    152          static void STD_GetDeviceDescriptor(const S_std_class *pClass,
+    153                                              unsigned short    wLength)
+    154          {
+   \                     STD_GetDeviceDescriptor:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   0400               MOVS     R4,R0
+    155              USB_Write(pClass->pUsb,
+    156                        0,
+    157                        (void *) pClass->pDescriptors->pDevice,
+    158                        min(sizeof(S_usb_device_descriptor), wLength),
+    159                        0,
+    160                        0);
+   \   00000004   1220               MOVS     R0,#+18
+   \   00000006   ........           BL       min
+   \   0000000A   0300               MOVS     R3,R0
+   \   0000000C   0021               MOVS     R1,#+0
+   \   0000000E   0800               MOVS     R0,R1
+   \   00000010   03B4               PUSH     {R0,R1}
+   \   00000012   6068               LDR      R0,[R4, #+4]
+   \   00000014   0268               LDR      R2,[R0, #+0]
+   \   00000016   2068               LDR      R0,[R4, #+0]
+   \   00000018   ........           BL       USB_Write
+   \   0000001C   02B0               ADD      SP,SP,#+8
+    161          }
+   \   0000001E   10BC               POP      {R4}
+   \   00000020   01BC               POP      {R0}
+   \   00000022   0047               BX       R0               ;; return
+    162          
+    163          //------------------------------------------------------------------------------
+    164          // \brief  Sends the configuration descriptor to the host.
+    165          //
+    166          //         The number of bytes actually sent depends on both the length
+    167          //         requested by the host and the actual length of the descriptor.
+    168          // \param  pClass  Pointer to a class driver instance
+    169          // \param  wLength Number of bytes requested by the host
+    170          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    171          static void STD_GetConfigurationDescriptor(const S_std_class *pClass,
+    172                                                     unsigned short    wLength)
+    173          {
+   \                     STD_GetConfigurationDescriptor:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   0400               MOVS     R4,R0
+    174              USB_Write(pClass->pUsb,
+    175                        0,
+    176                        (void *) pClass->pDescriptors->pConfiguration,
+    177                        min(pClass->pDescriptors->pConfiguration->wTotalLength,
+    178                            wLength),
+    179                        0,
+    180                        0);
+   \   00000004   6068               LDR      R0,[R4, #+4]
+   \   00000006   4268               LDR      R2,[R0, #+4]
+   \   00000008   9078               LDRB     R0,[R2, #+2]
+   \   0000000A   D378               LDRB     R3,[R2, #+3]
+   \   0000000C   1B06               LSLS     R3,R3,#+24
+   \   0000000E   1B0C               LSRS     R3,R3,#+16
+   \   00000010   1843               ORRS     R0,R0,R3
+   \   00000012   ........           BL       min
+   \   00000016   0300               MOVS     R3,R0
+   \   00000018   0021               MOVS     R1,#+0
+   \   0000001A   0800               MOVS     R0,R1
+   \   0000001C   03B4               PUSH     {R0,R1}
+   \   0000001E   6068               LDR      R0,[R4, #+4]
+   \   00000020   4268               LDR      R2,[R0, #+4]
+   \   00000022   2068               LDR      R0,[R4, #+0]
+   \   00000024   ........           BL       USB_Write
+   \   00000028   02B0               ADD      SP,SP,#+8
+    181          }
+   \   0000002A   10BC               POP      {R4}
+   \   0000002C   01BC               POP      {R0}
+   \   0000002E   0047               BX       R0               ;; return
+    182          
+    183          #if defined(HIGHSPEED)
+    184          //------------------------------------------------------------------------------
+    185          // \brief  Sends the qualifier descriptor to the host.
+    186          //
+    187          //         The number of bytes actually sent depends on both the length
+    188          //         requested by the host and the actual length of the descriptor.
+    189          // \param  pClass  Pointer to a class driver instance
+    190          // \param  wLength Number of bytes requested by the host
+    191          //------------------------------------------------------------------------------
+    192          static void STD_GetQualifierDescriptor(const S_std_class *pClass,
+    193                                                 unsigned short    wLength)
+    194          {
+    195              USB_Write(pClass->pUsb,
+    196                        0,
+    197                        (void *) pClass->pDescriptors->pQualifier,
+    198                        min(pClass->pDescriptors->pQualifier->bLength, wLength),
+    199                        0,
+    200                        0);
+    201          }
+    202          
+    203          //------------------------------------------------------------------------------
+    204          // \brief  Sends the other speed configuration descriptor to the host.
+    205          //
+    206          //         The number of bytes actually sent depends on both the length
+    207          //         requested by the host and the actual length of the descriptor.
+    208          // \param  pClass  Pointer to a class driver instance
+    209          // \param  wLength Number of bytes requested by the host
+    210          //------------------------------------------------------------------------------
+    211          static void STD_GetOSCDescriptor(const S_std_class *pClass,
+    212                                           unsigned short    wLength)
+    213          {
+    214              USB_Write(pClass->pUsb,
+    215                        0,
+    216                        (void *) pClass->pDescriptors->pOtherSpeedConfiguration,
+    217                        min(pClass->pDescriptors->pOtherSpeedConfiguration->wTotalLength,
+    218                            wLength),
+    219                        0,
+    220                        0);
+    221          }
+    222          #endif
+    223          
+    224          //------------------------------------------------------------------------------
+    225          // \brief  Sends the specified string descriptor to the host
+    226          //
+    227          //         The number of bytes actually sent depends on both the length
+    228          //         requested by the host and the actual length of the descriptor.
+    229          // \param  pClass  Pointer to a class driver instance
+    230          // \param  wLength Number of bytes requested by the host
+    231          // \param  wIndex  Index of requested string descriptor
+    232          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    233          static void STD_GetStringDescriptor(const S_std_class *pClass,
+    234                                              unsigned short    wLength,
+    235                                              unsigned char     bIndex)
+    236          {
+   \                     STD_GetStringDescriptor:
+   \   00000000   31B5               PUSH     {R0,R4,R5,LR}
+   \   00000002   0400               MOVS     R4,R0
+    237              USB_Write(pClass->pUsb,
+    238                        0,
+    239                        (void *) pClass->pDescriptors->pStrings[bIndex],
+    240                        min( *(pClass->pDescriptors->pStrings[bIndex]), wLength),
+    241                        0,
+    242                        0);
+   \   00000004   9500               LSLS     R5,R2,#+2
+   \   00000006   6068               LDR      R0,[R4, #+4]
+   \   00000008   8068               LDR      R0,[R0, #+8]
+   \   0000000A   4059               LDR      R0,[R0, R5]
+   \   0000000C   0078               LDRB     R0,[R0, #+0]
+   \   0000000E   ........           BL       min
+   \   00000012   0300               MOVS     R3,R0
+   \   00000014   0021               MOVS     R1,#+0
+   \   00000016   0800               MOVS     R0,R1
+   \   00000018   03B4               PUSH     {R0,R1}
+   \   0000001A   6068               LDR      R0,[R4, #+4]
+   \   0000001C   8068               LDR      R0,[R0, #+8]
+   \   0000001E   4259               LDR      R2,[R0, R5]
+   \   00000020   2068               LDR      R0,[R4, #+0]
+   \   00000022   ........           BL       USB_Write
+   \   00000026   02B0               ADD      SP,SP,#+8
+    243          }
+   \   00000028   38BC               POP      {R3-R5}
+   \   0000002A   01BC               POP      {R0}
+   \   0000002C   0047               BX       R0               ;; return
+    244          
+    245          //------------------------------------------------------------------------------
+    246          //      Exported functions
+    247          //------------------------------------------------------------------------------
+    248          //------------------------------------------------------------------------------
+    249          //! \ingroup usb_std_req_hlr
+    250          //! \brief   Handles standard SETUP requests
+    251          //! \param   pClass Pointer to a class driver instance
+    252          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    253          void STD_RequestHandler(S_std_class *pClass)
+    254          {
+   \                     STD_RequestHandler:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   0400               MOVS     R4,R0
+    255              S_usb_request *pSetup = USB_GetSetup(pClass->pUsb);
+   \   00000004   2068               LDR      R0,[R4, #+0]
+   \   00000006   ........           BL       USB_GetSetup
+    256          
+    257              //TRACE_DEBUG_M("Std ");
+    258          
+    259              // Handle incoming request
+    260              switch (pSetup->bRequest) {
+   \   0000000A   4178               LDRB     R1,[R0, #+1]
+   \   0000000C   0929               CMP      R1,#+9
+   \   0000000E   23D8               BHI      ??STD_RequestHandler_1
+   \   00000010   01A2               ADR      R2,??STD_RequestHandler_0
+   \   00000012   525C               LDRB     R2,[R2, R1]
+   \   00000014   9744               ADD      PC,PC,R2
+   \   00000016   C046               Nop      
+   \                     ??STD_RequestHandler_0:
+   \   00000018   A66C40CA           DC8      +166,+108,+64,+202
+   \   0000001C   404A0A40           DC8      +64,+74,+10,+64
+   \   00000020   6456               DC8      +100,+86
+    261              //----------------------
+    262              case USB_GET_DESCRIPTOR:
+    263              //----------------------
+    264                  //TRACE_DEBUG_M("gDesc ");
+    265          
+    266                  // The HBYTE macro returns the upper byte of a word
+    267                  switch (HBYTE(pSetup->wValue)) {
+   \                     ??STD_RequestHandler_2:
+   \   00000022   4188               LDRH     R1,[R0, #+2]
+   \   00000024   090A               LSRS     R1,R1,#+8
+   \   00000026   0129               CMP      R1,#+1
+   \   00000028   04D0               BEQ      ??STD_RequestHandler_3
+   \   0000002A   0229               CMP      R1,#+2
+   \   0000002C   07D0               BEQ      ??STD_RequestHandler_4
+   \   0000002E   0329               CMP      R1,#+3
+   \   00000030   0AD0               BEQ      ??STD_RequestHandler_5
+   \   00000032   11E0               B        ??STD_RequestHandler_1
+    268                  //-------------------------
+    269                  case USB_DEVICE_DESCRIPTOR:
+    270                  //-------------------------
+    271                      //TRACE_DEBUG_M("Dev ");
+    272                      STD_GetDeviceDescriptor(pClass, pSetup->wLength);
+   \                     ??STD_RequestHandler_3:
+   \   00000034   C188               LDRH     R1,[R0, #+6]
+   \   00000036   2000               MOVS     R0,R4
+   \   00000038   ........           BL       STD_GetDeviceDescriptor
+   \   0000003C   6DE0               B        ??STD_RequestHandler_6
+    273                      break;
+    274          
+    275                  //--------------------------------
+    276                  case USB_CONFIGURATION_DESCRIPTOR:
+    277                  //--------------------------------
+    278                      TRACE_DEBUG_M("Cfg ");
+    279                      STD_GetConfigurationDescriptor(pClass, pSetup->wLength);
+   \                     ??STD_RequestHandler_4:
+   \   0000003E   C188               LDRH     R1,[R0, #+6]
+   \   00000040   2000               MOVS     R0,R4
+   \   00000042   ........           BL       STD_GetConfigurationDescriptor
+   \   00000046   68E0               B        ??STD_RequestHandler_6
+    280                      break;
+    281          
+    282          #if defined(HIGHSPEED)
+    283                  //-----------------------------------
+    284                  case USB_DEVICE_QUALIFIER_DESCRIPTOR:
+    285                  //-----------------------------------
+    286                      //TRACE_DEBUG_M("Qua ");
+    287                      STD_GetQualifierDescriptor(pClass, pSetup->wLength);
+    288                      break;
+    289          
+    290                  //--------------------------------------------
+    291                  case USB_OTHER_SPEED_CONFIGURATION_DESCRIPTOR:
+    292                  //--------------------------------------------
+    293                      //TRACE_DEBUG_M("OSC ");
+    294                      STD_GetOSCDescriptor(pClass, pSetup->wLength);
+    295                      break;
+    296          #endif
+    297                  //-------------------------
+    298                  case USB_STRING_DESCRIPTOR:
+    299                  //-------------------------
+    300                      //TRACE_DEBUG_M("Str%d ", LBYTE(pSetup->wValue));
+    301                      STD_GetStringDescriptor(pClass,
+    302                                              pSetup->wLength,
+    303                                              LBYTE(pSetup->wValue));
+   \                     ??STD_RequestHandler_5:
+   \   00000048   4288               LDRH     R2,[R0, #+2]
+   \   0000004A   1206               LSLS     R2,R2,#+24
+   \   0000004C   120E               LSRS     R2,R2,#+24
+   \   0000004E   C188               LDRH     R1,[R0, #+6]
+   \   00000050   2000               MOVS     R0,R4
+   \   00000052   ........           BL       STD_GetStringDescriptor
+   \   00000056   60E0               B        ??STD_RequestHandler_6
+    304                      break;
+    305          
+    306                  //------
+    307                  default:
+    308                  //------
+    309                      TRACE_WARNING(
+    310                          "W: STD_RequestHandler: Unknown GetDescriptor = 0x%02X\n\r",
+    311                          pSetup->bRequest
+    312                      );
+    313                      USB_Stall(pClass->pUsb, 0);
+   \                     ??STD_RequestHandler_1:
+   \   00000058   0021               MOVS     R1,#+0
+   \   0000005A   2068               LDR      R0,[R4, #+0]
+   \   0000005C   ........           BL       USB_Stall
+   \   00000060   5BE0               B        ??STD_RequestHandler_6
+    314          
+    315                  }
+    316                  break;
+    317          
+    318              //-------------------
+    319              case USB_SET_ADDRESS:
+    320              //-------------------
+    321                  TRACE_DEBUG_M("sAddr ");
+    322                  USB_SendZLP0(pClass->pUsb,
+    323                               (Callback_f) USB_SetAddress,
+    324                               (void *) pClass->pUsb);
+   \                     ??STD_RequestHandler_7:
+   \   00000062   2268               LDR      R2,[R4, #+0]
+   \   00000064   2E49               LDR      R1,??STD_RequestHandler_8  ;; USB_SetAddress
+   \   00000066   1000               MOVS     R0,R2
+   \   00000068   ........           BL       USB_SendZLP0
+   \   0000006C   55E0               B        ??STD_RequestHandler_6
+    325                  break;
+    326          
+    327              //-------------------------
+    328              case USB_SET_CONFIGURATION:
+    329              //-------------------------
+    330                  TRACE_DEBUG_M("sCfg ");
+    331                  STD_SetConfiguration(pClass, (char) pSetup->wValue);
+   \                     ??STD_RequestHandler_9:
+   \   0000006E   4188               LDRH     R1,[R0, #+2]
+   \   00000070   0906               LSLS     R1,R1,#+24
+   \   00000072   090E               LSRS     R1,R1,#+24
+   \   00000074   2000               MOVS     R0,R4
+   \   00000076   ........           BL       STD_SetConfiguration
+   \   0000007A   4EE0               B        ??STD_RequestHandler_6
+    332                  break;
+    333          
+    334              //-------------------------
+    335              case USB_GET_CONFIGURATION:
+    336              //------------------------- 
+    337                  TRACE_DEBUG_M("gCfg ");
+    338                  STD_GetConfiguration(pClass);
+   \                     ??STD_RequestHandler_10:
+   \   0000007C   2000               MOVS     R0,R4
+   \   0000007E   ........           BL       STD_GetConfiguration
+   \   00000082   4AE0               B        ??STD_RequestHandler_6
+    339                  break;
+    340          
+    341              //---------------------
+    342              case USB_CLEAR_FEATURE:
+    343              //---------------------
+    344                  TRACE_DEBUG_M("cFeat ");
+    345          
+    346                  switch (pSetup->wValue) {
+   \                     ??STD_RequestHandler_11:
+   \   00000084   4188               LDRH     R1,[R0, #+2]
+   \   00000086   0029               CMP      R1,#+0
+   \   00000088   02D0               BEQ      ??STD_RequestHandler_12
+   \   0000008A   0129               CMP      R1,#+1
+   \   0000008C   0DD0               BEQ      ??STD_RequestHandler_13
+   \   0000008E   E3E7               B        ??STD_RequestHandler_1
+    347                      //---------------------
+    348                      case USB_ENDPOINT_HALT:
+    349                      //---------------------
+    350                          TRACE_DEBUG_M("Hlt ");
+    351                          USB_Halt(pClass->pUsb, LBYTE(pSetup->wIndex), USB_CLEAR_FEATURE);
+   \                     ??STD_RequestHandler_12:
+   \   00000090   0122               MOVS     R2,#+1
+   \   00000092   8188               LDRH     R1,[R0, #+4]
+   \   00000094   0906               LSLS     R1,R1,#+24
+   \   00000096   090E               LSRS     R1,R1,#+24
+   \   00000098   2068               LDR      R0,[R4, #+0]
+   \   0000009A   ........           BL       USB_Halt
+    352                          USB_SendZLP0(pClass->pUsb, 0, 0);
+   \   0000009E   0022               MOVS     R2,#+0
+   \   000000A0   1100               MOVS     R1,R2
+   \   000000A2   2068               LDR      R0,[R4, #+0]
+   \   000000A4   ........           BL       USB_SendZLP0
+   \   000000A8   37E0               B        ??STD_RequestHandler_6
+    353                          break;
+    354          
+    355                      //----------------------------
+    356                      case USB_DEVICE_REMOTE_WAKEUP:
+    357                      //----------------------------
+    358                          TRACE_DEBUG_M("RmWak ");
+    359                          pClass->wDeviceStatus &= ~REMOTE_WAKEUP; // Remote wakeup disabled
+   \                     ??STD_RequestHandler_13:
+   \   000000AA   2089               LDRH     R0,[R4, #+8]
+   \   000000AC   1D49               LDR      R1,??STD_RequestHandler_8+0x4  ;; 0xfffd
+   \   000000AE   0140               ANDS     R1,R1,R0
+   \   000000B0   2181               STRH     R1,[R4, #+8]
+    360                          USB_SendZLP0(pClass->pUsb, 0, 0);
+   \   000000B2   0022               MOVS     R2,#+0
+   \   000000B4   1100               MOVS     R1,R2
+   \   000000B6   2068               LDR      R0,[R4, #+0]
+   \   000000B8   ........           BL       USB_SendZLP0
+   \   000000BC   2DE0               B        ??STD_RequestHandler_6
+    361                          break;
+    362          
+    363                      //------
+    364                      default:
+    365                      //------
+    366                          TRACE_DEBUG_H("Sta ");
+    367                          USB_Stall(pClass->pUsb, 0);
+    368          
+    369                  }
+    370                  break;
+    371          
+    372              //------------------
+    373              case USB_GET_STATUS:
+    374              //------------------
+    375                  TRACE_DEBUG_H("gSta ");
+    376          
+    377                  switch (USB_REQUEST_RECIPIENT(pSetup)) {
+   \                     ??STD_RequestHandler_14:
+   \   000000BE   0178               LDRB     R1,[R0, #+0]
+   \   000000C0   C906               LSLS     R1,R1,#+27
+   \   000000C2   C90E               LSRS     R1,R1,#+27
+   \   000000C4   02D0               BEQ      ??STD_RequestHandler_15
+   \   000000C6   0229               CMP      R1,#+2
+   \   000000C8   04D0               BEQ      ??STD_RequestHandler_16
+   \   000000CA   C5E7               B        ??STD_RequestHandler_1
+    378                  //-------------------------
+    379                  case USB_RECIPIENT_DEVICE:
+    380                  //-------------------------
+    381                      TRACE_DEBUG_M("Dev ");
+    382                      STD_GetDeviceStatus(pClass);
+   \                     ??STD_RequestHandler_15:
+   \   000000CC   2000               MOVS     R0,R4
+   \   000000CE   ........           BL       STD_GetDeviceStatus
+   \   000000D2   22E0               B        ??STD_RequestHandler_6
+    383                      break;
+    384          
+    385                  //---------------------------
+    386                  case USB_RECIPIENT_ENDPOINT:
+    387                  //---------------------------
+    388                      TRACE_DEBUG_M("Ept ");
+    389                      STD_GetEndpointStatus(pClass,
+    390                                            LBYTE(pSetup->wIndex));
+   \                     ??STD_RequestHandler_16:
+   \   000000D4   8188               LDRH     R1,[R0, #+4]
+   \   000000D6   0906               LSLS     R1,R1,#+24
+   \   000000D8   090E               LSRS     R1,R1,#+24
+   \   000000DA   2000               MOVS     R0,R4
+   \   000000DC   ........           BL       STD_GetEndpointStatus
+   \   000000E0   1BE0               B        ??STD_RequestHandler_6
+    391                      break;
+    392          
+    393                  //------
+    394                  default:
+    395                  //------
+    396                      TRACE_WARNING(
+    397                          "W: STD_RequestHandler: Unsupported GetStatus = 0x%02X\n\r",
+    398                          pSetup->bmRequestType
+    399                      );
+    400                      USB_Stall(pClass->pUsb, 0);
+    401          
+    402                  }
+    403                  break;
+    404          
+    405              //-------------------
+    406              case USB_SET_FEATURE:
+    407              //-------------------
+    408                  TRACE_DEBUG_H("sFeat ");
+    409          
+    410                  switch (pSetup->wValue) {
+   \                     ??STD_RequestHandler_17:
+   \   000000E2   4188               LDRH     R1,[R0, #+2]
+   \   000000E4   0029               CMP      R1,#+0
+   \   000000E6   02D0               BEQ      ??STD_RequestHandler_18
+   \   000000E8   0129               CMP      R1,#+1
+   \   000000EA   0DD0               BEQ      ??STD_RequestHandler_19
+   \   000000EC   B4E7               B        ??STD_RequestHandler_1
+    411                  //---------------------
+    412                  case USB_ENDPOINT_HALT:
+    413                  //---------------------
+    414                      USB_Halt(pClass->pUsb, LBYTE(pSetup->wIndex), USB_SET_FEATURE);
+   \                     ??STD_RequestHandler_18:
+   \   000000EE   0322               MOVS     R2,#+3
+   \   000000F0   8188               LDRH     R1,[R0, #+4]
+   \   000000F2   0906               LSLS     R1,R1,#+24
+   \   000000F4   090E               LSRS     R1,R1,#+24
+   \   000000F6   2068               LDR      R0,[R4, #+0]
+   \   000000F8   ........           BL       USB_Halt
+    415                      USB_SendZLP0(pClass->pUsb, 0, 0);
+   \   000000FC   0022               MOVS     R2,#+0
+   \   000000FE   1100               MOVS     R1,R2
+   \   00000100   2068               LDR      R0,[R4, #+0]
+   \   00000102   ........           BL       USB_SendZLP0
+   \   00000106   08E0               B        ??STD_RequestHandler_6
+    416                      break;
+    417          
+    418                  //----------------------------
+    419                  case USB_DEVICE_REMOTE_WAKEUP:
+    420                  //----------------------------
+    421                      pClass->wDeviceStatus |= REMOTE_WAKEUP; // Remote wakeup enabled
+   \                     ??STD_RequestHandler_19:
+   \   00000108   2089               LDRH     R0,[R4, #+8]
+   \   0000010A   0221               MOVS     R1,#+2
+   \   0000010C   0143               ORRS     R1,R1,R0
+   \   0000010E   2181               STRH     R1,[R4, #+8]
+    422                      USB_SendZLP0(pClass->pUsb, 0, 0);
+   \   00000110   0022               MOVS     R2,#+0
+   \   00000112   1100               MOVS     R1,R2
+   \   00000114   2068               LDR      R0,[R4, #+0]
+   \   00000116   ........           BL       USB_SendZLP0
+    423                      break;
+    424          
+    425                  //------
+    426                  default:
+    427                  //------
+    428                      TRACE_WARNING(
+    429                          "W: STD_RequestHandler: Unsupported SetFeature=0x%04X\n\r",
+    430                          pSetup->wValue
+    431                      );
+    432                      USB_Stall(pClass->pUsb, 0);
+    433          
+    434                  }
+    435                  break;
+    436          
+    437              //------
+    438              default:
+    439              //------
+    440                  TRACE_WARNING(
+    441                      "W: STD_RequestHandler: Unsupported request: 0x%02X\n\r",
+    442                      pSetup->bRequest
+    443                  );
+    444                  USB_Stall(pClass->pUsb, 0);
+    445              }
+    446          }
+   \                     ??STD_RequestHandler_6:
+   \   0000011A   10BC               POP      {R4}
+   \   0000011C   01BC               POP      {R0}
+   \   0000011E   0047               BX       R0               ;; return
+   \                     ??STD_RequestHandler_8:
+   \   00000120   ........           DC32     USB_SetAddress
+   \   00000124   FDFF0000           DC32     0xfffd
+    447          
+    448          
+
+   Maximum stack usage in bytes:
+
+     Function                       .cstack
+     --------                       -------
+     STD_ConfigureEndpoints             16
+     STD_GetConfiguration               16
+     STD_GetConfigurationDescriptor     16
+     STD_GetDeviceDescriptor            16
+     STD_GetDeviceStatus                16
+     STD_GetEndpointStatus              16
+     STD_GetStringDescriptor            24
+     STD_RequestHandler                  8
+     STD_SetConfiguration                8
+     USB_ConfigureEndpoint               8
+     USB_GetSetup                        0
+     USB_GetState                        0
+     USB_Halt                            8
+     USB_SendZLP0                       16
+     USB_SetAddress                      8
+     USB_SetConfiguration                8
+     USB_Stall                           8
+     USB_Write                          24
+     min                                 0
+
+
+   Section sizes:
+
+     Function/Label                 Bytes
+     --------------                 -----
+     min                               8
+     USB_GetSetup                      4
+     USB_Write                        34
+     USB_SendZLP0                     30
+     USB_Stall                        18
+     USB_Halt                         22
+     USB_SetAddress                   18
+     USB_SetConfiguration             18
+     USB_ConfigureEndpoint            18
+     USB_GetState                     10
+     STD_ConfigureEndpoints           52
+     STD_SetConfiguration             24
+     STD_GetConfiguration             50
+     STD_GetDeviceStatus              64
+     STD_GetEndpointStatus            40
+     STD_GetDeviceDescriptor          36
+     STD_GetConfigurationDescriptor   48
+     STD_GetStringDescriptor          46
+     STD_RequestHandler              296
+      Others                           8
+
+ 
+ 844 bytes in section Debug.txt
+ 
+ 656 bytes of CODE memory (+ 188 bytes shared)
+
+Errors: none
+Warnings: none

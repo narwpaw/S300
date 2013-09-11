@@ -1,0 +1,38 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+ifFALSE SerialPortOpen(#NParam0, #NParam1, 0)
+{
+	SetString(#SParam9, "Serial Open Error")
+	goto TEST-END
+}
+SerialStartMonitor(#NParam0)
+
+
+SerialClearBuffer(#NParam0)
+MakeString(#SParam11, "AT+WS=,,,", #SParam0)
+SerialSendString(#NParam0, #SParam11, 2)
+ifFALSE SerialFindString(#NParam0, "OK", "", 100, 100)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+SerialGetSerialBuffer(#NParam0)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+:TEST-OK
+SetString(#SParam9, "Found WizFi Module")
+goto TEST-END
+
+:TEST-ERROR
+SetString(#SParam9, "AT Command Error")
+
+:TEST-END
+Sleep(10)
+SerialPortClose(#NParam0)
+Sleep(10)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

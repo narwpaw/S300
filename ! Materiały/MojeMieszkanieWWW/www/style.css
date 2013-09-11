@@ -1,0 +1,442 @@
+
+body,html {
+          margin: 0;
+          padding: 0;
+          width:100%;
+          height:100%;
+          text-align:center;
+          background-color:#F8F8F8;
+          background-repeat:repeat-x;
+          background-position:0 0;
+          background-image:url('backgr.png');
+}
+body,html,table {
+          font-size:11px;
+          line-height:150%;
+          font-family:Tahoma,sans-serif;
+          color: #666666; }
+
+h1,h2,h3,h4,h5,h6, h7{
+          margin: 0;
+          padding: 10px 30px;
+          font-weight:normal;
+          font-family: "Times New Roman",sans;
+          clear:both;
+          color:#333333; }
+h1 {
+          font-weight:bold;
+          font-size:24px; } 
+h2 {
+          font-size:17px; }
+h3 {
+          font-size:21px; }
+h4 {
+          font-size:17px; }
+h5 {
+          font-size:12px; }
+h6 {
+          font-size:11px; }
+
+
+.external {
+          margin: 0 auto 0 auto;
+          width:1024px;
+          overflow: hidden;
+          }
+
+
+#logo {
+          width: 100px;
+          height: 20px;
+          background-image:url("logo.png");
+          background-size:contain;
+          background-repeat:no-repeat;
+          margin-top: 5px;
+          margin-left: 0px;
+}
+
+#PassBox {
+          height :50px;
+          width  :250px;
+          margin: 0 auto 0 auto;
+          margin-top: 140px;
+          padding :40px;
+          background-color:#F0F0F0;
+          border: 2px solid  #CCCCCC;
+          color: #330033;
+          font-size:13px;
+}
+
+#MainBox {
+          margin: 0px 0px;
+          overflow: hidden;
+          width:1020px;
+          height:990px;
+          border: 2px solid  #CCCCCC;
+          background-color:#F4F4F4;
+          margin-top: 5px;
+          position: relative;
+          float: left;
+}
+
+
+
+#Wallpaper {
+          overflow: hidden;
+          width:980px;
+          height:900px;
+          border: 2px solid  #CCCCCC;
+          background-color:#FFFFFF;
+          border: 2px solid  #CCCCCC;
+          position: absolute;
+          top: 20px;
+          left: 20px;
+}
+
+
+
+#Box0 {
+height :17px;
+width:980px;
+margin: 0px;
+position: absolute;
+top: 940px;
+left: 20px;
+background-color:#888888;
+border: 2px solid  #CCCCCC;
+color: #FFFFFF;
+}
+
+#BoxMenu { 
+          overflow: hidden;
+          width:117px;
+          height:400px;
+          position: absolute;
+          top: 20px; 
+          left: 2px;
+          text-align:left;
+}
+ul, ul li {
+	display: block;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	float: right;
+}
+ul {
+	width: 102px;
+	background-color: #F4F4F4;
+}
+ul li {
+	border-bottom: 5px solid #F4F4F4;
+}
+ul a:link, ul a:visited {
+	display: block;
+	width: 102px;
+	text-decoration: none;
+	padding-top: 7px;
+	padding-bottom: 7px;
+	padding-left:5px;
+	font-weight: bold;
+	background-color: #202020;
+	color: #FFF;
+	border-right: 5px solid #FF00B0;
+}
+ul a:hover { 
+	width: 102px;
+	background-color: #000;
+	color: #FF00B0;
+	border-right: 10px solid #FF00B0;
+}
+
+#Box1 {
+          height :515px;
+          width :709px;
+          margin: 0px;
+          position: absolute;
+          top :0px;
+          left :1275068416px;
+          font-family:Times New Roman,serif;
+          background-image:url("p1.jpg");
+          background-size:contain;
+          background-repeat:no-repeat;
+}
+#Box2 {
+          height :0px;
+          width :0px;
+          margin: 0px;
+          position: absolute;
+          top :0px;
+          left :0px;
+          font-family:Times New Roman,serif;
+}
+#Box3 {
+          height :0px;
+          width :1px;
+          margin: 0px;
+          position: absolute;
+          top :825259523px;
+          left :167772160px;
+          font-family:Times New Roman,serif;
+}
+#Box4 {
+          height :0px;
+          width :0px;
+          margin: 0px;
+          position: absolute;
+          top :0px;
+          left :0px;
+          font-family:Times New Roman,serif;
+}
+#Box5 {
+          height :600px;
+          width :900px;
+          margin: 0px;
+          position: absolute;
+          top :97px;
+          left :27px;
+          font-family:Times New Roman,serif;
+          background-image:url("www- mieszkanie.jpg");
+          background-size:contain;
+          background-repeat:no-repeat;
+}
+#Box6 {
+          margin: 0px;
+          position: absolute;
+          top :12px;
+          left :867px;
+          font-family:Times New Roman,serif;
+          color:#3399FF;
+          background-color:#E0E0E0;
+          border: 4px solid #EEEEEE;
+          padding : 2px;
+          padding-bottom : 5px;
+          font-size:21px;}
+#Box7 {
+          margin: 0px;
+          position: absolute;
+          top :247px;
+          left :347px;
+          font-family:Times New Roman,serif;
+          color:#3399FF;
+          background-color:#E0E0E0;
+          border: 4px solid #EEEEEE;
+          padding : 2px;
+          padding-bottom : 5px;
+          font-size:21px;}
+#Box8 {
+          margin: 0px;
+          position: absolute;
+          top :12px;
+          left :227px;
+          font-family:Times New Roman,serif;
+          color:#3399FF;
+          background-color:#E0E0E0;
+          border: 4px solid #EEEEEE;
+          padding : 2px;
+          padding-bottom : 5px;
+          font-size:21px;}
+#Box9 {
+          height :19px;
+          width :124px;
+          margin: 0px;
+          position: absolute;
+          top :17px;
+          left :32px;
+          font-family:Times New Roman,serif;
+          color:#000000;
+          font-size:17px
+}
+#Box10 {
+          height :70px;
+          width :70px;
+          margin: 0px;
+          position: absolute;
+          top :512px;
+          left :402px;
+          font-family:Times New Roman,serif;
+          background-image:url("bulb_2a.png");
+          background-size:contain;
+          background-repeat:no-repeat;
+}
+#Box11 {
+          height :70px;
+          width :35px;
+          margin: 0px;
+          position: absolute;
+          top :222px;
+          left :212px;
+          font-family:Times New Roman,serif;
+          background-image:url("blind_2b.png");
+          background-size:contain;
+          background-repeat:no-repeat;
+}
+#Box12 {
+          height :21px;
+          width :69px;
+          margin: 0px;
+          position: absolute;
+          top :297px;
+          left :212px;
+          font-family:Times New Roman,serif;
+}
+#Box13 {
+          height :21px;
+          width :69px;
+          margin: 0px;
+          position: absolute;
+          top :322px;
+          left :212px;
+          font-family:Times New Roman,serif;
+}
+#Box14 {
+          height :70px;
+          width :35px;
+          margin: 0px;
+          position: absolute;
+          top :517px;
+          left :207px;
+          font-family:Times New Roman,serif;
+          background-image:url("blind_2b.png");
+          background-size:contain;
+          background-repeat:no-repeat;
+}
+#Box15 {
+          height :21px;
+          width :69px;
+          margin: 0px;
+          position: absolute;
+          top :527px;
+          left :252px;
+          font-family:Times New Roman,serif;
+}
+#Box16 {
+          height :21px;
+          width :69px;
+          margin: 0px;
+          position: absolute;
+          top :552px;
+          left :252px;
+          font-family:Times New Roman,serif;
+}
+#Box17 {
+          height :70px;
+          width :70px;
+          margin: 0px;
+          position: absolute;
+          top :427px;
+          left :197px;
+          font-family:Times New Roman,serif;
+          background-image:url("bulb_2a.png");
+          background-size:contain;
+          background-repeat:no-repeat;
+}
+#Box18 {
+          height :70px;
+          width :70px;
+          margin: 0px;
+          position: absolute;
+          top :607px;
+          left :202px;
+          font-family:Times New Roman,serif;
+          background-image:url("bulb_2a.png");
+          background-size:contain;
+          background-repeat:no-repeat;
+}
+#Box19 {
+          height :19px;
+          width :171px;
+          margin: 0px;
+          position: absolute;
+          top :52px;
+          left :32px;
+          font-family:Times New Roman,serif;
+          color:#000000;
+          font-size:17px
+}
+#Box20 {
+          margin: 0px;
+          position: absolute;
+          top :47px;
+          left :227px;
+          font-family:Times New Roman,serif;
+          color:#3399FF;
+          background-color:#E0E0E0;
+          border: 4px solid #EEEEEE;
+          padding : 2px;
+          padding-bottom : 5px;
+          font-size:21px;}
+#Box21 {
+          margin: 0px;
+          position: absolute;
+          top :757px;
+          left :87px;
+          font-family:Times New Roman,serif;
+          color:#3399FF;
+          background-color:#E0E0E0;
+          border: 4px solid #EEEEEE;
+          padding : 2px;
+          padding-bottom : 5px;
+          font-size:21px;}
+#Box22 {
+          height :19px;
+          width :71px;
+          margin: 0px;
+          position: absolute;
+          top :727px;
+          left :47px;
+          font-family:Times New Roman,serif;
+          color:#800080;
+          font-size:17px
+}
+#Box23 {
+          height :21px;
+          width :69px;
+          margin: 0px;
+          position: absolute;
+          top :727px;
+          left :172px;
+          font-family:Times New Roman,serif;
+}
+#Box24 {
+          height :25px;
+          width :25px;
+          margin: 0px;
+          position: absolute;
+          top :757px;
+          left :52px;
+          font-family:Times New Roman,serif;
+          background-image:url("Manual.JPG");
+          background-size:contain;
+          background-repeat:no-repeat;
+}
+#Box25 {
+          height :21px;
+          width :69px;
+          margin: 0px;
+          position: absolute;
+          top :752px;
+          left :172px;
+          font-family:Times New Roman,serif;
+}
+#Box26 {
+          height :21px;
+          width :69px;
+          margin: 0px;
+          position: absolute;
+          top :777px;
+          left :172px;
+          font-family:Times New Roman,serif;
+}
+#Box27 {
+          height :45px;
+          width :23px;
+          margin: 0px;
+          position: absolute;
+          top :732px;
+          left :17px;
+          font-family:Times New Roman,serif;
+          background-image:url("temperature_2.png");
+          background-size:contain;
+          background-repeat:no-repeat;
+}

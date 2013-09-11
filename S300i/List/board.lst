@@ -1,0 +1,360 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           04/Jun/2013  20:18:15 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\core\board.c                                  #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\core\board.c" -D AT91SAM7S256 -D AT91SAM7SEK  #
+#                    -D iH -D __ALARM -D __WIFI_MODULE -D S300i -lC           #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\S300i\List\" --diag_suppress Pa082 -o         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\S300i\Obj\" --debug --endian little --cpu     #
+#                    ARM7TDMI -e --fpu None --dlib_config "C:\Program Files   #
+#                    (x86)\IAR Systems\Embedded Workbench                     #
+#                    5.0\ARM\INC\DLib_Config_Normal.h" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\lib\AT91SAM7S256\" -I                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.3 - 04.06.2013\cdc\" -I "D:\Zeuron\Projekty\S300\S300 #
+#                    -program v1.3 - 04.06.2013\core\" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\startup\" -I "D:\Zeuron\Projekty\S300\S300-pr #
+#                    ogram v1.3 - 04.06.2013\Framework\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\Framework\Configuration\" -I "C:\Program      #
+#                    Files (x86)\IAR Systems\Embedded Workbench               #
+#                    5.0\ARM\INC\" --section .text=Debug.txt --interwork      #
+#                    --cpu_mode thumb -Oh                                     #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\S300i\List\board.lst                          #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\S300i\Obj\board.o                             #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v1.3 - 04.06.2013\core\board.c
+      1          /* ----------------------------------------------------------------------------
+      2           *         ATMEL Microcontroller Software Support  -  ROUSSET  -
+      3           * ----------------------------------------------------------------------------
+      4           * Copyright (c) 2006, Atmel Corporation
+      5          
+      6           * All rights reserved.
+      7           *
+      8           * Redistribution and use in source and binary forms, with or without
+      9           * modification, are permitted provided that the following conditions are met:
+     10           *
+     11           * - Redistributions of source code must retain the above copyright notice,
+     12           * this list of conditions and the disclaiimer below.
+     13           *
+     14           * - Redistributions in binary form must reproduce the above copyright notice,
+     15           * this list of conditions and the disclaimer below in the documentation and/or
+     16           * other materials provided with the distribution.
+     17           *
+     18           * Atmel's name may not be used to endorse or promote products derived from
+     19           * this software without specific prior written permission.
+     20           *
+     21           * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR
+     22           * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     23           * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+     24           * DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,
+     25           * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+     26           * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+     27           * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+     28           * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     29           * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+     30           * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     31           * ----------------------------------------------------------------------------
+     32           */
+     33          
+     34          /*
+     35          $Id: board.c,v 1.1.2.1 2006/12/05 08:33:25 danielru Exp $
+     36          */
+     37          
+     38          //------------------------------------------------------------------------------
+     39          //      Includes
+     40          //------------------------------------------------------------------------------
+     41          
+     42          #include "common.h"
+     43          #include "device.h"
+     44          #include "board.h"
+     45          
+     46          //------------------------------------------------------------------------------
+     47          // \brief   Indicates the state of the VBus power line associated with the
+     48          //          specified interface.
+     49          // \param   pInterface Pointer to an USB controller interface
+     50          // \return  true if VBus is detected, false otherwise
+     51          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     52          bool BRD_IsVBusConnected(void *pInterface)
+     53          {
+     54          #ifdef USB_BUS_POWERED
+     55              return true;
+     56          #else
+     57              if (ISSET(AT91F_PIO_GetInput(AT91C_PIO_VBUS), AT91C_VBUS)) {
+   \                     BRD_IsVBusConnected:
+   \   00000000   ....               LDR      R0,??DataTable1  ;; 0xfffff43c
+   \   00000002   0068               LDR      R0,[R0, #+0]
+   \   00000004   0221               MOVS     R1,#+2
+   \   00000006   0140               ANDS     R1,R1,R0
+   \   00000008   481E               SUBS     R0,R1,#+1
+   \   0000000A   8041               SBCS     R0,R0,R0
+   \   0000000C   C043               MVNS     R0,R0
+   \   0000000E   C00F               LSRS     R0,R0,#+31
+     58          
+     59                  return true;
+     60              }
+     61              else {
+     62          
+     63                  return false;
+   \   00000010   7047               BX       LR               ;; return
+     64              }
+     65          #endif
+     66          }
+     67          
+     68          //------------------------------------------------------------------------------
+     69          // \brief   Enables the external pull-up on D+ associated with the specified
+     70          //          USB controller
+     71          // \param   pInterface Pointer to an USB controller interface
+     72          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     73          void BRD_ConnectPullUp(void *pInterface)
+     74          {
+     75          #if defined(AT91SAM7SEK) || (defined(AT91SAM7A3EK) && (REVISION == REV_B))
+     76              AT91F_PIO_ClearOutput(AT91C_PIO_PULLUP, AT91C_PULLUP);
+   \                     BRD_ConnectPullUp:
+   \   00000000   0248               LDR      R0,??BRD_ConnectPullUp_0  ;; 0xfffff434
+   \   00000002   8021               MOVS     R1,#+128
+   \   00000004   4902               LSLS     R1,R1,#+9        ;; #+65536
+   \   00000006   0160               STR      R1,[R0, #+0]
+     77          
+     78          #elif (defined(AT91SAM7A3EK) && (REVISION == REV_A)) || defined(AT91RM9200)
+     79              AT91F_PIO_SetOutput(AT91C_PIO_PULLUP, AT91C_PULLUP);
+     80          #endif
+     81          }
+   \   00000008   7047               BX       LR               ;; return
+   \   0000000A   C046               Nop      
+   \                     ??BRD_ConnectPullUp_0:
+   \   0000000C   34F4FFFF           DC32     0xfffff434
+     82          
+     83          //------------------------------------------------------------------------------
+     84          // \brief   Disables the external pull-up on D+ associated with the specified
+     85          //          USB controller
+     86          // \param   pInterface Pointer to an USB controller interface
+     87          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     88          void BRD_DisconnectPullUp(void *pInterface)
+     89          {
+     90          #if defined(AT91SAM7SEK) || (defined(AT91SAM7A3EK) && (REVISION == REV_B))
+     91              AT91F_PIO_SetOutput(AT91C_PIO_PULLUP, AT91C_PULLUP);
+   \                     BRD_DisconnectPullUp:
+   \   00000000   0248               LDR      R0,??BRD_DisconnectPullUp_0  ;; 0xfffff430
+   \   00000002   8021               MOVS     R1,#+128
+   \   00000004   4902               LSLS     R1,R1,#+9        ;; #+65536
+   \   00000006   0160               STR      R1,[R0, #+0]
+     92          
+     93          #elif (defined(AT91SAM7A3EK) && (REVISION == REV_A)) || defined(AT91RM9200)
+     94              AT91F_PIO_ClearOutput(AT91C_PIO_PULLUP, AT91C_PULLUP);
+     95          #endif
+     96          }
+   \   00000008   7047               BX       LR               ;; return
+   \   0000000A   C046               Nop      
+   \                     ??BRD_DisconnectPullUp_0:
+   \   0000000C   30F4FFFF           DC32     0xfffff430
+     97          
+     98          //------------------------------------------------------------------------------
+     99          // \brief   Indicates the state of the external pull-up associated with the
+    100          //          specified interface.
+    101          // \param   pInterface Pointer to an USB controller interface
+    102          // \return  true if the pull-up is currently connected, false otherwise.
+    103          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    104          bool BRD_IsPullUpConnected(void *pInterface)
+    105          {
+    106          #if defined(AT91SAM7SEK) || (defined(AT91SAM7A3EK) && (REVISION == REV_B))
+    107              if (ISSET(AT91F_PIO_GetInput(AT91C_PIO_PULLUP), AT91C_PULLUP)) {
+   \                     BRD_IsPullUpConnected:
+   \   00000000   ....               LDR      R0,??DataTable1  ;; 0xfffff43c
+   \   00000002   0068               LDR      R0,[R0, #+0]
+   \   00000004   8021               MOVS     R1,#+128
+   \   00000006   4902               LSLS     R1,R1,#+9        ;; #+65536
+   \   00000008   0140               ANDS     R1,R1,R0
+   \   0000000A   481E               SUBS     R0,R1,#+1
+   \   0000000C   8041               SBCS     R0,R0,R0
+   \   0000000E   C00F               LSRS     R0,R0,#+31
+    108          #elif (defined(AT91SAM7A3EK) && (REVISION == REV_A)) || defined(AT91RM9200)
+    109          
+    110              if (!ISSET(AT91F_PIO_GetInput(AT91C_PIO_PULLUP), AT91C_PULLUP)) {
+    111          #else
+    112              if (false) {
+    113          #endif
+    114                  return false;
+    115              }
+    116              else {
+    117          
+    118                  return true;
+   \   00000010   7047               BX       LR               ;; return
+    119              }
+    120          }
+    121          
+    122          //------------------------------------------------------------------------------
+    123          // \brief   Configures the external pull-up on the D+ line associated with
+    124          //          the specified USB controller.
+    125          // \param   pInterface Pointer to the USB controller interface
+    126          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    127          void BRD_ConfigurePullUp(void *pInterface)
+    128          {
+    129          #if defined(AT91SAM7SEK) || defined(AT91SAM7A3EK) || defined(AT91RM9200)
+    130              AT91F_PMC_EnablePeriphClock(AT91C_BASE_PMC, 1 << AT91C_ID_PULLUP);
+   \                     BRD_ConfigurePullUp:
+   \   00000000   ....               LDR      R0,??DataTable7  ;; 0xfffffc10
+   \   00000002   0421               MOVS     R1,#+4
+   \   00000004   0160               STR      R1,[R0, #+0]
+    131              AT91F_PIO_CfgOutput(AT91C_PIO_PULLUP, AT91C_PULLUP);
+   \   00000006   8803               LSLS     R0,R1,#+14
+   \   00000008   ....               LDR      R1,??DataTable10  ;; 0xfffff400
+   \   0000000A   0860               STR      R0,[R1, #+0]
+   \   0000000C   0149               LDR      R1,??BRD_ConfigurePullUp_0  ;; 0xfffff410
+   \   0000000E   0860               STR      R0,[R1, #+0]
+    132          #endif
+    133          }
+   \   00000010   7047               BX       LR               ;; return
+   \   00000012   C046               Nop      
+   \                     ??BRD_ConfigurePullUp_0:
+   \   00000014   10F4FFFF           DC32     0xfffff410
+    134          
+    135          //------------------------------------------------------------------------------
+    136          // \brief   Configures the VBus monitoring PIO associated with the specified
+    137          //          USB controller.
+    138          // \param   pInterface Pointer to the USB controller interface
+    139          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    140          void BRD_ConfigureVBus(void *pInterface)
+    141          {
+    142          #if !defined(USB_BUS_POWERED)
+    143              AT91F_PMC_EnablePeriphClock(AT91C_BASE_PMC, 1 << AT91C_ID_VBUS);
+   \                     BRD_ConfigureVBus:
+   \   00000000   ....               LDR      R0,??DataTable7  ;; 0xfffffc10
+   \   00000002   0421               MOVS     R1,#+4
+   \   00000004   0160               STR      R1,[R0, #+0]
+    144              AT91F_PIO_CfgPullup(AT91C_PIO_VBUS, ~AT91C_VBUS);
+   \   00000006   0220               MOVS     R0,#+2
+   \   00000008   ....               LDR      R1,??DataTable8  ;; 0xfffff460
+   \   0000000A   0860               STR      R0,[R1, #+0]
+   \   0000000C   ....               LDR      R1,??DataTable9  ;; 0xfffff464
+   \   0000000E   0222               MOVS     R2,#+2
+   \   00000010   D243               MVNS     R2,R2            ;; #-3
+   \   00000012   ....               B.N      ?Subroutine0
+    145              AT91F_PIO_CfgInput(AT91C_PIO_VBUS, AT91C_VBUS);
+    146          #endif
+    147          }
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ?Subroutine0:
+   \   00000000   0A60               STR      R2,[R1, #+0]
+   \   00000002   0349               LDR      R1,??Subroutine0_0+0x4  ;; 0xfffff414
+   \   00000004   0860               STR      R0,[R1, #+0]
+   \   00000006   ....               LDR      R1,??DataTable10  ;; 0xfffff400
+   \   00000008   0860               STR      R0,[R1, #+0]
+   \   0000000A   7047               BX       LR               ;; return
+   \                     ??Subroutine0_0:
+   \   0000000C   FF7FFFFF           DC32     0xffff7fff
+   \   00000010   14F4FFFF           DC32     0xfffff414
+    148          
+    149          
+    150          
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    151          void ConfigureIrBus(void)
+    152          {
+    153          #if !defined(IR_BUS_DEF)
+    154              AT91F_PMC_EnablePeriphClock(AT91C_BASE_PMC, 1 << IR_ID_BUS);
+   \                     ConfigureIrBus:
+   \   00000000   ....               LDR      R0,??DataTable7  ;; 0xfffffc10
+   \   00000002   0421               MOVS     R1,#+4
+   \   00000004   0160               STR      R1,[R0, #+0]
+    155              AT91F_PIO_CfgPullup(IR_PIO_BUS, ~IR_BUS);
+   \   00000006   4803               LSLS     R0,R1,#+13
+   \   00000008   ....               LDR      R1,??DataTable8  ;; 0xfffff460
+   \   0000000A   0860               STR      R0,[R1, #+0]
+   \   0000000C   ....               LDR      R1,??DataTable9  ;; 0xfffff464
+   \   0000000E   ....               LDR      R2,??Subroutine0_0  ;; 0xffff7fff
+   \   00000010                      REQUIRE ?Subroutine0
+   \   00000010                      ;; // Fall through to label ?Subroutine0
+    156              AT91F_PIO_CfgInput(IR_PIO_BUS, IR_BUS);
+    157          #endif
+    158          }
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable1:
+   \   00000000   3CF4FFFF           DC32     0xfffff43c
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable7:
+   \   00000000   10FCFFFF           DC32     0xfffffc10
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable8:
+   \   00000000   60F4FFFF           DC32     0xfffff460
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable9:
+   \   00000000   64F4FFFF           DC32     0xfffff464
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable10:
+   \   00000000   00F4FFFF           DC32     0xfffff400
+
+   Maximum stack usage in bytes:
+
+     Function              .cstack
+     --------              -------
+     BRD_ConfigurePullUp        0
+     BRD_ConfigureVBus          0
+     BRD_ConnectPullUp          0
+     BRD_DisconnectPullUp       0
+     BRD_IsPullUpConnected      0
+     BRD_IsVBusConnected        0
+     ConfigureIrBus             0
+
+
+   Section sizes:
+
+     Function/Label        Bytes
+     --------------        -----
+     BRD_IsVBusConnected     18
+     BRD_ConnectPullUp       16
+     BRD_DisconnectPullUp    16
+     BRD_IsPullUpConnected   18
+     BRD_ConfigurePullUp     24
+     BRD_ConfigureVBus       20
+     ?Subroutine0            20
+     ConfigureIrBus          16
+     ??DataTable1             4
+     ??DataTable7             4
+     ??DataTable8             4
+     ??DataTable9             4
+     ??DataTable10            4
+
+ 
+ 168 bytes in section Debug.txt
+ 
+ 168 bytes of CODE memory
+
+Errors: none
+Warnings: none

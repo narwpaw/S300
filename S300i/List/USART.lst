@@ -1,0 +1,1082 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           28/Jul/2013  11:25:44 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v1.4 -              #
+#                    12.06.2013\Framework\USART.c                             #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\Framework\USART.c" -D AT91SAM7S256 -D         #
+#                    AT91SAM7SEK -D iH -D __ALARM -D __WIFI_MODULE -D S300i   #
+#                    -lC "D:\Zeuron\Projekty\S300\S300-program v1.4 -         #
+#                    12.06.2013\S300i\List\" --diag_suppress Pa082 -o         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\S300i\Obj\" --debug --endian little --cpu     #
+#                    ARM7TDMI -e --fpu None --dlib_config "C:\Program Files   #
+#                    (x86)\IAR Systems\Embedded Workbench                     #
+#                    5.0\ARM\INC\DLib_Config_Normal.h" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\lib\AT91SAM7S256\" -I                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.4 - 12.06.2013\cdc\" -I "D:\Zeuron\Projekty\S300\S300 #
+#                    -program v1.4 - 12.06.2013\core\" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\startup\" -I "D:\Zeuron\Projekty\S300\S300-pr #
+#                    ogram v1.4 - 12.06.2013\Framework\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\Framework\Configuration\" -I "C:\Program      #
+#                    Files (x86)\IAR Systems\Embedded Workbench               #
+#                    5.0\ARM\INC\" --section .text=Debug.txt --interwork      #
+#                    --cpu_mode thumb -Oh                                     #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v1.4 -              #
+#                    12.06.2013\S300i\List\USART.lst                          #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v1.4 -              #
+#                    12.06.2013\S300i\Obj\USART.o                             #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v1.4 - 12.06.2013\Framework\USART.c
+      1          //****************************************************************************//
+      2          //*--------------------------------------------------------------------------*//
+      3          //*                                 CEURON                                   *//
+      4          //*--------------------------------------------------------------------------*//
+      5          //*--------------------------------------------------------------------------*//
+      6          //*  Nazwa pliku                  : USART.c                                  *//
+      7          //*  Opis                         : G³ówny plik programu                     *//
+      8          //*  Autor                        : Pawe³ Narwojsz                           *//
+      9          //*  Data utrzorzenia             : 16.01.2008                               *//
+     10          //*  Data ostatniej modyfikacji   : --.--.----                               *//
+     11          //*--------------------------------------------------------------------------*//
+     12          //*                                                                          *//
+     13          //*--------------------------------------------------------------------------*//
+     14          //* Rejestr zmian  (data - opis):                                            *//
+     15          //*                                                                          *//
+     16          //*                               Brak zmian                                 *//
+     17          //*                                                                          *//
+     18          //*__________________________________________________________________________*//
+     19          //****************************************************************************//
+     20          //****************************************************************************//
+     21          
+     22          
+     23          
+     24          //Zmienne konfiguracyjne -------------------------------------------------------     
+     25          
+     26              //US0----------------------
+     27                int  g_US0_BAUDRATE             = 19200;                                   //prêdkoœæ transmisji US0
+     28                int  g_US0_Comm_TIMEOUT         = 12;                                      //(w ms) Czas oczekiwania na odpowiedŸ urz¹dzenia odpytywanego poprzez MODBUS
+     29                char q_US0_Comm_Mode            = 3;
+     30                
+     31              //US1----------------------
+     32                int g_US1_BAUDRATE             = 115200;                                   //prêdkoœæ transmisji US0
+     33                int g_US1_Comm_TIMEOUT         = 100;                                      //(w ms) Czas oczekiwania na odpowiedŸ urz¹dzenia odpytywanego poprzez MODBUS  
+     34          //___________________________Koniec zmiennych lokalnych________________________
+     35          
+     36          
+     37          
+     38          
+     39          
+     40          //------------------------------------------------------------------------------
+     41          //      Includes
+     42          //------------------------------------------------------------------------------
+     43          
+     44          
+     45          #include "USART.h"
+
+                                          
+                                          ^
+"D:\Zeuron\Projekty\S300\S300-program v1.4 - 12.06.2013\Framework\Configuration\InterruptPriority.h",59  Warning[Pe001]: 
+          last line of file ends without a newline
+     46          #include "WizFi.h"
+
+   
+   ^
+"D:\Zeuron\Projekty\S300\S300-program v1.4 - 12.06.2013\Framework\WizFi.h",172  Warning[Pe001]: 
+          last line of file ends without a newline
+     47          
+     48          
+     49          //Zmienne lokalne -------------------------------------------------------------
+     50              char SendModbusEnable = 1;                                                  //komunikacja z zewnêtrznym urz¹dzeniem poprzez MODBUS RS485 
+     51              
+     52          //___________________________Koniec zmiennych lokalnych________________________
+     53          
+     54          
+     55          
+     56          
+     57          //Zmienne globalne -------------------------------------------------------------
+
+   \                                 In section .bss, align 1
+     58              char   g_US0_Connect_OK = 0;                                                //1 - trwa komunikacja poprzez US0
+   \                     g_US0_Connect_OK:
+   \   00000000                      DS8 1
+
+   \                                 In section .bss, align 1
+     59              char   g_US1_Connect_OK = 0;                                                //1 - trwa komunikacja poprzez US1
+   \                     g_US1_Connect_OK:
+   \   00000000                      DS8 1
+
+   \                                 In section .bss, align 1
+     60              char   g_ETH0_Connect_OK = 0;                                               //1 - trwa komunikacja poprzez ETH0
+   \                     g_ETH0_Connect_OK:
+   \   00000000                      DS8 1
+
+   \                                 In section .bss, align 1
+     61              char   g_ETH1_Connect_OK = 0;                                               //1 - trwa komunikacja poprzez ETH0
+   \                     g_ETH1_Connect_OK:
+   \   00000000                      DS8 1
+
+   \                                 In section .data, align 4
+   \                     SendModbusEnable:
+   \   00000000   01                 DC8 1
+   \   00000001   000000             DC8 0, 0, 0
+   \                     g_US0_BAUDRATE:
+   \   00000004   004B0000           DC32 19200
+     62              int    g_US0_Comm_MinCykle = 10;                                            //Czas pomiêdzy kolejnymi pytaniami (przy poprawnych odpowiedziach) US0
+     63              float  g_US0_OneByteTxTime = 5;                                             //Czas trwania jednego bajtu (w ms) US0
+   \                     g_US0_OneByteTxTime:
+   \   00000008   0000A040           DC32 40A00000H
+     64              int    g_US1_Comm_MinCykle = 1;                                            //Czas pomiêdzy kolejnymi pytaniami (przy poprawnych odpowiedziach) US1
+     65              float  g_US1_OneByteTxTime = 5;                                             //Czas trwania jednego bajtu (w ms) US1
+     66              unsigned char  US0_Buffer[US0_BUFFER_Rx_SIZE];                                  //bufor odbiorczy USART 0
+   \                     US0_Buffer:
+   \   0000000C   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              000000000000
+   \              0000        
+
+   \                                 In section .data, align 4
+   \                     g_US0_Comm_TIMEOUT:
+   \   00000000   0C000000           DC32 12
+
+   \                                 In section .data, align 1
+   \                     q_US0_Comm_Mode:
+   \   00000000   03                 DC8 3
+
+   \                                 In section .data, align 4
+   \                     g_US1_BAUDRATE:
+   \   00000000   00C20100           DC32 115200
+   \                     g_US1_OneByteTxTime:
+   \   00000004   0000A040           DC32 40A00000H
+     67              unsigned char  US1_Buffer[US1_BUFFER_Rx_SIZE];                                  //bufor odbiorczy USART 0
+   \                     US1_Buffer:
+   \   00000008   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000018   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000028   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000038   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000048   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000058   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000068   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000078   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000088   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000098   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   000000A8   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   000000B8   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   000000C8   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   000000D8   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   000000E8   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   000000F8   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000108   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000118   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000128   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000138   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000148   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000158   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000168   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000178   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000188   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000198   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   000001A8   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   000001B8   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   000001C8   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   000001D8   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   000001E8   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   000001F8   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000208   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000218   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000228   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              00000000    
+   \   00000238   000000000000       DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              000000000000
+   \              000000000000
+   \              0000        
+
+   \                                 In section .data, align 4
+   \                     g_US1_Comm_TIMEOUT:
+   \   00000000   64000000           DC32 100
+
+   \                                 In section .data, align 4
+   \                     g_US0_Comm_MinCykle:
+   \   00000000   0A000000           DC32 10
+
+   \                                 In section .data, align 4
+   \                     g_US1_Comm_MinCykle:
+   \   00000000   01000000           DC32 1
+     68              
+     69              
+     70          //___________________________Koniec zmiennych globalnych________________________
+     71              
+     72              
+     73          
+     74          //Zmienne zewnêtrzne -----------------------------------------------------------    
+     75              extern char US0_MasterMODBUS_ENABLE;
+     76              extern char US1_MasterMODBUS_ENABLE;
+     77              extern BYTE Buff_TX_1[];
+     78              extern _Net NET; 
+     79          //___________________________Koniec zmiennych zewnêtrznych______________________    
+     80           
+     81          
+     82              
+     83              
+     84              
+     85              
+     86          //-----------------------------------------------------------------------------
+     87          //!  Nazwa funkcji :    US0_init
+     88          //!  Funkcja inicjalizacji USART 0
+     89          //-----------------------------------------------------------------------------
+     90          //! 
+     91          //-----------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     92          void US0_init(void)
+     93          {
+   \                     US0_init:
+   \   00000000   F1B5               PUSH     {R0,R4-R7,LR}
+   \   00000002   ....               LDR      R0,??DataTable0  ;; 0xfffffc10
+   \   00000004   4021               MOVS     R1,#+64
+   \   00000006   0160               STR      R1,[R0, #+0]
+     94          
+     95            
+     96            
+     97                  // Configure USART
+     98                AT91F_US0_CfgPMC();
+     99                AT91F_PDC_DisableRx(AT91C_BASE_PDC_US0);
+   \   00000008   434C               LDR      R4,??US0_init_0  ;; 0xfffc0120
+   \   0000000A   0220               MOVS     R0,#+2
+   \   0000000C   2060               STR      R0,[R4, #+0]
+   \   0000000E   0002               LSLS     R0,R0,#+8
+   \   00000010   2060               STR      R0,[R4, #+0]
+   \   00000012   4248               LDR      R0,??US0_init_0+0x4  ;; SendModbusEnable + 4
+   \   00000014   0168               LDR      R1,[R0, #+0]
+    100                AT91F_PDC_DisableTx(AT91C_BASE_PDC_US0);
+    101               
+    102                AT91F_US_Configure(AT91C_BASE_US0, AT91C_MASTER_CLOCK,
+    103                                 USART485_MODE, g_US0_BAUDRATE, 0);
+   \   00000016   4248               LDR      R0,??US0_init_0+0x8  ;; 0xfffc000c
+   \   00000018   0022               MOVS     R2,#+0
+   \   0000001A   D243               MVNS     R2,R2            ;; #-1
+   \   0000001C   0260               STR      R2,[R0, #+0]
+   \   0000001E   ....               LDR      R5,??DataTable18  ;; 0xfffc0000
+   \   00000020   AC20               MOVS     R0,#+172
+   \   00000022   2860               STR      R0,[R5, #+0]
+   \   00000024   ....               LDR      R0,??DataTable2  ;; 0x1c9c3800
+   \   00000026   0901               LSLS     R1,R1,#+4
+   \   00000028   ........           BL       __aeabi_uidivmod
+   \   0000002C   0600               MOVS     R6,R0
+   \   0000002E   0A21               MOVS     R1,#+10
+   \   00000030   ........           BL       __aeabi_uidivmod
+   \   00000034   0529               CMP      R1,#+5
+   \   00000036   05D3               BCC      ??US0_init_1
+   \   00000038   3000               MOVS     R0,R6
+   \   0000003A   0A21               MOVS     R1,#+10
+   \   0000003C   ........           BL       __aeabi_uidivmod
+   \   00000040   401C               ADDS     R0,R0,#+1
+   \   00000042   03E0               B        ??US0_init_2
+   \                     ??US0_init_1:
+   \   00000044   3000               MOVS     R0,R6
+   \   00000046   0A21               MOVS     R1,#+10
+   \   00000048   ........           BL       __aeabi_uidivmod
+   \                     ??US0_init_2:
+   \   0000004C   3549               LDR      R1,??US0_init_0+0xC  ;; 0xfffc0020
+   \   0000004E   0860               STR      R0,[R1, #+0]
+   \   00000050   0020               MOVS     R0,#+0
+   \   00000052   3549               LDR      R1,??US0_init_0+0x10  ;; 0xfffc0028
+   \   00000054   0860               STR      R0,[R1, #+0]
+   \   00000056   0221               MOVS     R1,#+2
+   \   00000058   2160               STR      R1,[R4, #+0]
+   \   0000005A   0902               LSLS     R1,R1,#+8
+   \   0000005C   2160               STR      R1,[R4, #+0]
+   \   0000005E   3349               LDR      R1,??US0_init_0+0x14  ;; 0xfffc0118
+   \   00000060   0860               STR      R0,[R1, #+0]
+   \   00000062   3349               LDR      R1,??US0_init_0+0x18  ;; 0xfffc011c
+   \   00000064   0860               STR      R0,[R1, #+0]
+   \   00000066   ....               LDR      R1,??DataTable25  ;; 0xfffc0110
+   \   00000068   0860               STR      R0,[R1, #+0]
+   \   0000006A   ....               LDR      R2,??DataTable24  ;; 0xfffc0114
+   \   0000006C   1060               STR      R0,[R2, #+0]
+   \   0000006E   314B               LDR      R3,??US0_init_0+0x1C  ;; 0xfffc0108
+   \   00000070   1860               STR      R0,[R3, #+0]
+   \   00000072   314B               LDR      R3,??US0_init_0+0x20  ;; 0xfffc010c
+   \   00000074   1860               STR      R0,[R3, #+0]
+   \   00000076   ....               LDR      R3,??DataTable20  ;; 0xfffc0100
+   \   00000078   1860               STR      R0,[R3, #+0]
+   \   0000007A   ....               LDR      R3,??DataTable19  ;; 0xfffc0104
+   \   0000007C   1860               STR      R0,[R3, #+0]
+   \   0000007E   0123               MOVS     R3,#+1
+   \   00000080   2360               STR      R3,[R4, #+0]
+   \   00000082   1B02               LSLS     R3,R3,#+8
+   \   00000084   2360               STR      R3,[R4, #+0]
+   \   00000086   2D4B               LDR      R3,??US0_init_0+0x24  ;; 0xfffc0004
+   \   00000088   2D4C               LDR      R4,??US0_init_0+0x28  ;; 0x408c1
+   \   0000008A   1C60               STR      R4,[R3, #+0]
+    104            
+    105                AT91C_BASE_US0->US_CR = AT91C_US_STTTO;
+   \   0000008C   8023               MOVS     R3,#+128
+   \   0000008E   1B01               LSLS     R3,R3,#+4        ;; #+2048
+   \   00000090   2B60               STR      R3,[R5, #+0]
+    106          
+    107                AT91F_US_EnableIt(AT91C_BASE_US0,AT91C_US_RXBUFF | AT91C_US_TIMEOUT );     //uruchomienie/ustawienie przerwania od przepe³nienia bufora oraz od time-out
+   \   00000092   2C4C               LDR      R4,??US0_init_0+0x2C  ;; 0xfffc0008
+   \   00000094   8826               MOVS     R6,#+136
+   \   00000096   7601               LSLS     R6,R6,#+5        ;; #+4352
+   \   00000098   2660               STR      R6,[R4, #+0]
+    108          
+    109                // konfiguracja przerqwania USART0 
+    110                AT91F_AIC_ConfigureIt ( AT91C_BASE_AIC, AT91C_ID_US0, USART0_INTERRUPT_LEVEL, AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL, Usart0_handler); 
+   \   0000009A   2B4C               LDR      R4,??US0_init_0+0x30  ;; 0xfffff098
+   \   0000009C   2668               LDR      R6,[R4, #+0]
+   \   0000009E   ....               LDR      R6,??DataTable31  ;; 0xfffff124
+   \   000000A0   4027               MOVS     R7,#+64
+   \   000000A2   3760               STR      R7,[R6, #+0]
+   \   000000A4   294E               LDR      R6,??US0_init_0+0x34  ;; Usart0_handler
+   \   000000A6   2660               STR      R6,[R4, #+0]
+   \   000000A8   294C               LDR      R4,??US0_init_0+0x38  ;; 0xfffff018
+   \   000000AA   0226               MOVS     R6,#+2
+   \   000000AC   2660               STR      R6,[R4, #+0]
+   \   000000AE   ....               LDR      R4,??DataTable32  ;; 0xfffff128
+   \   000000B0   2760               STR      R7,[R4, #+0]
+    111                  
+    112                AT91F_US_EnableRx(AT91C_BASE_US0);
+   \   000000B2   1024               MOVS     R4,#+16
+   \   000000B4   2C60               STR      R4,[R5, #+0]
+    113                AT91F_US_EnableTx(AT91C_BASE_US0);
+   \   000000B6   2F60               STR      R7,[R5, #+0]
+    114          
+    115             
+    116                AT91F_US0_CfgPIO();                                                       //konfiguracja pinów
+   \   000000B8   E024               MOVS     R4,#+224
+   \   000000BA   ....               LDR      R6,??DataTable33  ;; 0xfffff470
+   \   000000BC   3460               STR      R4,[R6, #+0]
+   \   000000BE   ....               LDR      R6,??DataTable34  ;; 0xfffff474
+   \   000000C0   3060               STR      R0,[R6, #+0]
+   \   000000C2   ....               LDR      R6,??DataTable35  ;; 0xfffff404
+   \   000000C4   3460               STR      R4,[R6, #+0]
+    117                
+    118                unsigned int xxx= AT91F_US_ReceiveFrame (                                 //Ustawienie bufora odbiorczego
+    119          	AT91C_BASE_US0,
+    120          	US0_Buffer,
+    121          	US0_BUFFER_Rx_SIZE,
+    122          	0,
+    123          	0 );
+   \   000000C6   ....               LDR      R4,??DataTable19  ;; 0xfffc0104
+   \   000000C8   2468               LDR      R4,[R4, #+0]
+   \   000000CA   002C               CMP      R4,#+0
+   \   000000CC   07D1               BNE      ??US0_init_3
+   \   000000CE   ....               LDR      R4,??DataTable20  ;; 0xfffc0100
+   \   000000D0   ....               LDR      R6,??DataTable26  ;; SendModbusEnable + 12
+   \   000000D2   2660               STR      R6,[R4, #+0]
+   \   000000D4   ....               LDR      R4,??DataTable19  ;; 0xfffc0104
+   \   000000D6   1426               MOVS     R6,#+20
+   \   000000D8   2660               STR      R6,[R4, #+0]
+   \   000000DA   0860               STR      R0,[R1, #+0]
+   \   000000DC   05E0               B.N      ??US0_init_4
+   \                     ??US0_init_3:
+   \   000000DE   1068               LDR      R0,[R2, #+0]
+   \   000000E0   0028               CMP      R0,#+0
+   \   000000E2   03D1               BNE      ??US0_init_5
+   \   000000E4   ....               LDR      R0,??DataTable26  ;; SendModbusEnable + 12
+   \   000000E6   0860               STR      R0,[R1, #+0]
+   \   000000E8   1420               MOVS     R0,#+20
+   \                     ??US0_init_4:
+   \   000000EA   1060               STR      R0,[R2, #+0]
+    124          
+    125                AT91C_BASE_US0->US_RTOR = TIME_OUT_US;                                    //ustawienie czasu time-out (w bitach)
+   \                     ??US0_init_5:
+   \   000000EC   1948               LDR      R0,??US0_init_0+0x3C  ;; 0xfffc0024
+   \   000000EE   0A21               MOVS     R1,#+10
+   \   000000F0   0160               STR      R1,[R0, #+0]
+    126                AT91C_BASE_US0->US_CR = AT91C_US_STTTO;                                   //restart time-out
+   \   000000F2   2B60               STR      R3,[R5, #+0]
+    127          
+    128                //wy³¹czone przerwanie bo koliduje z  innymi przerwaniami 
+    129                /*      
+    130                AT91F_AIC_EnableIt (AT91C_BASE_AIC, AT91C_ID_US0);                        //uruchomienie przerwania od USARTA
+    131                */
+    132                g_US0_OneByteTxTime  = 1000/ ((float) (g_US0_BAUDRATE /8));
+   \   000000F4   0948               LDR      R0,??US0_init_0+0x4  ;; SendModbusEnable + 4
+   \   000000F6   0068               LDR      R0,[R0, #+0]
+   \   000000F8   8110               ASRS     R1,R0,#+2
+   \   000000FA   490F               LSRS     R1,R1,#+29
+   \   000000FC   0818               ADDS     R0,R1,R0
+   \   000000FE   C010               ASRS     R0,R0,#+3
+   \   00000100   ........           BL       __aeabi_i2f
+   \   00000104   0100               MOVS     R1,R0
+   \   00000106   ....               LDR      R0,??DataTable39  ;; 0x447a0000
+   \   00000108   ........           BL       __aeabi_fdiv
+   \   0000010C   1249               LDR      R1,??US0_init_0+0x40  ;; SendModbusEnable + 8
+   \   0000010E   0860               STR      R0,[R1, #+0]
+    133                
+    134          }//_______________________ Koniec funkcji US0_init ____________________________ 
+   \   00000110   F8BC               POP      {R3-R7}
+   \   00000112   01BC               POP      {R0}
+   \   00000114   0047               BX       R0               ;; return
+   \   00000116   C046               Nop      
+   \                     ??US0_init_0:
+   \   00000118   2001FCFF           DC32     0xfffc0120
+   \   0000011C   ........           DC32     SendModbusEnable + 4
+   \   00000120   0C00FCFF           DC32     0xfffc000c
+   \   00000124   2000FCFF           DC32     0xfffc0020
+   \   00000128   2800FCFF           DC32     0xfffc0028
+   \   0000012C   1801FCFF           DC32     0xfffc0118
+   \   00000130   1C01FCFF           DC32     0xfffc011c
+   \   00000134   0801FCFF           DC32     0xfffc0108
+   \   00000138   0C01FCFF           DC32     0xfffc010c
+   \   0000013C   0400FCFF           DC32     0xfffc0004
+   \   00000140   C1080400           DC32     0x408c1
+   \   00000144   0800FCFF           DC32     0xfffc0008
+   \   00000148   98F0FFFF           DC32     0xfffff098
+   \   0000014C   ........           DC32     Usart0_handler
+   \   00000150   18F0FFFF           DC32     0xfffff018
+   \   00000154   2400FCFF           DC32     0xfffc0024
+   \   00000158   ........           DC32     SendModbusEnable + 8
+    135          
+    136          
+    137          
+    138          
+    139          
+    140          
+    141          //-----------------------------------------------------------------------------
+    142          //! Nazwa funkcji :    Usart0_handler
+    143          //! Funkcja obs³ugi przerwania USART 0
+    144          //-----------------------------------------------------------------------------
+    145          //  
+    146          //----------------------------------------------------------------------------- 
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    147          void Usart0_handler(void)                        //timer isr 
+    148          { 
+   \                     Usart0_handler:
+   \   00000000   10B5               PUSH     {R4,LR}
+    149            
+    150            //char CheckNoZero;                          //sprawdza czy tabela odczytów TP nie ma zer
+    151              unsigned int dummy = AT91C_BASE_US0->US_CSR;                  //interrupts    
+   \   00000002   1448               LDR      R0,??Usart0_handler_0  ;; 0xfffc0014
+   \   00000004   0168               LDR      R1,[R0, #+0]
+    152          
+    153              AT91PS_USART USART_pt = AT91C_BASE_US0; 
+    154              unsigned int status; 
+    155              
+    156              
+    157              //* get Usart status register 
+    158              status = USART_pt->US_CSR; 
+   \   00000006   0168               LDR      R1,[R0, #+0]
+    159            
+    160               
+    161              if ( status & AT91C_US_TIMEOUT)       //wystapil timeout lub odebrano dane
+   \   00000008   C905               LSLS     R1,R1,#+23
+   \   0000000A   1FD5               BPL      ??Usart0_handler_1
+    162                {
+    163          
+    164                  AT91C_BASE_US0->US_CR = AT91C_US_STTTO;
+   \   0000000C   ....               LDR      R1,??DataTable18  ;; 0xfffc0000
+   \   0000000E   8022               MOVS     R2,#+128
+   \   00000010   1201               LSLS     R2,R2,#+4        ;; #+2048
+   \   00000012   0A60               STR      R2,[R1, #+0]
+    165                  AT91C_BASE_US0->US_RCR = 0;
+   \   00000014   ....               LDR      R2,??DataTable19  ;; 0xfffc0104
+   \   00000016   0021               MOVS     R1,#+0
+   \   00000018   1160               STR      R1,[R2, #+0]
+    166          
+    167                  unsigned int xxx= AT91F_US_ReceiveFrame (
+    168          	USART_pt,
+    169          	US0_Buffer,
+    170          	US0_BUFFER_Rx_SIZE,
+    171          	0,
+    172          	0 );
+   \   0000001A   1368               LDR      R3,[R2, #+0]
+   \   0000001C   002B               CMP      R3,#+0
+   \   0000001E   09D1               BNE      ??Usart0_handler_2
+   \   00000020   ....               LDR      R3,??DataTable20  ;; 0xfffc0100
+   \   00000022   ....               LDR      R4,??DataTable26  ;; SendModbusEnable + 12
+   \   00000024   1C60               STR      R4,[R3, #+0]
+   \   00000026   1423               MOVS     R3,#+20
+   \   00000028   1360               STR      R3,[R2, #+0]
+   \   0000002A   ....               LDR      R2,??DataTable25  ;; 0xfffc0110
+   \   0000002C   1160               STR      R1,[R2, #+0]
+   \   0000002E   ....               LDR      R2,??DataTable24  ;; 0xfffc0114
+   \   00000030   1160               STR      R1,[R2, #+0]
+   \   00000032   08E0               B        ??Usart0_handler_3
+   \                     ??Usart0_handler_2:
+   \   00000034   ....               LDR      R1,??DataTable24  ;; 0xfffc0114
+   \   00000036   0A68               LDR      R2,[R1, #+0]
+   \   00000038   002A               CMP      R2,#+0
+   \   0000003A   04D1               BNE      ??Usart0_handler_3
+   \   0000003C   ....               LDR      R2,??DataTable25  ;; 0xfffc0110
+   \   0000003E   ....               LDR      R3,??DataTable26  ;; SendModbusEnable + 12
+   \   00000040   1360               STR      R3,[R2, #+0]
+   \   00000042   1422               MOVS     R2,#+20
+   \   00000044   0A60               STR      R2,[R1, #+0]
+    173                  
+    174                  SendModbusEnable=1;
+   \                     ??Usart0_handler_3:
+   \   00000046   0449               LDR      R1,??Usart0_handler_0+0x4  ;; SendModbusEnable
+   \   00000048   0122               MOVS     R2,#+1
+   \   0000004A   0A70               STRB     R2,[R1, #+0]
+    175          
+    176          
+    177                }
+    178             
+    179                  status = USART_pt->US_CSR; 
+   \                     ??Usart0_handler_1:
+   \   0000004C   0068               LDR      R0,[R0, #+0]
+    180              
+    181          
+    182           
+    183            
+    184          }//_______________________ Koniec funkcji Usart0_handler _________________________
+   \   0000004E   10BC               POP      {R4}
+   \   00000050   01BC               POP      {R0}
+   \   00000052   0047               BX       R0               ;; return
+   \                     ??Usart0_handler_0:
+   \   00000054   1400FCFF           DC32     0xfffc0014
+   \   00000058   ........           DC32     SendModbusEnable
+    185           
+    186          
+    187          
+    188          
+    189          
+    190          
+    191          
+    192          //-----------------------------------------------------------------------------
+    193          //!  Nazwa funkcji :    US1_init
+    194          //!  Funkcja inicjalizacji USART 1
+    195          //-----------------------------------------------------------------------------
+    196          //! 
+    197          //-----------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    198          void US1_init(void)
+    199          {
+   \                     US1_init:
+   \   00000000   F1B5               PUSH     {R0,R4-R7,LR}
+   \   00000002   4748               LDR      R0,??US1_init_0  ;; 0xfffffc10
+   \   00000004   8021               MOVS     R1,#+128
+   \   00000006   0160               STR      R1,[R0, #+0]
+    200                // Configure USART
+    201                AT91F_US1_CfgPMC();
+    202                AT91F_PDC_DisableRx(AT91C_BASE_PDC_US1);
+   \   00000008   464C               LDR      R4,??US1_init_0+0x4  ;; 0xfffc4120
+   \   0000000A   0220               MOVS     R0,#+2
+   \   0000000C   2060               STR      R0,[R4, #+0]
+   \   0000000E   0002               LSLS     R0,R0,#+8
+   \   00000010   2060               STR      R0,[R4, #+0]
+   \   00000012   4548               LDR      R0,??US1_init_0+0x8  ;; g_US1_BAUDRATE
+   \   00000014   0168               LDR      R1,[R0, #+0]
+    203                AT91F_PDC_DisableTx(AT91C_BASE_PDC_US1);
+    204                
+    205                AT91F_US_Configure(AT91C_BASE_US1, AT91C_MASTER_CLOCK,
+    206                                 USART232_MODE, g_US1_BAUDRATE, 0);
+   \   00000016   4548               LDR      R0,??US1_init_0+0xC  ;; 0xfffc400c
+   \   00000018   0022               MOVS     R2,#+0
+   \   0000001A   D243               MVNS     R2,R2            ;; #-1
+   \   0000001C   0260               STR      R2,[R0, #+0]
+   \   0000001E   444D               LDR      R5,??US1_init_0+0x10  ;; 0xfffc4000
+   \   00000020   AC20               MOVS     R0,#+172
+   \   00000022   2860               STR      R0,[R5, #+0]
+   \   00000024   4348               LDR      R0,??US1_init_0+0x14  ;; 0x1c9c3800
+   \   00000026   0901               LSLS     R1,R1,#+4
+   \   00000028   ........           BL       __aeabi_uidivmod
+   \   0000002C   0600               MOVS     R6,R0
+   \   0000002E   0A21               MOVS     R1,#+10
+   \   00000030   ........           BL       __aeabi_uidivmod
+   \   00000034   0529               CMP      R1,#+5
+   \   00000036   05D3               BCC      ??US1_init_1
+   \   00000038   3000               MOVS     R0,R6
+   \   0000003A   0A21               MOVS     R1,#+10
+   \   0000003C   ........           BL       __aeabi_uidivmod
+   \   00000040   401C               ADDS     R0,R0,#+1
+   \   00000042   03E0               B        ??US1_init_2
+   \                     ??US1_init_1:
+   \   00000044   3000               MOVS     R0,R6
+   \   00000046   0A21               MOVS     R1,#+10
+   \   00000048   ........           BL       __aeabi_uidivmod
+   \                     ??US1_init_2:
+   \   0000004C   3A49               LDR      R1,??US1_init_0+0x18  ;; 0xfffc4020
+   \   0000004E   0860               STR      R0,[R1, #+0]
+   \   00000050   0020               MOVS     R0,#+0
+   \   00000052   3A49               LDR      R1,??US1_init_0+0x1C  ;; 0xfffc4028
+   \   00000054   0860               STR      R0,[R1, #+0]
+   \   00000056   0221               MOVS     R1,#+2
+   \   00000058   2160               STR      R1,[R4, #+0]
+   \   0000005A   0902               LSLS     R1,R1,#+8
+   \   0000005C   2160               STR      R1,[R4, #+0]
+   \   0000005E   3849               LDR      R1,??US1_init_0+0x20  ;; 0xfffc4118
+   \   00000060   0860               STR      R0,[R1, #+0]
+   \   00000062   3849               LDR      R1,??US1_init_0+0x24  ;; 0xfffc411c
+   \   00000064   0860               STR      R0,[R1, #+0]
+   \   00000066   ....               LDR      R1,??DataTable27  ;; 0xfffc4110
+   \   00000068   0860               STR      R0,[R1, #+0]
+   \   0000006A   ....               LDR      R2,??DataTable28  ;; 0xfffc4114
+   \   0000006C   1060               STR      R0,[R2, #+0]
+   \   0000006E   364B               LDR      R3,??US1_init_0+0x28  ;; 0xfffc4108
+   \   00000070   1860               STR      R0,[R3, #+0]
+   \   00000072   364B               LDR      R3,??US1_init_0+0x2C  ;; 0xfffc410c
+   \   00000074   1860               STR      R0,[R3, #+0]
+   \   00000076   ....               LDR      R3,??DataTable36  ;; 0xfffc4100
+   \   00000078   1860               STR      R0,[R3, #+0]
+   \   0000007A   ....               LDR      R3,??DataTable30  ;; 0xfffc4104
+   \   0000007C   1860               STR      R0,[R3, #+0]
+   \   0000007E   0126               MOVS     R6,#+1
+   \   00000080   2660               STR      R6,[R4, #+0]
+   \   00000082   3602               LSLS     R6,R6,#+8
+   \   00000084   2660               STR      R6,[R4, #+0]
+   \   00000086   324C               LDR      R4,??US1_init_0+0x30  ;; 0xfffc4004
+   \   00000088   324E               LDR      R6,??US1_init_0+0x34  ;; 0x408c0
+   \   0000008A   2660               STR      R6,[R4, #+0]
+   \   0000008C   8024               MOVS     R4,#+128
+   \   0000008E   2401               LSLS     R4,R4,#+4        ;; #+2048
+   \   00000090   2C60               STR      R4,[R5, #+0]
+    207              
+    208                AT91C_BASE_US1->US_CR = AT91C_US_STTTO;
+    209          
+    210                AT91F_US_EnableIt(AT91C_BASE_US1,AT91C_US_RXBUFF | AT91C_US_TIMEOUT );     //uruchomienie/ustawienie przerwania od przepe³nienia bufora oraz od time-out
+   \   00000092   314C               LDR      R4,??US1_init_0+0x38  ;; 0xfffc4008
+   \   00000094   8826               MOVS     R6,#+136
+   \   00000096   7601               LSLS     R6,R6,#+5        ;; #+4352
+   \   00000098   2660               STR      R6,[R4, #+0]
+    211          
+    212                // konfiguracja przerqwania USART0 
+    213                AT91F_AIC_ConfigureIt ( AT91C_BASE_AIC, AT91C_ID_US1, USART1_INTERRUPT_LEVEL, AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL, Usart1_handler); 
+   \   0000009A   304C               LDR      R4,??US1_init_0+0x3C  ;; 0xfffff09c
+   \   0000009C   2668               LDR      R6,[R4, #+0]
+   \   0000009E   ....               LDR      R6,??DataTable31  ;; 0xfffff124
+   \   000000A0   8027               MOVS     R7,#+128
+   \   000000A2   3760               STR      R7,[R6, #+0]
+   \   000000A4   2E4E               LDR      R6,??US1_init_0+0x40  ;; Usart1_handler
+   \   000000A6   2660               STR      R6,[R4, #+0]
+   \   000000A8   2E4C               LDR      R4,??US1_init_0+0x44  ;; 0xfffff01c
+   \   000000AA   0526               MOVS     R6,#+5
+   \   000000AC   2660               STR      R6,[R4, #+0]
+   \   000000AE   ....               LDR      R4,??DataTable32  ;; 0xfffff128
+   \   000000B0   2760               STR      R7,[R4, #+0]
+    214                  
+    215                AT91F_US_EnableRx(AT91C_BASE_US1);
+   \   000000B2   1024               MOVS     R4,#+16
+   \   000000B4   2C60               STR      R4,[R5, #+0]
+    216                AT91F_US_EnableTx(AT91C_BASE_US1);
+   \   000000B6   4024               MOVS     R4,#+64
+   \   000000B8   2C60               STR      R4,[R5, #+0]
+    217          
+    218                
+    219                AT91F_US1_CfgPIO();                                                       //konfiguracja pinów
+   \   000000BA   C024               MOVS     R4,#+192
+   \   000000BC   E403               LSLS     R4,R4,#+15       ;; #+6291456
+   \   000000BE   ....               LDR      R6,??DataTable33  ;; 0xfffff470
+   \   000000C0   3460               STR      R4,[R6, #+0]
+   \   000000C2   ....               LDR      R6,??DataTable34  ;; 0xfffff474
+   \   000000C4   3060               STR      R0,[R6, #+0]
+   \   000000C6   ....               LDR      R6,??DataTable35  ;; 0xfffff404
+   \   000000C8   3460               STR      R4,[R6, #+0]
+    220                
+    221                unsigned int xxx= AT91F_US_ReceiveFrame (                                 //Ustawienie bufora odbiorczego
+    222          	AT91C_BASE_US1,
+    223          	US1_Buffer,
+    224          	US1_BUFFER_Rx_SIZE,
+    225          	0,
+    226          	0 );
+   \   000000CA   1C68               LDR      R4,[R3, #+0]
+   \   000000CC   002C               CMP      R4,#+0
+   \   000000CE   07D1               BNE      ??US1_init_3
+   \   000000D0   ....               LDR      R4,??DataTable36  ;; 0xfffc4100
+   \   000000D2   ....               LDR      R6,??DataTable38  ;; g_US1_BAUDRATE + 8
+   \   000000D4   2660               STR      R6,[R4, #+0]
+   \   000000D6   9124               MOVS     R4,#+145
+   \   000000D8   A400               LSLS     R4,R4,#+2        ;; #+580
+   \   000000DA   1C60               STR      R4,[R3, #+0]
+   \   000000DC   0860               STR      R0,[R1, #+0]
+   \   000000DE   06E0               B.N      ??US1_init_4
+   \                     ??US1_init_3:
+   \   000000E0   1068               LDR      R0,[R2, #+0]
+   \   000000E2   0028               CMP      R0,#+0
+   \   000000E4   04D1               BNE      ??US1_init_5
+   \   000000E6   ....               LDR      R0,??DataTable38  ;; g_US1_BAUDRATE + 8
+   \   000000E8   0860               STR      R0,[R1, #+0]
+   \   000000EA   9120               MOVS     R0,#+145
+   \   000000EC   8000               LSLS     R0,R0,#+2        ;; #+580
+   \                     ??US1_init_4:
+   \   000000EE   1060               STR      R0,[R2, #+0]
+    227          
+    228                AT91C_BASE_US1->US_RTOR = TIME_OUT_US1;                                    //ustawienie czasu time-out (w bitach)
+   \                     ??US1_init_5:
+   \   000000F0   1D48               LDR      R0,??US1_init_0+0x48  ;; 0xfffc4024
+   \   000000F2   3C21               MOVS     R1,#+60
+   \   000000F4   0160               STR      R1,[R0, #+0]
+    229                AT91C_BASE_US1->US_CR = AT91C_US_STTTO;                                   //restart time-out
+   \   000000F6   3801               LSLS     R0,R7,#+4
+   \   000000F8   2860               STR      R0,[R5, #+0]
+    230                
+    231                AT91F_AIC_EnableIt (AT91C_BASE_AIC, AT91C_ID_US1);                        //uruchomienie przerwania od USARTA
+   \   000000FA   1C48               LDR      R0,??US1_init_0+0x4C  ;; 0xfffff120
+   \   000000FC   0760               STR      R7,[R0, #+0]
+    232                
+    233                g_US1_OneByteTxTime  = 1000/ ((float) (g_US1_BAUDRATE /8));
+   \   000000FE   0A48               LDR      R0,??US1_init_0+0x8  ;; g_US1_BAUDRATE
+   \   00000100   0068               LDR      R0,[R0, #+0]
+   \   00000102   8110               ASRS     R1,R0,#+2
+   \   00000104   490F               LSRS     R1,R1,#+29
+   \   00000106   0818               ADDS     R0,R1,R0
+   \   00000108   C010               ASRS     R0,R0,#+3
+   \   0000010A   ........           BL       __aeabi_i2f
+   \   0000010E   0100               MOVS     R1,R0
+   \   00000110   ....               LDR      R0,??DataTable39  ;; 0x447a0000
+   \   00000112   ........           BL       __aeabi_fdiv
+   \   00000116   1649               LDR      R1,??US1_init_0+0x50  ;; g_US1_BAUDRATE + 4
+   \   00000118   0860               STR      R0,[R1, #+0]
+    234          }//_______________________ Koniec funkcji US1_init ____________________________ 
+   \   0000011A   F8BC               POP      {R3-R7}
+   \   0000011C   01BC               POP      {R0}
+   \   0000011E   0047               BX       R0               ;; return
+   \                     ??US1_init_0:
+   \   00000120   10FCFFFF           DC32     0xfffffc10
+   \   00000124   2041FCFF           DC32     0xfffc4120
+   \   00000128   ........           DC32     g_US1_BAUDRATE
+   \   0000012C   0C40FCFF           DC32     0xfffc400c
+   \   00000130   0040FCFF           DC32     0xfffc4000
+   \   00000134   00389C1C           DC32     0x1c9c3800
+   \   00000138   2040FCFF           DC32     0xfffc4020
+   \   0000013C   2840FCFF           DC32     0xfffc4028
+   \   00000140   1841FCFF           DC32     0xfffc4118
+   \   00000144   1C41FCFF           DC32     0xfffc411c
+   \   00000148   0841FCFF           DC32     0xfffc4108
+   \   0000014C   0C41FCFF           DC32     0xfffc410c
+   \   00000150   0440FCFF           DC32     0xfffc4004
+   \   00000154   C0080400           DC32     0x408c0
+   \   00000158   0840FCFF           DC32     0xfffc4008
+   \   0000015C   9CF0FFFF           DC32     0xfffff09c
+   \   00000160   ........           DC32     Usart1_handler
+   \   00000164   1CF0FFFF           DC32     0xfffff01c
+   \   00000168   2440FCFF           DC32     0xfffc4024
+   \   0000016C   20F1FFFF           DC32     0xfffff120
+   \   00000170   ........           DC32     g_US1_BAUDRATE + 4
+    235          
+    236          
+    237          
+    238          
+    239          
+    240          
+    241          //-----------------------------------------------------------------------------
+    242          //! Nazwa funkcji :    Usart1_handler 
+    243          //! Funkcja obs³ugi przerwania USART 1
+    244          //-----------------------------------------------------------------------------
+    245          //  
+    246          //----------------------------------------------------------------------------- 
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    247          void Usart1_handler(void)                        //timer isr 
+    248          { 
+   \                     Usart1_handler:
+   \   00000000   10B5               PUSH     {R4,LR}
+    249            
+    250            
+    251            //char CheckNoZero;                          //sprawdza czy tabela odczytów TP nie ma zer
+    252              unsigned int dummy = AT91C_BASE_US1->US_CSR;                  //interrupts    
+   \   00000002   1748               LDR      R0,??Usart1_handler_0  ;; 0xfffc4014
+   \   00000004   0168               LDR      R1,[R0, #+0]
+    253          
+    254              AT91PS_USART USART_pt = AT91C_BASE_US1; 
+    255              unsigned int status; 
+    256              
+    257              
+    258              //* get Usart status register 
+    259              status = USART_pt->US_CSR; 
+   \   00000006   0068               LDR      R0,[R0, #+0]
+    260             
+    261             
+    262              if (( status & AT91C_US_TIMEOUT) || ( status & AT91C_US_RXBUFF))      //wystapil timeout lub odebrano dane
+   \   00000008   8821               MOVS     R1,#+136
+   \   0000000A   4901               LSLS     R1,R1,#+5        ;; #+4352
+   \   0000000C   0842               TST      R0,R1
+   \   0000000E   23D0               BEQ      ??Usart1_handler_1
+    263                {
+    264          
+    265                  AT91C_BASE_US1->US_CR = AT91C_US_STTTO;
+   \   00000010   144A               LDR      R2,??Usart1_handler_0+0x4  ;; 0xfffc4000
+   \   00000012   8020               MOVS     R0,#+128
+   \   00000014   0001               LSLS     R0,R0,#+4        ;; #+2048
+   \   00000016   1060               STR      R0,[R2, #+0]
+    266                  AT91C_BASE_US1->US_RCR = 0;
+   \   00000018   1349               LDR      R1,??Usart1_handler_0+0x8  ;; 0xfffc4104
+   \   0000001A   0020               MOVS     R0,#+0
+   \   0000001C   0860               STR      R0,[R1, #+0]
+    267          
+    268               
+    269                  unsigned int xxx= AT91F_US_ReceiveFrame (
+    270          	USART_pt,
+    271          	US1_Buffer,
+    272          	US1_BUFFER_Rx_SIZE,
+    273          	0,
+    274          	0 );
+   \   0000001E   0B68               LDR      R3,[R1, #+0]
+   \   00000020   002B               CMP      R3,#+0
+   \   00000022   0AD1               BNE      ??Usart1_handler_2
+   \   00000024   114B               LDR      R3,??Usart1_handler_0+0xC  ;; 0xfffc4100
+   \   00000026   124C               LDR      R4,??Usart1_handler_0+0x10  ;; g_US1_BAUDRATE + 8
+   \   00000028   1C60               STR      R4,[R3, #+0]
+   \   0000002A   9123               MOVS     R3,#+145
+   \   0000002C   9B00               LSLS     R3,R3,#+2        ;; #+580
+   \   0000002E   0B60               STR      R3,[R1, #+0]
+   \   00000030   1049               LDR      R1,??Usart1_handler_0+0x14  ;; 0xfffc4110
+   \   00000032   0860               STR      R0,[R1, #+0]
+   \   00000034   1049               LDR      R1,??Usart1_handler_0+0x18  ;; 0xfffc4114
+   \   00000036   0860               STR      R0,[R1, #+0]
+   \   00000038   09E0               B        ??Usart1_handler_3
+   \                     ??Usart1_handler_2:
+   \   0000003A   0F48               LDR      R0,??Usart1_handler_0+0x18  ;; 0xfffc4114
+   \   0000003C   0168               LDR      R1,[R0, #+0]
+   \   0000003E   0029               CMP      R1,#+0
+   \   00000040   05D1               BNE      ??Usart1_handler_3
+   \   00000042   0C49               LDR      R1,??Usart1_handler_0+0x14  ;; 0xfffc4110
+   \   00000044   0A4B               LDR      R3,??Usart1_handler_0+0x10  ;; g_US1_BAUDRATE + 8
+   \   00000046   0B60               STR      R3,[R1, #+0]
+   \   00000048   9121               MOVS     R1,#+145
+   \   0000004A   8900               LSLS     R1,R1,#+2        ;; #+580
+   \   0000004C   0160               STR      R1,[R0, #+0]
+    275                  
+    276                  WizFiResponseInterpreter(US1_Buffer,Buff_TX_1 ,AT91C_BASE_US1, &NET);
+                         ^
+Warning[Pe223]: function "WizFiResponseInterpreter" declared implicitly
+   \                     ??Usart1_handler_3:
+   \   0000004E   0B4B               LDR      R3,??Usart1_handler_0+0x1C  ;; NET
+   \   00000050   0B49               LDR      R1,??Usart1_handler_0+0x20  ;; Buff_TX_1
+   \   00000052   0748               LDR      R0,??Usart1_handler_0+0x10  ;; g_US1_BAUDRATE + 8
+   \   00000054   ........           BL       WizFiResponseInterpreter
+    277          
+    278                }
+    279             
+    280          }//_______________________ Koniec funkcji Usart0_handler _________________________
+   \                     ??Usart1_handler_1:
+   \   00000058   10BC               POP      {R4}
+   \   0000005A   01BC               POP      {R0}
+   \   0000005C   0047               BX       R0               ;; return
+   \   0000005E   C046               Nop      
+   \                     ??Usart1_handler_0:
+   \   00000060   1440FCFF           DC32     0xfffc4014
+   \   00000064   0040FCFF           DC32     0xfffc4000
+   \   00000068   0441FCFF           DC32     0xfffc4104
+   \   0000006C   0041FCFF           DC32     0xfffc4100
+   \   00000070   ........           DC32     g_US1_BAUDRATE + 8
+   \   00000074   1041FCFF           DC32     0xfffc4110
+   \   00000078   1441FCFF           DC32     0xfffc4114
+   \   0000007C   ........           DC32     NET
+   \   00000080   ........           DC32     Buff_TX_1
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable0:
+   \   00000000   10FCFFFF           DC32     0xfffffc10
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable2:
+   \   00000000   00389C1C           DC32     0x1c9c3800
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable18:
+   \   00000000   0000FCFF           DC32     0xfffc0000
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable19:
+   \   00000000   0401FCFF           DC32     0xfffc0104
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable20:
+   \   00000000   0001FCFF           DC32     0xfffc0100
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable24:
+   \   00000000   1401FCFF           DC32     0xfffc0114
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable25:
+   \   00000000   1001FCFF           DC32     0xfffc0110
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable26:
+   \   00000000   ........           DC32     SendModbusEnable + 12
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable27:
+   \   00000000   1041FCFF           DC32     0xfffc4110
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable28:
+   \   00000000   1441FCFF           DC32     0xfffc4114
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable30:
+   \   00000000   0441FCFF           DC32     0xfffc4104
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable31:
+   \   00000000   24F1FFFF           DC32     0xfffff124
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable32:
+   \   00000000   28F1FFFF           DC32     0xfffff128
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable33:
+   \   00000000   70F4FFFF           DC32     0xfffff470
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable34:
+   \   00000000   74F4FFFF           DC32     0xfffff474
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable35:
+   \   00000000   04F4FFFF           DC32     0xfffff404
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable36:
+   \   00000000   0041FCFF           DC32     0xfffc4100
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable38:
+   \   00000000   ........           DC32     g_US1_BAUDRATE + 8
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable39:
+   \   00000000   00007A44           DC32     0x447a0000
+    281           
+    282          
+
+   Maximum stack usage in bytes:
+
+     Function       .cstack
+     --------       -------
+     US0_init           24
+     US1_init           24
+     Usart0_handler      8
+     Usart1_handler      8
+
+
+   Section sizes:
+
+     Function/Label      Bytes
+     --------------      -----
+     g_US0_Connect_OK       1
+     g_US1_Connect_OK       1
+     g_ETH0_Connect_OK      1
+     g_ETH1_Connect_OK      1
+     SendModbusEnable      32
+     g_US0_Comm_TIMEOUT     4
+     q_US0_Comm_Mode        1
+     g_US1_BAUDRATE       588
+     g_US1_Comm_TIMEOUT     4
+     g_US0_Comm_MinCykle    4
+     g_US1_Comm_MinCykle    4
+     US0_init             348
+     Usart0_handler        92
+     US1_init             372
+     Usart1_handler       132
+     ??DataTable0           4
+     ??DataTable2           4
+     ??DataTable18          4
+     ??DataTable19          4
+     ??DataTable20          4
+     ??DataTable24          4
+     ??DataTable25          4
+     ??DataTable26          4
+     ??DataTable27          4
+     ??DataTable28          4
+     ??DataTable30          4
+     ??DataTable31          4
+     ??DataTable32          4
+     ??DataTable33          4
+     ??DataTable34          4
+     ??DataTable35          4
+     ??DataTable36          4
+     ??DataTable38          4
+     ??DataTable39          4
+
+ 
+     4 bytes in section .bss
+   637 bytes in section .data
+ 1 020 bytes in section Debug.txt
+ 
+ 1 020 bytes of CODE memory
+   641 bytes of DATA memory
+
+Errors: none
+Warnings: 3

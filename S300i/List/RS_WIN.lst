@@ -1,0 +1,1840 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           04/Jun/2013  20:18:19 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\Framework\RS_WIN.c                            #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\Framework\RS_WIN.c" -D AT91SAM7S256 -D        #
+#                    AT91SAM7SEK -D iH -D __ALARM -D __WIFI_MODULE -D S300i   #
+#                    -lC "D:\Zeuron\Projekty\S300\S300-program v1.3 -         #
+#                    04.06.2013\S300i\List\" --diag_suppress Pa082 -o         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\S300i\Obj\" --debug --endian little --cpu     #
+#                    ARM7TDMI -e --fpu None --dlib_config "C:\Program Files   #
+#                    (x86)\IAR Systems\Embedded Workbench                     #
+#                    5.0\ARM\INC\DLib_Config_Normal.h" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\lib\AT91SAM7S256\" -I                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.3 - 04.06.2013\cdc\" -I "D:\Zeuron\Projekty\S300\S300 #
+#                    -program v1.3 - 04.06.2013\core\" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\startup\" -I "D:\Zeuron\Projekty\S300\S300-pr #
+#                    ogram v1.3 - 04.06.2013\Framework\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\Framework\Configuration\" -I "C:\Program      #
+#                    Files (x86)\IAR Systems\Embedded Workbench               #
+#                    5.0\ARM\INC\" --section .text=Debug.txt --interwork      #
+#                    --cpu_mode thumb -Oh                                     #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\S300i\List\RS_WIN.lst                         #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\S300i\Obj\RS_WIN.o                            #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v1.3 - 04.06.2013\Framework\RS_WIN.c
+      1          //****************************************************************************//
+      2          //*--------------------------------------------------------------------------*//
+      3          //*                 IASE Microcontroller Software Support                    *//                       
+      4          //*--------------------------------------------------------------------------*//
+      5          //*--------------------------------------------------------------------------*//
+      6          //*  Nazwa pliku                  : RS_WIN.c                                 *//
+      7          //*  Opis                         : Plik komunikacji z programem RS-win      *//
+      8          //*  Autor                        : Pawe³ Narwojsz                           *//
+      9          //*  Data utrzorzenia             : 10.09.2007                               *//
+     10          //*  Data ostatniej modyfikacji   : --.--.----                               *//
+     11          //*--------------------------------------------------------------------------*//
+     12          //*                                                                          *//
+     13          //*--------------------------------------------------------------------------*//
+     14          //* Rejestr zmian  (data - opis):                                            *//
+     15          //*                                                                          *//
+     16          //*                               Brak zmian                                 *//
+     17          //*                                                                          *//
+     18          //*__________________________________________________________________________*// 
+     19          //****************************************************************************//
+     20          //****************************************************************************//
+     21          
+     22          
+     23          #include <intrinsics.h>
+     24          #include "core/common.h"
+     25          #include "core/device.h"
+     26          #include "core/trace.h"
+     27          #include "flash.h"
+     28          #include "Framework.h"
+     29          #include "Application_prog.h"
+     30          
+     31               
+
+   \                                 In section .bss, align 4
+     32          RAM ram;
+   \                     ram:
+   \   00000000                      DS8 400
+     33          extern char *pProg;
+     34          extern char WiFiDebug;
+     35          //extern FlashPagesOffset;
+
+   \                                 In section .bss, align 4
+     36          ConversFC Convers_DW_B;
+   \                     Convers_DW_B:
+   \   00000000                      DS8 4
+     37          
+     38          
+     39          
+     40          
+     41          //Zmienne zewnêtrzne -------------------------------------------------
+     42              extern char g_czas_petli;
+     43              extern const char identyfikacja[];
+     44              extern int FlashProgramOfset;
+     45              extern int FlashProgramReserveOfset;
+     46              //extern char start_cykl;
+     47              extern char g_Stop_Program;                                                     //1- zatrzymuje program
+     48              extern char g_Restart_Program;                                                  //1- restartuje program
+     49              extern _ProgramTab gProg;
+     50              extern void Delay (unsigned long a);
+     51              extern _Trap      Trap;
+     52          //_______________Koniec globalnych zmiennych zewnêtrznych ______________________
+     53          
+     54              
+     55          
+     56          //*-----------------------------------------------------------------------------
+     57          //* Nazwa funkcji :    komunikcja_RSwin
+     58          //* Interpretacja i wykonanie rozkazów wysy³anych z programu RS-win
+     59          //*-----------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     60          void komunikcja_RSwin(char *ptr1, char *ptr2, unsigned int *ptr3)
+     61          {
+   \                     komunikcja_RSwin:
+   \   00000000   F7B5               PUSH     {R0-R2,R4-R7,LR}
+   \   00000002   0400               MOVS     R4,R0
+   \   00000004   0D00               MOVS     R5,R1
+   \   00000006   1600               MOVS     R6,R2
+   \   00000008   0027               MOVS     R7,#+0
+     62          
+     63          
+     64              //Zmienne lokalne ----------------------------------------------------------
+     65          
+     66                unsigned long adres =0;;
+     67              //----------------Koniec zmiennych lokalnych -------------------------------
+     68            
+     69           
+     70              //Zmienne tymczasowe -------------------------------------------------------
+     71                int tmp =0;
+     72                
+     73              //----------------Koniec zmiennych tymczasowych ---------------------------- 
+     74            
+     75            
+     76                
+     77                
+     78              //Zapis do dowolnego segmentu ----------------------------------------------
+     79              if ((ptr1[0]==0xAD)& (ptr1[1]==0x05)) 
+   \   0000000A   2078               LDRB     R0,[R4, #+0]
+   \   0000000C   AD28               CMP      R0,#+173
+   \   0000000E   6DD1               BNE      ??komunikcja_RSwin_0
+   \   00000010   6078               LDRB     R0,[R4, #+1]
+   \   00000012   0528               CMP      R0,#+5
+   \   00000014   6AD1               BNE      ??komunikcja_RSwin_0
+     80              {
+     81                //Zapis programu zrodlowego
+     82                adres = ptr1[4]+(ptr1[5]*0x100);
+   \   00000016   2079               LDRB     R0,[R4, #+4]
+   \   00000018   6179               LDRB     R1,[R4, #+5]
+   \   0000001A   0902               LSLS     R1,R1,#+8
+   \   0000001C   4018               ADDS     R0,R0,R1
+   \   0000001E   0090               STR      R0,[SP, #+0]
+     83                if (ptr1[3]==0x70)
+   \   00000020   E078               LDRB     R0,[R4, #+3]
+   \   00000022   7028               CMP      R0,#+112
+   \   00000024   46D1               BNE      ??komunikcja_RSwin_1
+     84                {
+     85          
+     86          
+     87                       unsigned int Save = __get_interrupt_state();            
+   \   00000026   ........           BL       __iar_get_interrupt_state
+   \   0000002A   0190               STR      R0,[SP, #+4]
+     88                          __disable_interrupt();
+   \   0000002C   ........           BL       __iar_disable_interrupt
+     89                          
+     90                      if (adres==0) 
+   \   00000030   0098               LDR      R0,[SP, #+0]
+   \   00000032   0028               CMP      R0,#+0
+   \   00000034   06D1               BNE      ??komunikcja_RSwin_2
+     91                      {
+     92                        //CleanFlash((int)AT91C_IFLASH_MEM->FlashProgram+FlashProgramOfset,0,sizeof(gProg));
+     93                        CleanFlash((char*)&AT91C_IFLASH_MEM->FlashProgram+FlashProgramOfset,sizeof(gProg));
+   \   00000036   A449               LDR      R1,??komunikcja_RSwin_3  ;; 0xc670
+   \   00000038   A448               LDR      R0,??komunikcja_RSwin_3+0x4  ;; FlashProgramOfset
+   \   0000003A   0068               LDR      R0,[R0, #+0]
+   \   0000003C   A44A               LDR      R2,??komunikcja_RSwin_3+0x8  ;; 0x130100
+   \   0000003E   1018               ADDS     R0,R2,R0
+   \   00000040   ........           BL       CleanFlash
+   \                     ??komunikcja_RSwin_2:
+   \   00000044   A379               LDRB     R3,[R4, #+6]
+   \   00000046   2200               MOVS     R2,R4
+   \   00000048   D21D               ADDS     R2,R2,#+7
+   \   0000004A   0099               LDR      R1,[SP, #+0]
+   \   0000004C   8C46               MOV      R12,R1
+   \   0000004E   9F48               LDR      R0,??komunikcja_RSwin_3+0x4  ;; FlashProgramOfset
+   \   00000050   0168               LDR      R1,[R0, #+0]
+   \   00000052   9F48               LDR      R0,??komunikcja_RSwin_3+0x8  ;; 0x130100
+   \   00000054   0818               ADDS     R0,R1,R0
+   \   00000056   6146               MOV      R1,R12
+     94                      }
+     95                      
+     96                         
+     97                          at91flashWrite((int)AT91C_IFLASH_MEM->FlashProgram+FlashProgramOfset,adres,ptr1+7,ptr1[6]);
+   \   00000058   ........           BL       at91flashWrite
+     98                      
+     99                          
+    100                          __set_interrupt_state(Save);
+   \   0000005C   0198               LDR      R0,[SP, #+4]
+   \   0000005E   ........           BL       __iar_set_interrupt_state
+    101                          __enable_interrupt();  
+   \   00000062   ........           BL       __iar_enable_interrupt
+    102                     
+    103                      
+    104                      //Potwierdzenie
+    105                      ptr2[0]=0xAC;
+   \   00000066   AC20               MOVS     R0,#+172
+   \   00000068   2870               STRB     R0,[R5, #+0]
+    106                      ptr2[1]=0x02;
+   \   0000006A   0220               MOVS     R0,#+2
+   \   0000006C   6870               STRB     R0,[R5, #+1]
+    107                      *ptr3=2;
+   \   0000006E   3060               STR      R0,[R6, #+0]
+    108                      ptr2[2]=CheckSum(ptr2, ptr3);
+   \   00000070   3100               MOVS     R1,R6
+   \   00000072   2800               MOVS     R0,R5
+   \   00000074   ........           BL       CheckSum
+   \   00000078   A870               STRB     R0,[R5, #+2]
+    109                      
+    110                        /*
+    111                               memory_read=(char*)&gProg+adres;
+    112                      
+    113                      for (char i=0; i<ptr1[6]; i++)
+    114                      {
+    115                        *memory_read=*(ptr1+7+i);
+    116                        memory_read++;
+    117                      }
+    118                          
+    119                      */
+    120                  
+    121                    //przepisz program z flash do ram
+    122                    char *memory_read_prog;
+    123                    memory_read_prog=(char*)(AT91C_IFLASH_MEM->FlashProgram+FlashProgramOfset);
+   \   0000007A   9448               LDR      R0,??komunikcja_RSwin_3+0x4  ;; FlashProgramOfset
+   \   0000007C   0068               LDR      R0,[R0, #+0]
+   \   0000007E   9449               LDR      R1,??komunikcja_RSwin_3+0x8  ;; 0x130100
+   \   00000080   0918               ADDS     R1,R1,R0
+   \   00000082   9448               LDR      R0,??komunikcja_RSwin_3+0xC  ;; gProg
+   \   00000084   0A78               LDRB     R2,[R1, #+0]
+   \   00000086   0270               STRB     R2,[R0, #+0]
+    124                
+    125                    
+    126                    char *SourRam= (char*)&gProg;
+    127                    int tProgramTabSize=ProgramTabSize;
+    128                    for (int k = 0 ; k <= tProgramTabSize ; k++) 
+    129                    { 
+    130                          SourRam[k]=memory_read_prog[k]; 
+   \   00000088   0120               MOVS     R0,#+1
+   \   0000008A   491C               ADDS     R1,R1,#+1
+   \                     ??komunikcja_RSwin_4:
+   \   0000008C   914A               LDR      R2,??komunikcja_RSwin_3+0xC  ;; gProg
+   \   0000008E   0B78               LDRB     R3,[R1, #+0]
+   \   00000090   1354               STRB     R3,[R2, R0]
+   \   00000092   401C               ADDS     R0,R0,#+1
+   \   00000094   4B78               LDRB     R3,[R1, #+1]
+   \   00000096   1354               STRB     R3,[R2, R0]
+   \   00000098   401C               ADDS     R0,R0,#+1
+   \   0000009A   8B78               LDRB     R3,[R1, #+2]
+   \   0000009C   1354               STRB     R3,[R2, R0]
+   \   0000009E   401C               ADDS     R0,R0,#+1
+   \   000000A0   CB78               LDRB     R3,[R1, #+3]
+   \   000000A2   1354               STRB     R3,[R2, R0]
+   \   000000A4   401C               ADDS     R0,R0,#+1
+   \   000000A6   0B79               LDRB     R3,[R1, #+4]
+   \   000000A8   1354               STRB     R3,[R2, R0]
+    131                          
+    132                    }
+   \   000000AA   401C               ADDS     R0,R0,#+1
+   \   000000AC   491D               ADDS     R1,R1,#+5
+   \   000000AE   8A4A               LDR      R2,??komunikcja_RSwin_3+0x10  ;; 0xc671
+   \   000000B0   9042               CMP      R0,R2
+   \   000000B2   EBDB               BLT      ??komunikcja_RSwin_4
+    133                } 
+    134                   
+    135                
+    136                if (ptr1[3]==0x10)
+   \                     ??komunikcja_RSwin_1:
+   \   000000B4   E078               LDRB     R0,[R4, #+3]
+   \   000000B6   1028               CMP      R0,#+16
+   \   000000B8   18D1               BNE      ??komunikcja_RSwin_0
+    137                {
+    138                   char *memory_read;
+    139                      memory_read=(char*)&gProg+adres;
+   \   000000BA   0098               LDR      R0,[SP, #+0]
+   \   000000BC   8549               LDR      R1,??komunikcja_RSwin_3+0xC  ;; gProg
+   \   000000BE   0818               ADDS     R0,R1,R0
+    140                      
+    141                      for (char i=0; i<ptr1[6]; i++)
+   \   000000C0   0021               MOVS     R1,#+0
+   \   000000C2   06E0               B        ??komunikcja_RSwin_5
+    142                      {
+    143                        *memory_read=*(ptr1+7+i);
+   \                     ??komunikcja_RSwin_6:
+   \   000000C4   6218               ADDS     R2,R4,R1
+   \   000000C6   D279               LDRB     R2,[R2, #+7]
+   \   000000C8   0270               STRB     R2,[R0, #+0]
+    144                        memory_read++;
+   \   000000CA   401C               ADDS     R0,R0,#+1
+    145                      } 
+   \   000000CC   491C               ADDS     R1,R1,#+1
+   \   000000CE   0906               LSLS     R1,R1,#+24
+   \   000000D0   090E               LSRS     R1,R1,#+24
+   \                     ??komunikcja_RSwin_5:
+   \   000000D2   A379               LDRB     R3,[R4, #+6]
+   \   000000D4   9942               CMP      R1,R3
+   \   000000D6   F5D3               BCC      ??komunikcja_RSwin_6
+    146                      
+    147                      
+    148                     //Potwierdzenie
+    149                      ptr2[0]=0xAC;
+   \   000000D8   AC20               MOVS     R0,#+172
+   \   000000DA   2870               STRB     R0,[R5, #+0]
+    150                      ptr2[1]=0x02;
+   \   000000DC   0220               MOVS     R0,#+2
+   \   000000DE   6870               STRB     R0,[R5, #+1]
+    151                      *ptr3=2;
+   \   000000E0   3060               STR      R0,[R6, #+0]
+    152                      ptr2[2]=CheckSum(ptr2, ptr3);   
+   \   000000E2   3100               MOVS     R1,R6
+   \   000000E4   2800               MOVS     R0,R5
+   \   000000E6   ........           BL       CheckSum
+   \   000000EA   A870               STRB     R0,[R5, #+2]
+    153                
+    154                }
+    155                
+    156              }//-----------Koniec zapisu do dowolnego segmentu --------------------------         
+    157              
+    158              
+    159              
+    160              //Odczyt z dowolnego segmentu ----------------------------------------------
+    161              if ((ptr1[0]==0xAD)& (ptr1[1]==0x03)) 
+   \                     ??komunikcja_RSwin_0:
+   \   000000EC   2078               LDRB     R0,[R4, #+0]
+   \   000000EE   AD28               CMP      R0,#+173
+   \   000000F0   4ED1               BNE      ??komunikcja_RSwin_7
+   \   000000F2   6078               LDRB     R0,[R4, #+1]
+   \   000000F4   0328               CMP      R0,#+3
+   \   000000F6   4BD1               BNE      ??komunikcja_RSwin_7
+    162              {
+    163                
+    164          
+    165                //Odczyt programu zrodlowego
+    166                if ((ptr1[2]==0x00) & (ptr1[3]==0x10) /*& (ptr1[4]!=0x40)*/)
+   \   000000F8   A078               LDRB     R0,[R4, #+2]
+   \   000000FA   0028               CMP      R0,#+0
+   \   000000FC   21D1               BNE      ??komunikcja_RSwin_8
+   \   000000FE   E078               LDRB     R0,[R4, #+3]
+   \   00000100   1028               CMP      R0,#+16
+   \   00000102   1ED1               BNE      ??komunikcja_RSwin_8
+    167                {
+    168                  
+    169                  tmp = 2;
+   \   00000104   0227               MOVS     R7,#+2
+    170                  
+    171                  ptr2[0] =0xAC;
+   \   00000106   AC20               MOVS     R0,#+172
+   \   00000108   2870               STRB     R0,[R5, #+0]
+    172                  ptr2[1] =0x04;
+   \   0000010A   0420               MOVS     R0,#+4
+   \   0000010C   6870               STRB     R0,[R5, #+1]
+    173                  //*ptr3=2;
+    174                  
+    175                  adres = ptr1[4]+(ptr1[5]*0x100);
+    176                  
+    177                  char *memory_read;
+    178                  
+    179                  //memory_read=(char*)(AT91C_IFLASH_MEM->FlashProgram+FlashProgramReserveOfset);
+    180                  memory_read=(char*)&gProg;
+    181                  
+    182                  
+    183                  for (int k = 0 ; k <= (ptr1[6]-1) ; k++) 
+   \   0000010E   0020               MOVS     R0,#+0
+   \   00000110   2900               MOVS     R1,R5
+   \   00000112   891C               ADDS     R1,R1,#+2
+   \   00000114   2279               LDRB     R2,[R4, #+4]
+   \   00000116   6379               LDRB     R3,[R4, #+5]
+   \   00000118   1B02               LSLS     R3,R3,#+8
+   \   0000011A   D218               ADDS     R2,R2,R3
+   \   0000011C   6D4B               LDR      R3,??komunikcja_RSwin_3+0xC  ;; gProg
+   \   0000011E   9A18               ADDS     R2,R3,R2
+   \   00000120   05E0               B        ??komunikcja_RSwin_9
+    184                  { 
+    185          
+    186                      tmp++;
+   \                     ??komunikcja_RSwin_10:
+   \   00000122   7F1C               ADDS     R7,R7,#+1
+    187                      
+    188                      ptr2[2+k] =memory_read[adres+k]; 
+   \   00000124   1378               LDRB     R3,[R2, #+0]
+   \   00000126   0B70               STRB     R3,[R1, #+0]
+    189                      
+    190                  
+    191                  }
+   \   00000128   401C               ADDS     R0,R0,#+1
+   \   0000012A   521C               ADDS     R2,R2,#+1
+   \   0000012C   491C               ADDS     R1,R1,#+1
+   \                     ??komunikcja_RSwin_9:
+   \   0000012E   A379               LDRB     R3,[R4, #+6]
+   \   00000130   5B1E               SUBS     R3,R3,#+1
+   \   00000132   8342               CMP      R3,R0
+   \   00000134   F5DA               BGE      ??komunikcja_RSwin_10
+    192                  
+    193                  
+    194                  
+    195          
+    196                  *ptr3=tmp;
+   \   00000136   3760               STR      R7,[R6, #+0]
+    197                  ptr2[tmp]=CheckSum(ptr2, ptr3);
+   \   00000138   3100               MOVS     R1,R6
+   \   0000013A   2800               MOVS     R0,R5
+   \   0000013C   ........           BL       CheckSum
+   \   00000140   E855               STRB     R0,[R5, R7]
+    198                  
+    199                }
+    200          //tmp
+    201                if ((ptr1[2]==0x00) & (ptr1[3]>0x70) & (ptr1[3]<0xC0)  /*& (ptr1[4]!=0x40)*/)
+   \                     ??komunikcja_RSwin_8:
+   \   00000142   A078               LDRB     R0,[R4, #+2]
+   \   00000144   0028               CMP      R0,#+0
+   \   00000146   23D1               BNE      ??komunikcja_RSwin_7
+   \   00000148   E078               LDRB     R0,[R4, #+3]
+   \   0000014A   7128               CMP      R0,#+113
+   \   0000014C   20D3               BCC      ??komunikcja_RSwin_7
+   \   0000014E   C028               CMP      R0,#+192
+   \   00000150   1ED2               BCS      ??komunikcja_RSwin_7
+    202                {
+    203                  
+    204                  tmp = 2;
+   \   00000152   0227               MOVS     R7,#+2
+    205                  
+    206                  ptr2[0] =0xAC;
+   \   00000154   AC20               MOVS     R0,#+172
+   \   00000156   2870               STRB     R0,[R5, #+0]
+    207                  ptr2[1] =0x04;
+   \   00000158   0420               MOVS     R0,#+4
+   \   0000015A   6870               STRB     R0,[R5, #+1]
+    208                  //*ptr3=2;
+    209                  
+    210                  adres = ptr1[4]+(ptr1[5]*0x100);
+    211                  for (int k = 0 ; k <= (ptr1[6]-1) ; k++) 
+   \   0000015C   0020               MOVS     R0,#+0
+   \   0000015E   2900               MOVS     R1,R5
+   \   00000160   891C               ADDS     R1,R1,#+2
+   \   00000162   2279               LDRB     R2,[R4, #+4]
+   \   00000164   6379               LDRB     R3,[R4, #+5]
+   \   00000166   1B02               LSLS     R3,R3,#+8
+   \   00000168   D218               ADDS     R2,R2,R3
+   \   0000016A   07E0               B        ??komunikcja_RSwin_11
+    212                  { 
+    213                      ptr2[2+k] = pProg[adres+k];
+   \                     ??komunikcja_RSwin_12:
+   \   0000016C   5B4B               LDR      R3,??komunikcja_RSwin_3+0x14  ;; pProg
+   \   0000016E   1B68               LDR      R3,[R3, #+0]
+   \   00000170   9B5C               LDRB     R3,[R3, R2]
+   \   00000172   0B70               STRB     R3,[R1, #+0]
+    214                      tmp++;
+   \   00000174   7F1C               ADDS     R7,R7,#+1
+    215                  }
+   \   00000176   401C               ADDS     R0,R0,#+1
+   \   00000178   521C               ADDS     R2,R2,#+1
+   \   0000017A   491C               ADDS     R1,R1,#+1
+   \                     ??komunikcja_RSwin_11:
+   \   0000017C   A379               LDRB     R3,[R4, #+6]
+   \   0000017E   5B1E               SUBS     R3,R3,#+1
+   \   00000180   8342               CMP      R3,R0
+   \   00000182   F3DA               BGE      ??komunikcja_RSwin_12
+    216          
+    217                  *ptr3=tmp;
+   \   00000184   3760               STR      R7,[R6, #+0]
+    218                  ptr2[tmp]=CheckSum(ptr2, ptr3);
+   \   00000186   3100               MOVS     R1,R6
+   \   00000188   2800               MOVS     R0,R5
+   \   0000018A   ........           BL       CheckSum
+   \   0000018E   E855               STRB     R0,[R5, R7]
+    219                  
+    220                } 
+    221          //kon tmp
+    222                
+    223              }//------------------Koniec odczytu z dowolnego segmentu--------------------    
+    224              
+    225              
+    226          
+    227              //Odczyt z segmentu 0 ------------------------------------------------------
+    228              if ((ptr1[0]==0xAC)& (ptr1[1]==0x03) & (ptr1[2]!=0x14) & (ptr1[2]!=0x80) ) 
+   \                     ??komunikcja_RSwin_7:
+   \   00000190   2078               LDRB     R0,[R4, #+0]
+   \   00000192   AC28               CMP      R0,#+172
+   \   00000194   60D1               BNE      ??komunikcja_RSwin_13
+   \   00000196   6078               LDRB     R0,[R4, #+1]
+   \   00000198   0328               CMP      R0,#+3
+   \   0000019A   5DD1               BNE      ??komunikcja_RSwin_13
+   \   0000019C   A078               LDRB     R0,[R4, #+2]
+   \   0000019E   1428               CMP      R0,#+20
+   \   000001A0   5AD0               BEQ      ??komunikcja_RSwin_13
+   \   000001A2   8028               CMP      R0,#+128
+   \   000001A4   58D0               BEQ      ??komunikcja_RSwin_13
+    229              {
+    230                
+    231                //odczyt zmiennych dwustanwych
+    232                if (   (ptr1[2]+(ptr1[3]*0x100)>= 0xC000) &&  (ptr1[2]+(ptr1[3]*0x100)<= 0xC7FF)  )
+   \   000001A6   C820               MOVS     R0,#+200
+   \   000001A8   0002               LSLS     R0,R0,#+8        ;; #+51200
+   \   000001AA   A178               LDRB     R1,[R4, #+2]
+   \   000001AC   E278               LDRB     R2,[R4, #+3]
+   \   000001AE   1202               LSLS     R2,R2,#+8
+   \   000001B0   8918               ADDS     R1,R1,R2
+   \   000001B2   C022               MOVS     R2,#+192
+   \   000001B4   1202               LSLS     R2,R2,#+8        ;; #+49152
+   \   000001B6   0904               LSLS     R1,R1,#+16
+   \   000001B8   090C               LSRS     R1,R1,#+16
+   \   000001BA   9142               CMP      R1,R2
+   \   000001BC   1AD3               BCC      ??komunikcja_RSwin_14
+   \   000001BE   A178               LDRB     R1,[R4, #+2]
+   \   000001C0   E278               LDRB     R2,[R4, #+3]
+   \   000001C2   1202               LSLS     R2,R2,#+8
+   \   000001C4   8918               ADDS     R1,R1,R2
+   \   000001C6   0904               LSLS     R1,R1,#+16
+   \   000001C8   090C               LSRS     R1,R1,#+16
+   \   000001CA   8142               CMP      R1,R0
+   \   000001CC   12D2               BCS      ??komunikcja_RSwin_14
+    233                {
+    234                  
+    235                  
+    236                  ptr2[0] =0xAC;
+   \   000001CE   AC21               MOVS     R1,#+172
+   \   000001D0   2970               STRB     R1,[R5, #+0]
+    237                  ptr2[1] =0x04;
+   \   000001D2   0421               MOVS     R1,#+4
+   \   000001D4   6970               STRB     R1,[R5, #+1]
+    238                  tmp = 2;
+   \   000001D6   0227               MOVS     R7,#+2
+    239                  
+    240                  for (int k = 0; k <= ptr1[4]-1; k++) 
+   \   000001D8   0021               MOVS     R1,#+0
+   \   000001DA   2A00               MOVS     R2,R5
+   \   000001DC   921C               ADDS     R2,R2,#+2
+   \   000001DE   05E0               B        ??komunikcja_RSwin_15
+    241                  { 
+    242                    adres = (ptr1[2]+(ptr1[3]*0x100)-0xC000 +k);
+    243                    ptr2[2+k] = BinVarToMaster(&adres);     
+   \                     ??komunikcja_RSwin_16:
+   \   000001E0   6B46               MOV      R3,SP
+   \   000001E2   1B7A               LDRB     R3,[R3, #+8]
+   \   000001E4   1370               STRB     R3,[R2, #+0]
+    244                    tmp++;
+   \   000001E6   7F1C               ADDS     R7,R7,#+1
+    245                  }
+   \   000001E8   491C               ADDS     R1,R1,#+1
+   \   000001EA   521C               ADDS     R2,R2,#+1
+   \                     ??komunikcja_RSwin_15:
+   \   000001EC   2379               LDRB     R3,[R4, #+4]
+   \   000001EE   5B1E               SUBS     R3,R3,#+1
+   \   000001F0   8B42               CMP      R3,R1
+   \   000001F2   F5DA               BGE      ??komunikcja_RSwin_16
+    246                  
+    247                }//Koniec odczytu zmiennych dwustanowych
+    248                      
+    249                      
+    250                //Odczyt zmiennych analogowych
+    251                if (  (ptr1[2]+(ptr1[3]*0x100)>= 0xC800) &&  (ptr1[2]+(ptr1[3]*0x100)<= 0xDFFF) )
+   \                     ??komunikcja_RSwin_14:
+   \   000001F4   A178               LDRB     R1,[R4, #+2]
+   \   000001F6   E278               LDRB     R2,[R4, #+3]
+   \   000001F8   1202               LSLS     R2,R2,#+8
+   \   000001FA   8918               ADDS     R1,R1,R2
+   \   000001FC   0904               LSLS     R1,R1,#+16
+   \   000001FE   090C               LSRS     R1,R1,#+16
+   \   00000200   8142               CMP      R1,R0
+   \   00000202   23D3               BCC      ??komunikcja_RSwin_17
+   \   00000204   A078               LDRB     R0,[R4, #+2]
+   \   00000206   E178               LDRB     R1,[R4, #+3]
+   \   00000208   0902               LSLS     R1,R1,#+8
+   \   0000020A   4018               ADDS     R0,R0,R1
+   \   0000020C   E021               MOVS     R1,#+224
+   \   0000020E   0902               LSLS     R1,R1,#+8        ;; #+57344
+   \   00000210   0004               LSLS     R0,R0,#+16
+   \   00000212   000C               LSRS     R0,R0,#+16
+   \   00000214   8842               CMP      R0,R1
+   \   00000216   19D2               BCS      ??komunikcja_RSwin_17
+    252                {   
+    253                  
+    254                  ptr2[0] =0xAC;
+   \   00000218   AC20               MOVS     R0,#+172
+   \   0000021A   2870               STRB     R0,[R5, #+0]
+    255                  ptr2[1] =0x04;
+   \   0000021C   0420               MOVS     R0,#+4
+   \   0000021E   6870               STRB     R0,[R5, #+1]
+    256                  tmp = 2;
+   \   00000220   0227               MOVS     R7,#+2
+    257                  
+    258                  for (int k = 0; k <= ptr1[4]-1; k=k+4) 
+   \   00000222   0021               MOVS     R1,#+0
+   \   00000224   2A00               MOVS     R2,R5
+   \   00000226   921C               ADDS     R2,R2,#+2
+   \   00000228   2D48               LDR      R0,??komunikcja_RSwin_3+0x18  ;; Convers_DW_B
+   \   0000022A   0BE0               B        ??komunikcja_RSwin_18
+    259                  { 
+    260                    
+    261                    adres = ((ptr1[2]+(ptr1[3]*0x100)-0xC800)/4)  +(k/4);
+    262                    
+    263                    Convers_DW_B.DWvar = AnaVarToMaster(&adres);  
+   \                     ??komunikcja_RSwin_19:
+   \   0000022C   0023               MOVS     R3,#+0
+   \   0000022E   0360               STR      R3,[R0, #+0]
+    264                    
+    265                    // zmiana kolejnoœci dla nowego RSWINa
+    266                   /*
+    267                    ptr2[k+2]   =Convers_DW_B.Bvar[3];
+    268                    ptr2[k+3]   =Convers_DW_B.Bvar[2];
+    269                    ptr2[k+4]   =Convers_DW_B.Bvar[0];
+    270                    ptr2[k+5]   =Convers_DW_B.Bvar[1];
+    271                   */
+    272                    ptr2[k+2]   =Convers_DW_B.Bvar[0];
+   \   00000230   1370               STRB     R3,[R2, #+0]
+    273                    ptr2[k+3]   =Convers_DW_B.Bvar[1];
+   \   00000232   4378               LDRB     R3,[R0, #+1]
+   \   00000234   5370               STRB     R3,[R2, #+1]
+    274                    ptr2[k+4]   =Convers_DW_B.Bvar[2];
+   \   00000236   8378               LDRB     R3,[R0, #+2]
+   \   00000238   9370               STRB     R3,[R2, #+2]
+    275                    ptr2[k+5]   =Convers_DW_B.Bvar[3];
+   \   0000023A   C378               LDRB     R3,[R0, #+3]
+   \   0000023C   D370               STRB     R3,[R2, #+3]
+    276                    
+    277                    tmp=tmp+4;
+   \   0000023E   3F1D               ADDS     R7,R7,#+4
+    278                   }
+   \   00000240   091D               ADDS     R1,R1,#+4
+   \   00000242   121D               ADDS     R2,R2,#+4
+   \                     ??komunikcja_RSwin_18:
+   \   00000244   2379               LDRB     R3,[R4, #+4]
+   \   00000246   5B1E               SUBS     R3,R3,#+1
+   \   00000248   8B42               CMP      R3,R1
+   \   0000024A   EFDA               BGE      ??komunikcja_RSwin_19
+    279                 }//Koniec odczytu zmiennych analogowych
+    280                 *ptr3=tmp;
+   \                     ??komunikcja_RSwin_17:
+   \   0000024C   3760               STR      R7,[R6, #+0]
+    281                 ptr2[tmp]=CheckSum(ptr2, ptr3);
+   \   0000024E   3100               MOVS     R1,R6
+   \   00000250   2800               MOVS     R0,R5
+   \   00000252   ........           BL       CheckSum
+   \   00000256   E855               STRB     R0,[R5, R7]
+    282              
+    283              }//-------------------Koniec odczytu z segmentu 0---------------------------
+    284              
+    285              
+    286              
+    287              //Zapis do segmentu 0-------------------------------------------------------
+    288              if ((ptr1[0]==0xAC)& (ptr1[1]==0x05)) 
+   \                     ??komunikcja_RSwin_13:
+   \   00000258   2078               LDRB     R0,[R4, #+0]
+   \   0000025A   AC28               CMP      R0,#+172
+   \   0000025C   5AD1               BNE      ??komunikcja_RSwin_20
+   \   0000025E   6078               LDRB     R0,[R4, #+1]
+   \   00000260   0528               CMP      R0,#+5
+   \   00000262   57D1               BNE      ??komunikcja_RSwin_20
+    289              {
+    290          
+    291                //Zapis zmiennych dwustanowych
+    292                if ( (ptr1[2]+(ptr1[3]*0x100)>= 0xC000) &&  (ptr1[2]+(ptr1[3]*0x100)<= 0xC7FF))
+   \   00000264   C820               MOVS     R0,#+200
+   \   00000266   0002               LSLS     R0,R0,#+8        ;; #+51200
+   \   00000268   A178               LDRB     R1,[R4, #+2]
+   \   0000026A   E278               LDRB     R2,[R4, #+3]
+   \   0000026C   1202               LSLS     R2,R2,#+8
+   \   0000026E   8918               ADDS     R1,R1,R2
+   \   00000270   C022               MOVS     R2,#+192
+   \   00000272   1202               LSLS     R2,R2,#+8        ;; #+49152
+   \   00000274   0904               LSLS     R1,R1,#+16
+   \   00000276   090C               LSRS     R1,R1,#+16
+   \   00000278   9142               CMP      R1,R2
+   \   0000027A   0ED3               BCC      ??komunikcja_RSwin_21
+   \   0000027C   A178               LDRB     R1,[R4, #+2]
+   \   0000027E   E278               LDRB     R2,[R4, #+3]
+   \   00000280   1202               LSLS     R2,R2,#+8
+   \   00000282   8918               ADDS     R1,R1,R2
+   \   00000284   0904               LSLS     R1,R1,#+16
+   \   00000286   090C               LSRS     R1,R1,#+16
+   \   00000288   8142               CMP      R1,R0
+   \   0000028A   06D2               BCS      ??komunikcja_RSwin_21
+    293                {
+    294                  for (int k = 0; k <= ptr1[4]-1; k++) 
+   \   0000028C   0021               MOVS     R1,#+0
+   \   0000028E   00E0               B        ??komunikcja_RSwin_22
+    295                  { 
+    296                    adres = (ptr1[2]+(ptr1[3]*0x100)-0xC000+k);
+    297                    MasterToBinVar(&adres, &ptr1[5]);              //Konwersja z formatu Master i zapis
+   \                     ??komunikcja_RSwin_23:
+   \   00000290   491C               ADDS     R1,R1,#+1
+   \                     ??komunikcja_RSwin_22:
+   \   00000292   2279               LDRB     R2,[R4, #+4]
+   \   00000294   521E               SUBS     R2,R2,#+1
+   \   00000296   8A42               CMP      R2,R1
+   \   00000298   FADA               BGE      ??komunikcja_RSwin_23
+    298                  }        
+    299                }//Koniec zapisu zmiennych dwustanowch
+    300                      
+    301                      
+    302                
+    303                //Zapis zmiennej analogowej
+    304                if ( (ptr1[2]+(ptr1[3]*0x100)>= 0xC800) &&  (ptr1[2]+(ptr1[3]*0x100)<= 0xDFFF))
+   \                     ??komunikcja_RSwin_21:
+   \   0000029A   A178               LDRB     R1,[R4, #+2]
+   \   0000029C   E278               LDRB     R2,[R4, #+3]
+   \   0000029E   1202               LSLS     R2,R2,#+8
+   \   000002A0   8918               ADDS     R1,R1,R2
+   \   000002A2   0904               LSLS     R1,R1,#+16
+   \   000002A4   090C               LSRS     R1,R1,#+16
+   \   000002A6   8142               CMP      R1,R0
+   \   000002A8   2AD3               BCC      ??komunikcja_RSwin_24
+   \   000002AA   A078               LDRB     R0,[R4, #+2]
+   \   000002AC   E178               LDRB     R1,[R4, #+3]
+   \   000002AE   0902               LSLS     R1,R1,#+8
+   \   000002B0   4018               ADDS     R0,R0,R1
+   \   000002B2   E021               MOVS     R1,#+224
+   \   000002B4   0902               LSLS     R1,R1,#+8        ;; #+57344
+   \   000002B6   0004               LSLS     R0,R0,#+16
+   \   000002B8   000C               LSRS     R0,R0,#+16
+   \   000002BA   8842               CMP      R0,R1
+   \   000002BC   20D2               BCS      ??komunikcja_RSwin_24
+    305                {
+    306                                                           
+    307          
+    308                  for (int k = 0; k <= ptr1[4]-1; k=k+4) 
+   \   000002BE   0021               MOVS     R1,#+0
+   \   000002C0   2200               MOVS     R2,R4
+   \   000002C2   521D               ADDS     R2,R2,#+5
+   \   000002C4   0648               LDR      R0,??komunikcja_RSwin_3+0x18  ;; Convers_DW_B
+   \   000002C6   17E0               B        ??komunikcja_RSwin_25
+   \                     ??komunikcja_RSwin_3:
+   \   000002C8   70C60000           DC32     0xc670
+   \   000002CC   ........           DC32     FlashProgramOfset
+   \   000002D0   00011300           DC32     0x130100
+   \   000002D4   ........           DC32     gProg
+   \   000002D8   71C60000           DC32     0xc671
+   \   000002DC   ........           DC32     pProg
+   \   000002E0   ........           DC32     Convers_DW_B
+    309                  { /*
+    310                    // zmiana kolejnoœci dla nowego RSWINa
+    311                    
+    312                    Convers_DW_B.Bvar[3] = ptr1[5+(k)+0];
+    313                    Convers_DW_B.Bvar[2] = ptr1[5+(k)+1];
+    314                    Convers_DW_B.Bvar[0] = ptr1[5+(k)+2];
+    315                    Convers_DW_B.Bvar[1] = ptr1[5+(k)+3];
+    316                    */
+    317                    Convers_DW_B.Bvar[0] = ptr1[5+(k)+0];
+   \                     ??komunikcja_RSwin_26:
+   \   000002E4   1378               LDRB     R3,[R2, #+0]
+   \   000002E6   0370               STRB     R3,[R0, #+0]
+    318                    Convers_DW_B.Bvar[1] = ptr1[5+(k)+1];
+   \   000002E8   5378               LDRB     R3,[R2, #+1]
+   \   000002EA   4370               STRB     R3,[R0, #+1]
+    319                    Convers_DW_B.Bvar[2] = ptr1[5+(k)+2];
+   \   000002EC   9378               LDRB     R3,[R2, #+2]
+   \   000002EE   8370               STRB     R3,[R0, #+2]
+    320                    Convers_DW_B.Bvar[3] = ptr1[5+(k)+3];
+   \   000002F0   D378               LDRB     R3,[R2, #+3]
+   \   000002F2   C370               STRB     R3,[R0, #+3]
+    321                    
+    322                    
+    323                    adres= (((ptr1[2]+(ptr1[3]*0x100)-0xC800))/4)+(k/4);
+    324                    MasterToAnaVar(&adres, &Convers_DW_B.DWvar);
+    325          
+    326                  } //koniec petli k
+   \   000002F4   091D               ADDS     R1,R1,#+4
+   \   000002F6   121D               ADDS     R2,R2,#+4
+   \                     ??komunikcja_RSwin_25:
+   \   000002F8   2379               LDRB     R3,[R4, #+4]
+   \   000002FA   5B1E               SUBS     R3,R3,#+1
+   \   000002FC   8B42               CMP      R3,R1
+   \   000002FE   F1DA               BGE      ??komunikcja_RSwin_26
+    327                  
+    328                }//Koniec zapisu zmiennych analogowych
+    329                      
+    330                      
+    331                      
+    332                      
+    333                  //Potwierdzenie
+    334                  ptr2[0]=0xAC;
+   \                     ??komunikcja_RSwin_24:
+   \   00000300   AC20               MOVS     R0,#+172
+   \   00000302   2870               STRB     R0,[R5, #+0]
+    335                  ptr2[1]=0x02;
+   \   00000304   0220               MOVS     R0,#+2
+   \   00000306   6870               STRB     R0,[R5, #+1]
+    336                  *ptr3=2;
+   \   00000308   3060               STR      R0,[R6, #+0]
+    337                  //koniec potwoerdzenia
+    338                  
+    339                   ptr2[2]=CheckSum(ptr2, ptr3);                                        //suma kontrolna
+   \   0000030A   3100               MOVS     R1,R6
+   \   0000030C   2800               MOVS     R0,R5
+   \   0000030E   ........           BL       CheckSum
+   \   00000312   A870               STRB     R0,[R5, #+2]
+    340           
+    341              }//------------------Koniec zapisu do segmentu 0---------------------------       
+    342                 
+    343              
+    344          
+    345              
+    346              //!!! Standardowe pytania -------------------------------------------------- 
+    347             
+    348                  //Przepisz program uzytkowy z Ram do flash
+    349                  if ( (ptr1[0]==0xAC) && (ptr1[1]==0x06) && (ptr1[2]==0x4E) )
+   \                     ??komunikcja_RSwin_20:
+   \   00000314   2078               LDRB     R0,[R4, #+0]
+   \   00000316   AC28               CMP      R0,#+172
+   \   00000318   14D1               BNE      ??komunikcja_RSwin_27
+   \   0000031A   6078               LDRB     R0,[R4, #+1]
+   \   0000031C   0628               CMP      R0,#+6
+   \   0000031E   11D1               BNE      ??komunikcja_RSwin_27
+   \   00000320   A078               LDRB     R0,[R4, #+2]
+   \   00000322   4E28               CMP      R0,#+78
+   \   00000324   0ED1               BNE      ??komunikcja_RSwin_27
+    350                    {
+    351                      ptr2[0]=0xAC;
+   \   00000326   AC20               MOVS     R0,#+172
+   \   00000328   2870               STRB     R0,[R5, #+0]
+    352                      ptr2[1]=0x02;
+   \   0000032A   0220               MOVS     R0,#+2
+   \   0000032C   6870               STRB     R0,[R5, #+1]
+    353                      *ptr3=2;
+   \   0000032E   3060               STR      R0,[R6, #+0]
+    354                      ptr2[2]=CheckSum(ptr2, ptr3);
+   \   00000330   3100               MOVS     R1,R6
+   \   00000332   2800               MOVS     R0,R5
+   \   00000334   ........           BL       CheckSum
+   \   00000338   A870               STRB     R0,[R5, #+2]
+    355                      
+    356                      
+    357                       RamToFlash();
+   \   0000033A   ........           BL       RamToFlash
+    358                       ProgramChangeExecute(&gProg); 
+   \   0000033E   2448               LDR      R0,??komunikcja_RSwin_28  ;; gProg
+   \   00000340   ........           BL       ProgramChangeExecute
+    359          
+    360                    }
+    361          
+    362          
+    363              
+    364                    //Ustaw pu³apkê
+    365                    if (
+    366                         (ptr1[0]==0xAA)&&
+    367                         (ptr1[1]==0xAA)&&
+    368                         (ptr1[2]==0x01)
+    369                        )
+   \                     ??komunikcja_RSwin_27:
+   \   00000344   2078               LDRB     R0,[R4, #+0]
+   \   00000346   AA28               CMP      R0,#+170
+   \   00000348   19D1               BNE      ??komunikcja_RSwin_29
+   \   0000034A   6078               LDRB     R0,[R4, #+1]
+   \   0000034C   AA28               CMP      R0,#+170
+   \   0000034E   16D1               BNE      ??komunikcja_RSwin_29
+   \   00000350   A078               LDRB     R0,[R4, #+2]
+   \   00000352   0128               CMP      R0,#+1
+   \   00000354   13D1               BNE      ??komunikcja_RSwin_29
+    370                      {
+    371                       
+    372                        Trap.Row=ptr1[3];
+   \   00000356   1F48               LDR      R0,??komunikcja_RSwin_28+0x4  ;; Trap
+   \   00000358   E178               LDRB     R1,[R4, #+3]
+   \   0000035A   4170               STRB     R1,[R0, #+1]
+    373                        Trap.Col=ptr1[4];
+   \   0000035C   2179               LDRB     R1,[R4, #+4]
+   \   0000035E   8170               STRB     R1,[R0, #+2]
+    374                        Trap.Enable=1;
+   \   00000360   0121               MOVS     R1,#+1
+   \   00000362   0170               STRB     R1,[R0, #+0]
+    375                        Trap.Activ=0;
+   \   00000364   0022               MOVS     R2,#+0
+   \   00000366   C270               STRB     R2,[R0, #+3]
+    376                        Trap.Change=1;
+   \   00000368   0171               STRB     R1,[R0, #+4]
+    377                        
+    378                        
+    379                        //Potwierdzenie
+    380                         ptr2[0]=0xAB;
+   \   0000036A   AB20               MOVS     R0,#+171
+   \   0000036C   2870               STRB     R0,[R5, #+0]
+    381                         ptr2[1]=0xAB;
+   \   0000036E   6870               STRB     R0,[R5, #+1]
+    382                         *ptr3=2;
+   \   00000370   0220               MOVS     R0,#+2
+   \   00000372   3060               STR      R0,[R6, #+0]
+    383                         ptr2[2]=CheckSum(ptr2, ptr3);                                        //suma kontrolna
+   \   00000374   3100               MOVS     R1,R6
+   \   00000376   2800               MOVS     R0,R5
+   \   00000378   ........           BL       CheckSum
+   \   0000037C   A870               STRB     R0,[R5, #+2]
+    384                        //koniec potwoerdzenia
+    385          
+    386                      }//koniec "Ustaw pu³apkê"
+    387                   
+    388              
+    389              
+    390                    //Usuñ pu³apki
+    391                    if (
+    392                         (ptr1[0]==0xAA)&&
+    393                         (ptr1[1]==0xAA)&&
+    394                         (ptr1[2]==0x02)
+    395                        )
+   \                     ??komunikcja_RSwin_29:
+   \   0000037E   2078               LDRB     R0,[R4, #+0]
+   \   00000380   AA28               CMP      R0,#+170
+   \   00000382   15D1               BNE      ??komunikcja_RSwin_30
+   \   00000384   6078               LDRB     R0,[R4, #+1]
+   \   00000386   AA28               CMP      R0,#+170
+   \   00000388   12D1               BNE      ??komunikcja_RSwin_30
+   \   0000038A   A078               LDRB     R0,[R4, #+2]
+   \   0000038C   0228               CMP      R0,#+2
+   \   0000038E   0FD1               BNE      ??komunikcja_RSwin_30
+    396                      {
+    397                        
+    398                        Trap.Enable=0;
+   \   00000390   1048               LDR      R0,??komunikcja_RSwin_28+0x4  ;; Trap
+   \   00000392   0021               MOVS     R1,#+0
+   \   00000394   0170               STRB     R1,[R0, #+0]
+    399                        Trap.Row=0;
+   \   00000396   4170               STRB     R1,[R0, #+1]
+    400                        Trap.Col=0;
+   \   00000398   8170               STRB     R1,[R0, #+2]
+    401                        Trap.Activ=0;
+   \   0000039A   C170               STRB     R1,[R0, #+3]
+    402                       
+    403                        //Potwierdzenie
+    404                         ptr2[0]=0xAB;
+   \   0000039C   AB20               MOVS     R0,#+171
+   \   0000039E   2870               STRB     R0,[R5, #+0]
+    405                         ptr2[1]=0xAB;
+   \   000003A0   6870               STRB     R0,[R5, #+1]
+    406                         *ptr3=2;
+   \   000003A2   0220               MOVS     R0,#+2
+   \   000003A4   3060               STR      R0,[R6, #+0]
+    407                         ptr2[2]=CheckSum(ptr2, ptr3);                                        //suma kontrolna
+   \   000003A6   3100               MOVS     R1,R6
+   \   000003A8   2800               MOVS     R0,R5
+   \   000003AA   ........           BL       CheckSum
+   \   000003AE   A870               STRB     R0,[R5, #+2]
+    408                        //koniec potwoerdzenia
+    409          
+    410                      }//koniec "Ustaw pu³apkê"
+    411                   
+    412              
+    413              
+    414                     //Odczytaj stany "Output" procedur (ptr1[3]-startowy rz¹d procedur, ptr1[4]-ilosc rzedow do odczytu
+    415                    if (
+    416                         (ptr1[0]==0xAA)&&
+    417                         (ptr1[1]==0xAA)&&
+    418                         (ptr1[2]==0x03)
+    419                        )
+   \                     ??komunikcja_RSwin_30:
+   \   000003B0   2078               LDRB     R0,[R4, #+0]
+   \   000003B2   AA28               CMP      R0,#+170
+   \   000003B4   36D1               BNE      ??komunikcja_RSwin_31
+   \   000003B6   6078               LDRB     R0,[R4, #+1]
+   \   000003B8   AA28               CMP      R0,#+170
+   \   000003BA   33D1               BNE      ??komunikcja_RSwin_31
+   \   000003BC   A078               LDRB     R0,[R4, #+2]
+   \   000003BE   0328               CMP      R0,#+3
+   \   000003C0   30D1               BNE      ??komunikcja_RSwin_31
+    420                      {
+    421          
+    422                          
+    423                  
+    424                          ptr2[0] =0xAC;
+   \   000003C2   AC20               MOVS     R0,#+172
+   \   000003C4   2870               STRB     R0,[R5, #+0]
+    425                          ptr2[1] =0x04;
+   \   000003C6   0420               MOVS     R0,#+4
+   \   000003C8   6870               STRB     R0,[R5, #+1]
+    426          
+    427                          tmp = 2;
+   \   000003CA   0227               MOVS     R7,#+2
+    428          
+    429                          for (int Row = ptr1[3] ; Row<ptr1[3]+ptr1[4] ; Row++) 
+   \   000003CC   E078               LDRB     R0,[R4, #+3]
+   \   000003CE   1CE0               B.N      ??komunikcja_RSwin_32
+   \                     ??komunikcja_RSwin_28:
+   \   000003D0   ........           DC32     gProg
+   \   000003D4   ........           DC32     Trap
+    430                          { 
+    431                            for (int Col = 0 ; Col<MaxPrcInLine ; Col++) 
+   \                     ??komunikcja_RSwin_33:
+   \   000003D8   E819               ADDS     R0,R5,R7
+   \   000003DA   0099               LDR      R1,[SP, #+0]
+   \   000003DC   F022               MOVS     R2,#+240
+   \   000003DE   5143               MULS     R1,R2,R1
+   \   000003E0   B44A               LDR      R2,??komunikcja_RSwin_34  ;; gProg
+   \   000003E2   5118               ADDS     R1,R2,R1
+   \   000003E4   2A31               ADDS     R1,R1,#+42
+   \   000003E6   0522               MOVS     R2,#+5
+   \   000003E8   1437               ADDS     R7,R7,#+20
+    432                            { 
+    433                              ptr2[tmp++] =gProg.Line[Row].Proc[Col].Out>>8; 
+   \                     ??komunikcja_RSwin_35:
+   \   000003EA   0B88               LDRH     R3,[R1, #+0]
+   \   000003EC   1B12               ASRS     R3,R3,#+8
+   \   000003EE   0370               STRB     R3,[R0, #+0]
+    434                              ptr2[tmp++] =gProg.Line[Row].Proc[Col].Out & 0xFF; 
+   \   000003F0   0B88               LDRH     R3,[R1, #+0]
+   \   000003F2   4370               STRB     R3,[R0, #+1]
+   \   000003F4   0B8B               LDRH     R3,[R1, #+24]
+   \   000003F6   1B12               ASRS     R3,R3,#+8
+   \   000003F8   8370               STRB     R3,[R0, #+2]
+   \   000003FA   0B8B               LDRH     R3,[R1, #+24]
+   \   000003FC   C370               STRB     R3,[R0, #+3]
+    435                            }  
+   \   000003FE   3031               ADDS     R1,R1,#+48
+   \   00000400   001D               ADDS     R0,R0,#+4
+   \   00000402   521E               SUBS     R2,R2,#+1
+   \   00000404   F1D1               BNE      ??komunikcja_RSwin_35
+    436                          }
+   \   00000406   0098               LDR      R0,[SP, #+0]
+   \   00000408   401C               ADDS     R0,R0,#+1
+   \                     ??komunikcja_RSwin_32:
+   \   0000040A   0090               STR      R0,[SP, #+0]
+   \   0000040C   0098               LDR      R0,[SP, #+0]
+   \   0000040E   E178               LDRB     R1,[R4, #+3]
+   \   00000410   2279               LDRB     R2,[R4, #+4]
+   \   00000412   8918               ADDS     R1,R1,R2
+   \   00000414   8842               CMP      R0,R1
+   \   00000416   DFDB               BLT      ??komunikcja_RSwin_33
+    437                      
+    438          
+    439                          *ptr3=tmp;
+   \   00000418   3760               STR      R7,[R6, #+0]
+    440                          ptr2[tmp]=CheckSum(ptr2, ptr3);
+   \   0000041A   3100               MOVS     R1,R6
+   \   0000041C   2800               MOVS     R0,R5
+   \   0000041E   ........           BL       CheckSum
+   \   00000422   E855               STRB     R0,[R5, R7]
+    441          
+    442                        
+    443                        
+    444                      }//koniec "Ustaw pu³apkê"
+    445                    
+    446              
+    447              
+    448              
+    449                  //Komunikacja startowa  
+    450                    //pytanie 0 - pytanie o prêdkoœæ pêtli programu
+    451                    if (
+    452                         (ptr1[0]==0xAC)&&
+    453                         (ptr1[1]==0x03)&&
+    454                         (ptr1[2]==0x14)&&
+    455                         (ptr1[3]==0xFF)&&
+    456                         (ptr1[4]==0x02)&&
+    457                         (ptr1[5]==0x3C)
+    458                        )
+   \                     ??komunikcja_RSwin_31:
+   \   00000424   2078               LDRB     R0,[R4, #+0]
+   \   00000426   AC28               CMP      R0,#+172
+   \   00000428   20D1               BNE      ??komunikcja_RSwin_36
+   \   0000042A   6078               LDRB     R0,[R4, #+1]
+   \   0000042C   0328               CMP      R0,#+3
+   \   0000042E   1DD1               BNE      ??komunikcja_RSwin_36
+   \   00000430   A078               LDRB     R0,[R4, #+2]
+   \   00000432   1428               CMP      R0,#+20
+   \   00000434   1AD1               BNE      ??komunikcja_RSwin_36
+   \   00000436   E078               LDRB     R0,[R4, #+3]
+   \   00000438   FF28               CMP      R0,#+255
+   \   0000043A   17D1               BNE      ??komunikcja_RSwin_36
+   \   0000043C   2079               LDRB     R0,[R4, #+4]
+   \   0000043E   0228               CMP      R0,#+2
+   \   00000440   14D1               BNE      ??komunikcja_RSwin_36
+   \   00000442   6079               LDRB     R0,[R4, #+5]
+   \   00000444   3C28               CMP      R0,#+60
+   \   00000446   11D1               BNE      ??komunikcja_RSwin_36
+    459                      {
+    460                        //odpowiedŸ
+    461                        ptr2[0]=0xAC;
+   \   00000448   AC20               MOVS     R0,#+172
+   \   0000044A   2870               STRB     R0,[R5, #+0]
+    462                        ptr2[1]=0x04;
+   \   0000044C   0427               MOVS     R7,#+4
+   \   0000044E   6F70               STRB     R7,[R5, #+1]
+    463                        ptr2[2]=g_czas_petli / 10;
+   \   00000450   9948               LDR      R0,??komunikcja_RSwin_34+0x4  ;; g_czas_petli
+   \   00000452   0078               LDRB     R0,[R0, #+0]
+   \   00000454   0A21               MOVS     R1,#+10
+   \   00000456   ........           BL       __aeabi_idivmod
+   \   0000045A   A870               STRB     R0,[R5, #+2]
+    464                        ptr2[3]=0x00;
+   \   0000045C   0020               MOVS     R0,#+0
+   \   0000045E   E870               STRB     R0,[R5, #+3]
+    465                        *ptr3=4;
+   \   00000460   3760               STR      R7,[R6, #+0]
+    466                        ptr2[4]=CheckSum(ptr2, ptr3);
+   \   00000462   3100               MOVS     R1,R6
+   \   00000464   2800               MOVS     R0,R5
+   \   00000466   ........           BL       CheckSum
+   \   0000046A   2871               STRB     R0,[R5, #+4]
+    467                      }//koniec pytania 0
+    468                   
+    469            
+    470                   //pytanie 1 
+    471                   if (
+    472                         (ptr1[0]==0xAD)&&
+    473                         (ptr1[1]==0x03)&&
+    474                         (ptr1[2]==0x00)&&
+    475                         (ptr1[3]==0xA0)&&
+    476                         (ptr1[4]==0x0D)&&
+    477                         (ptr1[5]==0x00)&&
+    478                         (ptr1[6]==0x01)&&
+    479                         (ptr1[7]==0xA2)
+    480                      
+    481                        )
+   \                     ??komunikcja_RSwin_36:
+   \   0000046C   2078               LDRB     R0,[R4, #+0]
+   \   0000046E   AD28               CMP      R0,#+173
+   \   00000470   21D1               BNE      ??komunikcja_RSwin_37
+   \   00000472   6078               LDRB     R0,[R4, #+1]
+   \   00000474   0328               CMP      R0,#+3
+   \   00000476   1ED1               BNE      ??komunikcja_RSwin_37
+   \   00000478   A078               LDRB     R0,[R4, #+2]
+   \   0000047A   0028               CMP      R0,#+0
+   \   0000047C   1BD1               BNE      ??komunikcja_RSwin_37
+   \   0000047E   E078               LDRB     R0,[R4, #+3]
+   \   00000480   A028               CMP      R0,#+160
+   \   00000482   18D1               BNE      ??komunikcja_RSwin_37
+   \   00000484   2079               LDRB     R0,[R4, #+4]
+   \   00000486   0D28               CMP      R0,#+13
+   \   00000488   15D1               BNE      ??komunikcja_RSwin_37
+   \   0000048A   6079               LDRB     R0,[R4, #+5]
+   \   0000048C   0028               CMP      R0,#+0
+   \   0000048E   12D1               BNE      ??komunikcja_RSwin_37
+   \   00000490   A079               LDRB     R0,[R4, #+6]
+   \   00000492   0128               CMP      R0,#+1
+   \   00000494   0FD1               BNE      ??komunikcja_RSwin_37
+   \   00000496   E079               LDRB     R0,[R4, #+7]
+   \   00000498   A228               CMP      R0,#+162
+   \   0000049A   0CD1               BNE      ??komunikcja_RSwin_37
+    482                    {
+    483                        //odpowiedŸ
+    484                        ptr2[0]=0xAC;
+   \   0000049C   AC20               MOVS     R0,#+172
+   \   0000049E   2870               STRB     R0,[R5, #+0]
+    485                        ptr2[1]=0x04;
+   \   000004A0   0420               MOVS     R0,#+4
+   \   000004A2   6870               STRB     R0,[R5, #+1]
+    486                        ptr2[2]=0xFF;
+   \   000004A4   FF20               MOVS     R0,#+255
+   \   000004A6   A870               STRB     R0,[R5, #+2]
+    487                        
+    488                        *ptr3=3;
+   \   000004A8   0320               MOVS     R0,#+3
+   \   000004AA   3060               STR      R0,[R6, #+0]
+    489                        ptr2[3]=CheckSum(ptr2, ptr3);
+   \   000004AC   3100               MOVS     R1,R6
+   \   000004AE   2800               MOVS     R0,R5
+   \   000004B0   ........           BL       CheckSum
+   \   000004B4   E870               STRB     R0,[R5, #+3]
+    490                      
+    491                    }//koniec pytania 1
+    492                   
+    493                   
+    494                   //pytanie 2  (pytanie o sterownik)
+    495                   if (
+    496                         (ptr1[0]==0xAC)&&
+    497                         (ptr1[1]==0x03)&&
+    498                         (ptr1[2]==0x80)&&
+    499                         (ptr1[3]==0xFF)&&
+    500                         (ptr1[4]==0x10)&&
+    501                         (ptr1[5]==0xC2)
+    502                        )
+   \                     ??komunikcja_RSwin_37:
+   \   000004B6   2078               LDRB     R0,[R4, #+0]
+   \   000004B8   AC28               CMP      R0,#+172
+   \   000004BA   2CD1               BNE      ??komunikcja_RSwin_38
+   \   000004BC   6078               LDRB     R0,[R4, #+1]
+   \   000004BE   0328               CMP      R0,#+3
+   \   000004C0   29D1               BNE      ??komunikcja_RSwin_38
+   \   000004C2   A078               LDRB     R0,[R4, #+2]
+   \   000004C4   8028               CMP      R0,#+128
+   \   000004C6   26D1               BNE      ??komunikcja_RSwin_38
+   \   000004C8   E078               LDRB     R0,[R4, #+3]
+   \   000004CA   FF28               CMP      R0,#+255
+   \   000004CC   23D1               BNE      ??komunikcja_RSwin_38
+   \   000004CE   2079               LDRB     R0,[R4, #+4]
+   \   000004D0   1028               CMP      R0,#+16
+   \   000004D2   20D1               BNE      ??komunikcja_RSwin_38
+   \   000004D4   6079               LDRB     R0,[R4, #+5]
+   \   000004D6   C228               CMP      R0,#+194
+   \   000004D8   1DD1               BNE      ??komunikcja_RSwin_38
+    503                    {
+    504                        //odpowiedŸ
+    505                        ptr2[0]=0xAC;
+   \   000004DA   AC20               MOVS     R0,#+172
+   \   000004DC   2870               STRB     R0,[R5, #+0]
+    506                        ptr2[1]=0x04;
+   \   000004DE   0420               MOVS     R0,#+4
+   \   000004E0   6870               STRB     R0,[R5, #+1]
+    507                        
+    508                        for(int k=2; k<=11; k++)
+   \   000004E2   2800               MOVS     R0,R5
+   \   000004E4   801C               ADDS     R0,R0,#+2
+   \   000004E6   7549               LDR      R1,??komunikcja_RSwin_34+0x8  ;; identyfikacja + 2
+   \   000004E8   0222               MOVS     R2,#+2
+    509                        {
+    510                          ptr2[k]=identyfikacja[k-2];
+   \                     ??komunikcja_RSwin_39:
+   \   000004EA   8B1E               SUBS     R3,R1,#+2
+   \   000004EC   1F78               LDRB     R7,[R3, #+0]
+   \   000004EE   0770               STRB     R7,[R0, #+0]
+   \   000004F0   5B78               LDRB     R3,[R3, #+1]
+   \   000004F2   4370               STRB     R3,[R0, #+1]
+   \   000004F4   0B78               LDRB     R3,[R1, #+0]
+   \   000004F6   8370               STRB     R3,[R0, #+2]
+   \   000004F8   4B78               LDRB     R3,[R1, #+1]
+   \   000004FA   C370               STRB     R3,[R0, #+3]
+   \   000004FC   8B78               LDRB     R3,[R1, #+2]
+   \   000004FE   0371               STRB     R3,[R0, #+4]
+    511                        }
+   \   00000500   491D               ADDS     R1,R1,#+5
+   \   00000502   401D               ADDS     R0,R0,#+5
+   \   00000504   521E               SUBS     R2,R2,#+1
+   \   00000506   F0D1               BNE      ??komunikcja_RSwin_39
+    512                        
+    513                        *ptr3=18; 
+   \   00000508   1220               MOVS     R0,#+18
+   \   0000050A   3060               STR      R0,[R6, #+0]
+    514                        ptr2[18]=CheckSum(ptr2, ptr3);
+   \   0000050C   3100               MOVS     R1,R6
+   \   0000050E   2800               MOVS     R0,R5
+   \   00000510   ........           BL       CheckSum
+   \   00000514   A874               STRB     R0,[R5, #+18]
+    515                    }
+    516                   
+    517                   
+    518                   //pytanie 3 // 1-jest program, 2 - brak programu
+    519                   if (
+    520                         (ptr1[0]==0xAD)&&
+    521                         (ptr1[1]==0x03)&&
+    522                         (ptr1[2]==0x00)&&
+    523                         (ptr1[3]==0x60)&&
+    524                         (ptr1[4]==0x0D)&&
+    525                         (ptr1[5]==0x00)&&
+    526                         (ptr1[6]==0x01)&&
+    527                         (ptr1[7]==0xE2)
+    528                        )
+   \                     ??komunikcja_RSwin_38:
+   \   00000516   2078               LDRB     R0,[R4, #+0]
+   \   00000518   AD28               CMP      R0,#+173
+   \   0000051A   21D1               BNE      ??komunikcja_RSwin_40
+   \   0000051C   6078               LDRB     R0,[R4, #+1]
+   \   0000051E   0328               CMP      R0,#+3
+   \   00000520   1ED1               BNE      ??komunikcja_RSwin_40
+   \   00000522   A078               LDRB     R0,[R4, #+2]
+   \   00000524   0028               CMP      R0,#+0
+   \   00000526   1BD1               BNE      ??komunikcja_RSwin_40
+   \   00000528   E078               LDRB     R0,[R4, #+3]
+   \   0000052A   6028               CMP      R0,#+96
+   \   0000052C   18D1               BNE      ??komunikcja_RSwin_40
+   \   0000052E   2079               LDRB     R0,[R4, #+4]
+   \   00000530   0D28               CMP      R0,#+13
+   \   00000532   15D1               BNE      ??komunikcja_RSwin_40
+   \   00000534   6079               LDRB     R0,[R4, #+5]
+   \   00000536   0028               CMP      R0,#+0
+   \   00000538   12D1               BNE      ??komunikcja_RSwin_40
+   \   0000053A   A079               LDRB     R0,[R4, #+6]
+   \   0000053C   0128               CMP      R0,#+1
+   \   0000053E   0FD1               BNE      ??komunikcja_RSwin_40
+   \   00000540   E079               LDRB     R0,[R4, #+7]
+   \   00000542   E228               CMP      R0,#+226
+   \   00000544   0CD1               BNE      ??komunikcja_RSwin_40
+    529                    {
+    530                        //odpowiedŸ
+    531                        ptr2[0]=0xAC;
+   \   00000546   AC20               MOVS     R0,#+172
+   \   00000548   2870               STRB     R0,[R5, #+0]
+    532                        ptr2[1]=0x04;
+   \   0000054A   0420               MOVS     R0,#+4
+   \   0000054C   6870               STRB     R0,[R5, #+1]
+    533                        ptr2[2]=0x01;
+   \   0000054E   0120               MOVS     R0,#+1
+   \   00000550   A870               STRB     R0,[R5, #+2]
+    534                        //ptr2[3]=0x4F;
+    535                       
+    536                        *ptr3=3;
+   \   00000552   0320               MOVS     R0,#+3
+   \   00000554   3060               STR      R0,[R6, #+0]
+    537                        ptr2[3]=CheckSum(ptr2, ptr3);
+   \   00000556   3100               MOVS     R1,R6
+   \   00000558   2800               MOVS     R0,R5
+   \   0000055A   ........           BL       CheckSum
+   \   0000055E   E870               STRB     R0,[R5, #+3]
+    538                    }
+    539                   
+    540           
+    541                   //pytanie 4 - pytanie o nazwe aktualnie dzia³j¹cego programu u¿ytkowego
+    542                   if (
+    543                         (ptr1[0]==0xAD)&&
+    544                         (ptr1[1]==0x03)&&
+    545                         (ptr1[2]==0x00)&&
+    546                         (ptr1[3]==0x90)&&
+    547                         (ptr1[4]==0x40)&&
+    548                         (ptr1[5]==0x00)&&
+    549                         (ptr1[6]==0x20)&&
+    550                         (ptr1[7]==0x60)
+    551                        )
+   \                     ??komunikcja_RSwin_40:
+   \   00000560   2078               LDRB     R0,[R4, #+0]
+   \   00000562   AD28               CMP      R0,#+173
+   \   00000564   2DD1               BNE      ??komunikcja_RSwin_41
+   \   00000566   6078               LDRB     R0,[R4, #+1]
+   \   00000568   0328               CMP      R0,#+3
+   \   0000056A   2AD1               BNE      ??komunikcja_RSwin_41
+   \   0000056C   A078               LDRB     R0,[R4, #+2]
+   \   0000056E   0028               CMP      R0,#+0
+   \   00000570   27D1               BNE      ??komunikcja_RSwin_41
+   \   00000572   E078               LDRB     R0,[R4, #+3]
+   \   00000574   9028               CMP      R0,#+144
+   \   00000576   24D1               BNE      ??komunikcja_RSwin_41
+   \   00000578   2079               LDRB     R0,[R4, #+4]
+   \   0000057A   4028               CMP      R0,#+64
+   \   0000057C   21D1               BNE      ??komunikcja_RSwin_41
+   \   0000057E   6079               LDRB     R0,[R4, #+5]
+   \   00000580   0028               CMP      R0,#+0
+   \   00000582   1ED1               BNE      ??komunikcja_RSwin_41
+   \   00000584   A079               LDRB     R0,[R4, #+6]
+   \   00000586   2028               CMP      R0,#+32
+   \   00000588   1BD1               BNE      ??komunikcja_RSwin_41
+   \   0000058A   E079               LDRB     R0,[R4, #+7]
+   \   0000058C   6028               CMP      R0,#+96
+   \   0000058E   18D1               BNE      ??komunikcja_RSwin_41
+    552                    {
+    553                        //odpowiedŸ
+    554                        ptr2[0]=0xAC;
+   \   00000590   AC20               MOVS     R0,#+172
+   \   00000592   2870               STRB     R0,[R5, #+0]
+    555                        ptr2[1]=0x04;
+   \   00000594   0420               MOVS     R0,#+4
+   \   00000596   6870               STRB     R0,[R5, #+1]
+    556                        
+    557                        for (int k=2; k<=32; k++)
+   \   00000598   0220               MOVS     R0,#+2
+   \   0000059A   2900               MOVS     R1,R5
+   \   0000059C   891C               ADDS     R1,R1,#+2
+    558                        {
+    559                         ptr2[k]=pProg[0x40 - 2 +k]; 
+   \                     ??komunikcja_RSwin_42:
+   \   0000059E   484A               LDR      R2,??komunikcja_RSwin_34+0xC  ;; pProg
+   \   000005A0   1268               LDR      R2,[R2, #+0]
+   \   000005A2   1218               ADDS     R2,R2,R0
+   \   000005A4   3E32               ADDS     R2,R2,#+62
+   \   000005A6   1278               LDRB     R2,[R2, #+0]
+   \   000005A8   0A70               STRB     R2,[R1, #+0]
+    560                        }
+   \   000005AA   401C               ADDS     R0,R0,#+1
+   \   000005AC   491C               ADDS     R1,R1,#+1
+   \   000005AE   2128               CMP      R0,#+33
+   \   000005B0   F5DB               BLT      ??komunikcja_RSwin_42
+    561          
+    562                        *ptr3=33;
+   \   000005B2   2120               MOVS     R0,#+33
+   \   000005B4   3060               STR      R0,[R6, #+0]
+    563                        ptr2[33]=CheckSum(ptr2, ptr3);
+   \   000005B6   3100               MOVS     R1,R6
+   \   000005B8   2800               MOVS     R0,R5
+   \   000005BA   ........           BL       CheckSum
+   \   000005BE   2121               MOVS     R1,#+33
+   \   000005C0   6854               STRB     R0,[R5, R1]
+    564                        //Suma=true;
+    565                        
+    566                    }
+    567              
+    568              
+    569              
+    570                    if (
+    571                         (ptr1[0]==0xAC)&&
+    572                         (ptr1[1]==0xAC)&&
+    573                         (ptr1[2]==0x01)
+    574                        )
+   \                     ??komunikcja_RSwin_41:
+   \   000005C2   2078               LDRB     R0,[R4, #+0]
+   \   000005C4   AC28               CMP      R0,#+172
+   \   000005C6   12D1               BNE      ??komunikcja_RSwin_43
+   \   000005C8   6078               LDRB     R0,[R4, #+1]
+   \   000005CA   AC28               CMP      R0,#+172
+   \   000005CC   0FD1               BNE      ??komunikcja_RSwin_43
+   \   000005CE   A078               LDRB     R0,[R4, #+2]
+   \   000005D0   0128               CMP      R0,#+1
+   \   000005D2   0CD1               BNE      ??komunikcja_RSwin_43
+    575                      {
+    576          
+    577                         WiFiDebug=1;
+   \   000005D4   3B48               LDR      R0,??komunikcja_RSwin_34+0x10  ;; WiFiDebug
+   \   000005D6   0121               MOVS     R1,#+1
+   \   000005D8   0170               STRB     R1,[R0, #+0]
+    578                        
+    579                        //Potwierdzenie
+    580                         ptr2[0]=0xAC;
+   \   000005DA   AC20               MOVS     R0,#+172
+   \   000005DC   2870               STRB     R0,[R5, #+0]
+    581                         ptr2[1]=0xAC;
+   \   000005DE   6870               STRB     R0,[R5, #+1]
+    582                         *ptr3=2;
+   \   000005E0   0220               MOVS     R0,#+2
+   \   000005E2   3060               STR      R0,[R6, #+0]
+    583                         ptr2[2]=CheckSum(ptr2, ptr3);                                        //suma kontrolna
+   \   000005E4   3100               MOVS     R1,R6
+   \   000005E6   2800               MOVS     R0,R5
+   \   000005E8   ........           BL       CheckSum
+   \   000005EC   A870               STRB     R0,[R5, #+2]
+    584                        //koniec potwoerdzenia
+    585          
+    586                      }//koniec
+    587              
+    588              
+    589              
+    590                     if (
+    591                         (ptr1[0]==0xAC)&&
+    592                         (ptr1[1]==0xAC)&&
+    593                         (ptr1[2]==0x02)
+    594                        )
+   \                     ??komunikcja_RSwin_43:
+   \   000005EE   2078               LDRB     R0,[R4, #+0]
+   \   000005F0   AC28               CMP      R0,#+172
+   \   000005F2   12D1               BNE      ??komunikcja_RSwin_44
+   \   000005F4   6078               LDRB     R0,[R4, #+1]
+   \   000005F6   AC28               CMP      R0,#+172
+   \   000005F8   0FD1               BNE      ??komunikcja_RSwin_44
+   \   000005FA   A078               LDRB     R0,[R4, #+2]
+   \   000005FC   0228               CMP      R0,#+2
+   \   000005FE   0CD1               BNE      ??komunikcja_RSwin_44
+    595                      {
+    596          
+    597                         WiFiDebug=0;
+   \   00000600   3048               LDR      R0,??komunikcja_RSwin_34+0x10  ;; WiFiDebug
+   \   00000602   0021               MOVS     R1,#+0
+   \   00000604   0170               STRB     R1,[R0, #+0]
+    598                        
+    599                        //Potwierdzenie
+    600                         ptr2[0]=0xAC;
+   \   00000606   AC20               MOVS     R0,#+172
+   \   00000608   2870               STRB     R0,[R5, #+0]
+    601                         ptr2[1]=0xAC;
+   \   0000060A   6870               STRB     R0,[R5, #+1]
+    602                         *ptr3=2;
+   \   0000060C   0220               MOVS     R0,#+2
+   \   0000060E   3060               STR      R0,[R6, #+0]
+    603                         ptr2[2]=CheckSum(ptr2, ptr3);                                        //suma kontrolna
+   \   00000610   3100               MOVS     R1,R6
+   \   00000612   2800               MOVS     R0,R5
+   \   00000614   ........           BL       CheckSum
+   \   00000618   A870               STRB     R0,[R5, #+2]
+    604                        //koniec potwoerdzenia
+    605          
+    606                      }//koniec
+    607          
+    608          
+    609              
+    610               /*    
+    611                   //pytanie 5 
+    612                   if (
+    613                         (ptr1[0]==0xAD)&&
+    614                         (ptr1[1]==0x03)&&
+    615                         (ptr1[2]==0x00)&&
+    616                         (ptr1[3]==0x10)&&
+    617                         (ptr1[4]==0x40)&&
+    618                         (ptr1[5]==0x00)&&
+    619                         (ptr1[6]==0x20)&&
+    620                         (ptr1[7]==0xE0)
+    621                        )
+    622                    {
+    623                       //odpowiedŸ
+    624                        ptr2[0]=0xAC;
+    625                        ptr2[1]=0x04;
+    626                        ptr2[2]=0x73;
+    627                        ptr2[3]=0x41;
+    628                        ptr2[4]=0x73;
+    629                        ptr2[5]=0x42;
+    630                        ptr2[6]=0x45;
+    631                        ptr2[7]=0xD6;
+    632                        ptr2[8]=0x84;
+    633                        ptr2[9]=0x75;
+    634                        ptr2[10]=0xA5;
+    635                        ptr2[11]=0xE8;
+    636                        ptr2[12]=0x47;
+    637                        ptr2[13]=0x00;
+    638                        ptr2[14]=0xA0;
+    639                        ptr2[15]=0x27;
+    640                        ptr2[16]=0x21;
+    641                        ptr2[17]=0xDE;
+    642                        ptr2[18]=0x44;
+    643                        ptr2[19]=0x5D;
+    644          
+    645                        *ptr3=20;   
+    646                        ptr2[20]=CheckSum(ptr2, ptr3);
+    647                        
+    648               
+    649                    }
+    650                   
+    651                  */
+    652              
+    653                   //rozkaz uruchomienia nowo wgranego programu
+    654                   if (
+    655                         (ptr1[0]==0xAC)&&
+    656                         (ptr1[1]==0x01)&&
+    657                         (ptr1[2]==0x53)
+    658                        )
+   \                     ??komunikcja_RSwin_44:
+   \   0000061A   2078               LDRB     R0,[R4, #+0]
+   \   0000061C   AC28               CMP      R0,#+172
+   \   0000061E   1BD1               BNE      ??komunikcja_RSwin_45
+   \   00000620   6078               LDRB     R0,[R4, #+1]
+   \   00000622   0128               CMP      R0,#+1
+   \   00000624   18D1               BNE      ??komunikcja_RSwin_45
+   \   00000626   A078               LDRB     R0,[R4, #+2]
+   \   00000628   5328               CMP      R0,#+83
+   \   0000062A   15D1               BNE      ??komunikcja_RSwin_45
+    659                    {
+    660                        //zatrzymaj program
+    661                        g_Stop_Program=1;
+   \   0000062C   2648               LDR      R0,??komunikcja_RSwin_34+0x14  ;; g_Stop_Program
+   \   0000062E   0121               MOVS     R1,#+1
+   \   00000630   0170               STRB     R1,[R0, #+0]
+    662                        //ustaw restart programu
+    663                        g_Restart_Program=1;
+   \   00000632   264A               LDR      R2,??komunikcja_RSwin_34+0x18  ;; g_Restart_Program
+   \   00000634   1170               STRB     R1,[R2, #+0]
+    664                        //cykl startowy
+    665                        //start_cykl = 0;
+    666                      
+    667                        //przepisz program z flash do ram
+    668                        char *memory_read_prog;
+    669                        memory_read_prog=(char*)(AT91C_IFLASH_MEM->FlashProgram+FlashProgramReserveOfset);
+    670                        for (int k = 0 ; k <= UseProgramSize ; k++) 
+   \   00000636   0021               MOVS     R1,#+0
+   \   00000638   254A               LDR      R2,??komunikcja_RSwin_34+0x1C  ;; FlashProgramReserveOfset
+   \   0000063A   1268               LDR      R2,[R2, #+0]
+   \   0000063C   254B               LDR      R3,??komunikcja_RSwin_34+0x20  ;; 0x130100
+   \   0000063E   9A18               ADDS     R2,R3,R2
+    671                        { 
+    672                            pProg[k]=memory_read_prog[k]; 
+   \                     ??komunikcja_RSwin_46:
+   \   00000640   1F4B               LDR      R3,??komunikcja_RSwin_34+0xC  ;; pProg
+   \   00000642   1B68               LDR      R3,[R3, #+0]
+   \   00000644   1778               LDRB     R7,[R2, #+0]
+   \   00000646   5F54               STRB     R7,[R3, R1]
+    673                        }
+   \   00000648   491C               ADDS     R1,R1,#+1
+   \   0000064A   521C               ADDS     R2,R2,#+1
+   \   0000064C   224B               LDR      R3,??komunikcja_RSwin_34+0x24  ;; 0xd6d9
+   \   0000064E   9942               CMP      R1,R3
+   \   00000650   F6DB               BLT      ??komunikcja_RSwin_46
+    674                        //koniec
+    675          
+    676                        *ptr3=0;
+   \   00000652   0021               MOVS     R1,#+0
+   \   00000654   3160               STR      R1,[R6, #+0]
+    677                       
+    678                      
+    679                       
+    680                       //wznów wykonywanie programu
+    681                        g_Stop_Program=0; 
+   \   00000656   0170               STRB     R1,[R0, #+0]
+    682                    }    
+    683              
+    684              
+    685                   
+    686                   //pytanie 6 
+    687                   if (
+    688                         (ptr1[0]==0xAD)&&
+    689                         (ptr1[1]==0x03)&&
+    690                         (ptr1[2]==0x00)&&
+    691                         (ptr1[3]==0x10)&&
+    692                         (ptr1[4]==0xC3)&&
+    693                         (ptr1[5]==0x00)&&
+    694                         (ptr1[6]==0x04)&&
+    695                         (ptr1[7]==0x00)
+    696                        )
+   \                     ??komunikcja_RSwin_45:
+   \   00000658   2078               LDRB     R0,[R4, #+0]
+   \   0000065A   AD28               CMP      R0,#+173
+   \   0000065C   27D1               BNE      ??komunikcja_RSwin_47
+   \   0000065E   6078               LDRB     R0,[R4, #+1]
+   \   00000660   0328               CMP      R0,#+3
+   \   00000662   24D1               BNE      ??komunikcja_RSwin_47
+   \   00000664   A078               LDRB     R0,[R4, #+2]
+   \   00000666   0028               CMP      R0,#+0
+   \   00000668   21D1               BNE      ??komunikcja_RSwin_47
+   \   0000066A   E078               LDRB     R0,[R4, #+3]
+   \   0000066C   1028               CMP      R0,#+16
+   \   0000066E   1ED1               BNE      ??komunikcja_RSwin_47
+   \   00000670   2079               LDRB     R0,[R4, #+4]
+   \   00000672   C328               CMP      R0,#+195
+   \   00000674   1BD1               BNE      ??komunikcja_RSwin_47
+   \   00000676   6079               LDRB     R0,[R4, #+5]
+   \   00000678   0028               CMP      R0,#+0
+   \   0000067A   18D1               BNE      ??komunikcja_RSwin_47
+   \   0000067C   A079               LDRB     R0,[R4, #+6]
+   \   0000067E   0428               CMP      R0,#+4
+   \   00000680   15D1               BNE      ??komunikcja_RSwin_47
+   \   00000682   E079               LDRB     R0,[R4, #+7]
+   \   00000684   0028               CMP      R0,#+0
+   \   00000686   12D1               BNE      ??komunikcja_RSwin_47
+    697                    {
+    698                        //odpowiedŸ
+    699                        ptr2[0]=0xAC;
+   \   00000688   AC20               MOVS     R0,#+172
+   \   0000068A   2870               STRB     R0,[R5, #+0]
+    700                        ptr2[1]=0x04;
+   \   0000068C   0420               MOVS     R0,#+4
+   \   0000068E   6870               STRB     R0,[R5, #+1]
+    701                        ptr2[2]=0x70;
+   \   00000690   7020               MOVS     R0,#+112
+   \   00000692   A870               STRB     R0,[R5, #+2]
+    702                        ptr2[3]=0xC9;
+   \   00000694   C920               MOVS     R0,#+201
+   \   00000696   E870               STRB     R0,[R5, #+3]
+    703                        ptr2[4]=0x90;
+   \   00000698   9020               MOVS     R0,#+144
+   \   0000069A   2871               STRB     R0,[R5, #+4]
+    704                        ptr2[5]=0x5D;
+   \   0000069C   5D20               MOVS     R0,#+93
+   \   0000069E   6871               STRB     R0,[R5, #+5]
+    705                        //ptr2[6]=0x2A;
+    706                        *ptr3=6;    
+   \   000006A0   0620               MOVS     R0,#+6
+   \   000006A2   3060               STR      R0,[R6, #+0]
+    707                        ptr2[6]=CheckSum(ptr2, ptr3);
+   \   000006A4   3100               MOVS     R1,R6
+   \   000006A6   2800               MOVS     R0,R5
+   \   000006A8   ........           BL       CheckSum
+   \   000006AC   A871               STRB     R0,[R5, #+6]
+    708                    }
+    709              
+    710             
+    711                   
+    712          }
+   \                     ??komunikcja_RSwin_47:
+   \   000006AE   FEBC               POP      {R1-R7}
+   \   000006B0   01BC               POP      {R0}
+   \   000006B2   0047               BX       R0               ;; return
+   \                     ??komunikcja_RSwin_34:
+   \   000006B4   ........           DC32     gProg
+   \   000006B8   ........           DC32     g_czas_petli
+   \   000006BC   ........           DC32     identyfikacja + 2
+   \   000006C0   ........           DC32     pProg
+   \   000006C4   ........           DC32     WiFiDebug
+   \   000006C8   ........           DC32     g_Stop_Program
+   \   000006CC   ........           DC32     g_Restart_Program
+   \   000006D0   ........           DC32     FlashProgramReserveOfset
+   \   000006D4   00011300           DC32     0x130100
+   \   000006D8   D9D60000           DC32     0xd6d9
+    713          
+    714          //SUMA KONTEROLNA---------------------------------------------------------------
+
+   \                                 In section .bss, align 1
+    715           byte SK=0;
+   \                     SK:
+   \   00000000                      DS8 1
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    716          char CheckSum(char *TabLiczb, unsigned int *IlLiczb)
+    717          {
+   \                     CheckSum:
+   \   00000000   70B5               PUSH     {R4-R6,LR}
+    718                  SK=0;
+   \   00000002   0023               MOVS     R3,#+0
+   \   00000004   0C4A               LDR      R2,??CheckSum_0  ;; SK
+   \   00000006   1370               STRB     R3,[R2, #+0]
+    719                  for (int k = 0; k<*IlLiczb; k++) 
+   \   00000008   0400               MOVS     R4,R0
+   \   0000000A   05E0               B        ??CheckSum_1
+    720                  {
+    721                    SK += TabLiczb[k]; 
+   \                     ??CheckSum_2:
+   \   0000000C   1578               LDRB     R5,[R2, #+0]
+   \   0000000E   2678               LDRB     R6,[R4, #+0]
+   \   00000010   AD19               ADDS     R5,R5,R6
+   \   00000012   1570               STRB     R5,[R2, #+0]
+    722                  }
+   \   00000014   5B1C               ADDS     R3,R3,#+1
+   \   00000016   641C               ADDS     R4,R4,#+1
+   \                     ??CheckSum_1:
+   \   00000018   0D68               LDR      R5,[R1, #+0]
+   \   0000001A   AB42               CMP      R3,R5
+   \   0000001C   F6D3               BCC      ??CheckSum_2
+    723                  SK = 0 - SK;
+   \   0000001E   1378               LDRB     R3,[R2, #+0]
+   \   00000020   5C42               RSBS     R4,R3,#+0
+   \   00000022   1470               STRB     R4,[R2, #+0]
+    724                  TabLiczb[*IlLiczb]=SK;
+   \   00000024   0B68               LDR      R3,[R1, #+0]
+   \   00000026   1478               LDRB     R4,[R2, #+0]
+   \   00000028   C454               STRB     R4,[R0, R3]
+    725                  *IlLiczb=*IlLiczb+1;
+   \   0000002A   0868               LDR      R0,[R1, #+0]
+   \   0000002C   401C               ADDS     R0,R0,#+1
+   \   0000002E   0860               STR      R0,[R1, #+0]
+    726                  return  SK;
+   \   00000030   1078               LDRB     R0,[R2, #+0]
+   \   00000032   70BC               POP      {R4-R6}
+   \   00000034   02BC               POP      {R1}
+   \   00000036   0847               BX       R1               ;; return
+   \                     ??CheckSum_0:
+   \   00000038   ........           DC32     SK
+    727                  
+    728          }
+    729          //------------------------------------------------------------------------------
+    730          
+    731                         
+    732          //Funkcja konwersji zmiennej analogowej z formatu MASTER na format Float oraz zapisu do RAM------- 
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    733          void MasterToAnaVar(unsigned long *adr, unsigned long *vart)           //(nr. zmiennej, wartoœæ do konwersji)
+    734          {
+    735                    
+    736            ConversFC Convers_DW_Btmp;
+    737            unsigned long zm;
+                                 ^
+Warning[Pe550]: variable "zm" was set but never used
+    738          
+    739            
+    740                    
+    741                    Convers_DW_Btmp.DWvar = *vart;   
+    742                    zm=Convers_DW_Btmp.DWvar;
+    743                    
+    744          }
+   \                     MasterToAnaVar:
+   \   00000000   7047               BX       LR               ;; return
+    745          //------------------------------------------------------------------------------
+    746          
+    747          
+    748          //Funkcja konwersji zmiennej dwustanowej z formatu MASTER na format Float------- 
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    749          void MasterToBinVar(unsigned long *adr, char *vart)           //(nr. zmiennej, wartoœæ do konwersji)
+    750          {
+    751           
+    752            /*
+    753                  //ustawienie "1"
+    754                  if ((*vart & 0xC0)==0x80)
+    755                  { 
+    756                    ram.BinVarRAM[(*adr/8)] |= (0x1 << (*adr%8));
+    757                  }
+    758                  if (((*vart & 0xC0)==0x00) || ((*vart & 0xC0)==0x40))
+    759                  { 
+    760                    ram.BinVarRAM[(*adr/8)] &= ~(0x1 << (*adr%8));
+    761                  }
+    762                  //Ustawienie forsowanie
+    763                  if ((*vart & 0x1F)==0x15) 
+    764                  { 
+    765                    ram.BinVarRAMfors[(*adr/8)] |= (0x1 << (*adr%8));
+    766                  }
+    767                   else
+    768                  { 
+    769                    ram.BinVarRAMfors[(*adr/8)] &= ~(0x1 << (*adr%8));
+    770                  }
+    771            */
+    772          }
+   \                     MasterToBinVar:
+   \   00000000   7047               BX       LR               ;; return
+    773          //------------------------------------------------------------------------------
+    774          
+    775          
+    776          //funkcja konwersji zmiennej dwustanowej z formatu Float na format MASTER ------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    777          char BinVarToMaster(unsigned long *adr)                    
+    778          {
+    779          
+    780          }
+                 ^
+Warning[Pe940]: missing return statement at end of non-void function
+          "BinVarToMaster"
+   \                     BinVarToMaster:
+   \   00000000   7047               BX       LR               ;; return
+    781          //------------------------------------------------------------------------------
+    782          
+    783          
+    784          //funkcja konwersji zmiennej analogowej z formatu Float na format MASTER -------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    785          unsigned long AnaVarToMaster(unsigned long *adr)
+    786          {
+    787            ConversFC Convers_DW_Btmp;
+    788            unsigned long zm;
+    789          
+    790                    
+    791               
+    792                    
+    793                    Convers_DW_Btmp.DWvar = 0;
+    794          
+    795                    return zm;
+                                  ^
+Warning[Pe549]: variable "zm" is used before its value is set
+
+    ConversFC Convers_DW_Btmp;
+              ^
+"D:\Zeuron\Projekty\S300\S300-program v1.3 - 04.06.2013\Framework\RS_WIN.c",787  Warning[Pe550]: 
+          variable "Convers_DW_Btmp" was set but never used
+   \                     AnaVarToMaster:
+   \   00000000   0020               MOVS     R0,#+0
+   \   00000002   7047               BX       LR               ;; return
+    796                    
+    797                    
+    798          }
+    799          //------------------------------------------------------------------------------
+    800          
+
+   Maximum stack usage in bytes:
+
+     Function         .cstack
+     --------         -------
+     AnaVarToMaster        0
+     BinVarToMaster        0
+     CheckSum             16
+     MasterToAnaVar        0
+     MasterToBinVar        0
+     komunikcja_RSwin     32
+
+
+   Section sizes:
+
+     Function/Label   Bytes
+     --------------   -----
+     ram               400
+     Convers_DW_B        4
+     komunikcja_RSwin 1756
+     SK                  1
+     CheckSum           60
+     MasterToAnaVar      2
+     MasterToBinVar      2
+     BinVarToMaster      2
+     AnaVarToMaster      4
+      Others            64
+
+ 
+   405 bytes in section .bss
+ 1 890 bytes in section Debug.txt
+ 
+ 1 826 bytes of CODE memory (+ 64 bytes shared)
+   405 bytes of DATA memory
+
+Errors: none
+Warnings: 4

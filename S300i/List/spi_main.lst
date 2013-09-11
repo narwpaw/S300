@@ -1,0 +1,1485 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           04/Jun/2013  20:18:35 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\Framework\spi_main.c                          #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\Framework\spi_main.c" -D AT91SAM7S256 -D      #
+#                    AT91SAM7SEK -D iH -D __ALARM -D __WIFI_MODULE -D S300i   #
+#                    -lC "D:\Zeuron\Projekty\S300\S300-program v1.3 -         #
+#                    04.06.2013\S300i\List\" --diag_suppress Pa082 -o         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\S300i\Obj\" --debug --endian little --cpu     #
+#                    ARM7TDMI -e --fpu None --dlib_config "C:\Program Files   #
+#                    (x86)\IAR Systems\Embedded Workbench                     #
+#                    5.0\ARM\INC\DLib_Config_Normal.h" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\lib\AT91SAM7S256\" -I                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.3 - 04.06.2013\cdc\" -I "D:\Zeuron\Projekty\S300\S300 #
+#                    -program v1.3 - 04.06.2013\core\" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\startup\" -I "D:\Zeuron\Projekty\S300\S300-pr #
+#                    ogram v1.3 - 04.06.2013\Framework\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\Framework\Configuration\" -I "C:\Program      #
+#                    Files (x86)\IAR Systems\Embedded Workbench               #
+#                    5.0\ARM\INC\" --section .text=Debug.txt --interwork      #
+#                    --cpu_mode thumb -Oh                                     #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\S300i\List\spi_main.lst                       #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\S300i\Obj\spi_main.o                          #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v1.3 - 04.06.2013\Framework\spi_main.c
+      1          //****************************************************************************//
+      2          //*--------------------------------------------------------------------------*//
+      3          //*                 IASE Microcontroller Software Support                    *//                       
+      4          //*--------------------------------------------------------------------------*//
+      5          //*--------------------------------------------------------------------------*//
+      6          //*  Nazwa pliku                  : spi_main.c                               *//
+      7          //*  Opis                         : obs³oga transmisji SPI                   *//
+      8          //*  Autor                        : Pawe³ Narwojsz                           *//
+      9          //*  Data utrzorzenia             : 14.01.2009                               *//
+     10          //*  Data ostatniej modyfikacji   : --.--.----                               *//
+     11          //*--------------------------------------------------------------------------*//
+     12          //*                                                                          *//
+     13          //*--------------------------------------------------------------------------*//
+     14          //* Rejestr zmian  (data - opis):                                            *//
+     15          //*                                                                          *//
+     16          //*                               Brak zmian                                 *//
+     17          //*                                                                          *//
+     18          //*__________________________________________________________________________*// 
+     19          //****************************************************************************//
+     20          //****************************************************************************//
+     21          
+     22          
+     23          
+     24          //Konfiguracja -----------------------------------------------------------------
+     25            
+     26          //___________________________Koniec konfiguracji________________________________
+     27          
+     28          
+     29          
+     30          // Pliki do³¹czane -------------------------------------------------------------
+     31              #include "core/common.h"
+     32              #include "core/device.h" 
+     33              #include "spi_main.h"
+     34              #include <intrinsics.h>
+     35              //#include  "Clock.h"
+     36          #include "core/trace.h"
+     37             // #include  "RF.h"
+     38          #include "core/board.h"
+     39          #include "InterruptPriority.h"
+
+                                          
+                                          ^
+"D:\Zeuron\Projekty\S300\S300-program v1.3 - 04.06.2013\Framework\Configuration\InterruptPriority.h",59  Warning[Pe001]: 
+          last line of file ends without a newline
+     40          //-----------------------Koniec plików do³¹czanych -----------------------------
+     41          
+     42          
+     43          
+     44          //Definicje --------------------------------------------------------------------
+     45              AT91PS_SPI     pSPI = AT91C_BASE_SPI;
+     46          //___________________________Koniec definicji___________________________________
+     47          
+     48          
+     49          
+     50          
+     51          
+     52          //Sta³e ------------------------------------------------------------------------
+     53          
+     54          //____________________________Koniec sta³ych ___________________________________
+     55          
+     56          
+     57          
+     58          
+     59          
+     60          //Zmienne globalne -------------------------------------------------------------
+     61          
+     62          //___________________________Koniec zmiennych globalnych________________________
+     63          
+     64          
+     65          
+     66          
+     67          
+     68          //Zmienne lokalne -------------------------------------------------------------
+
+   \                                 In section .bss, align 1
+     69              unsigned char volatile      spi_Rdrf_Flag     = 0;
+   \                     spi_Rdrf_Flag:
+   \   00000000                      DS8 1
+
+   \                                 In section .bss, align 1
+     70              unsigned char volatile	spi_Tdre_Flag     = 0;
+   \                     spi_Tdre_Flag:
+   \   00000000                      DS8 1
+
+   \                                 In section .bss, align 1
+     71              unsigned char volatile	spi_Modf_Flag     = 0;
+   \                     spi_Modf_Flag:
+   \   00000000                      DS8 1
+
+   \                                 In section .bss, align 1
+     72              unsigned char volatile	spi_Ovred_Flag    = 0;
+   \                     spi_Ovred_Flag:
+   \   00000000                      DS8 1
+
+   \                                 In section .bss, align 1
+     73              unsigned char volatile	spi_Nssr_Flag     = 0;
+   \                     spi_Nssr_Flag:
+   \   00000000                      DS8 1
+
+   \                                 In section .bss, align 4
+     74              unsigned long volatile	spi_Txempty_Flag  = 0;
+   \                     spi_Txempty_Flag:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 1
+     75              unsigned char volatile	spi_Spiens_Flag   = 0;
+   \                     spi_Spiens_Flag:
+   \   00000000                      DS8 1
+     76              unsigned long volatile 	spi_Endrx_Flag    = 0;
+     77              unsigned long volatile 	spi_Endtx_Flag    = 0;
+     78              unsigned long volatile      spi_Rxbuff_Flag   = 0;
+
+   \                                 In section .bss, align 4
+     79              unsigned long volatile      spi_Txbuff_Flag   = 0;
+   \                     spi_Txbuff_Flag:
+   \   00000000                      DS8 4
+     80              unsigned long volatile	spi_Status        = 0;
+
+   \                                 In section .bss, align 4
+     81              AT91_SPI_Buff               SPI_Buff;
+   \                     SPI_Buff:
+   \   00000000                      DS8 224
+     82              AT91_SPI_Buff               *pSPI_Buff        = &SPI_Buff;
+     83          //___________________________Koniec zmiennych lplkalnych________________________
+     84          
+     85          
+     86          
+     87          //Zmienne zewnêtrzne -------------------------------------------------------------
+     88              extern    char Clock_Set_Command[6];
+     89          
+     90          //___________________________Koniec zmiennych zewnêtrznych________________________
+     91          
+     92            
+     93          
+     94          //-----------------------------------------------------------------------------
+     95          //! Nazwa funkcji :    AT91F_SPI_Interrupt_handler
+     96          //! Funkcja realizacji przerwania SPI
+     97          //-----------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     98          void AT91F_SPI_Interrupt_handler (void)
+     99          {
+   \                     AT91F_SPI_Interrupt_handler:
+   \   00000000   31B5               PUSH     {R0,R4,R5,LR}
+    100          
+    101            	spi_Status = pSPI -> SPI_SR;
+   \   00000002   ....               LDR      R4,??DataTable30  ;; Real_Cs_RF
+   \   00000004   6068               LDR      R0,[R4, #+4]
+   \   00000006   0169               LDR      R1,[R0, #+16]
+   \   00000008   6161               STR      R1,[R4, #+20]
+    102          
+    103          
+    104          	// The Receive Counter Register has reached 0 since the last write in SPI_RCR or SPI_RNCR.
+    105          	if (spi_Status & AT91C_SPI_ENDRX)	
+   \   0000000A   1021               MOVS     R1,#+16
+   \   0000000C   6269               LDR      R2,[R4, #+20]
+   \   0000000E   0A42               TST      R2,R1
+   \   00000010   1CD0               BEQ      ??AT91F_SPI_Interrupt_handler_0
+    106          	{
+    107                           spi_Endrx_Flag  = 1;
+   \   00000012   0122               MOVS     R2,#+1
+   \   00000014   A260               STR      R2,[R4, #+8]
+    108          		pSPI -> SPI_IDR = AT91C_SPI_ENDRX; // Interrupt is disabled to avoid inopportune interrupt 
+   \   00000016   8161               STR      R1,[R0, #+24]
+    109                    
+    110                            unsigned int Save = __get_interrupt_state();   
+   \   00000018   ........           BL       __iar_get_interrupt_state
+   \   0000001C   0500               MOVS     R5,R0
+    111                            __disable_interrupt(); 
+   \   0000001E   ........           BL       __iar_disable_interrupt
+    112                              SPI_Response_Interpretation((pSPI_Buff->Buffer_TxCount));
+   \   00000022   A069               LDR      R0,[R4, #+24]
+   \   00000024   DD30               ADDS     R0,R0,#+221
+   \   00000026   0078               LDRB     R0,[R0, #+0]
+   \   00000028   ........           BL       SPI_Response_Interpretation
+    113                            __set_interrupt_state(Save);
+   \   0000002C   2800               MOVS     R0,R5
+   \   0000002E   ........           BL       __iar_set_interrupt_state
+    114                            __enable_interrupt();   
+   \   00000032   ........           BL       __iar_enable_interrupt
+    115                           
+    116                            if (SPI_Buff.WordToSendCount>0) 
+   \   00000036   ....               LDR      R0,??DataTable14  ;; SPI_Buff + 220
+   \   00000038   0078               LDRB     R0,[R0, #+0]
+   \   0000003A   0028               CMP      R0,#+0
+   \   0000003C   02D0               BEQ      ??AT91F_SPI_Interrupt_handler_1
+    117                            {
+    118                              SPI_Send_Executive();
+   \   0000003E   ........           BL       SPI_Send_Executive
+   \   00000042   03E0               B        ??AT91F_SPI_Interrupt_handler_0
+    119                            }
+    120                            else
+    121                            {
+    122                              pSPI_Buff->Buffer_TxCount=0;
+   \                     ??AT91F_SPI_Interrupt_handler_1:
+   \   00000044   A069               LDR      R0,[R4, #+24]
+   \   00000046   DD30               ADDS     R0,R0,#+221
+   \   00000048   0021               MOVS     R1,#+0
+   \   0000004A   0170               STRB     R1,[R0, #+0]
+    123                            }
+    124                             
+    125                           
+    126                          
+    127                  }
+    128                  
+    129                    
+    130                  // Both SPI_RCR and SPI_RNCR have a value of 0.
+    131          	if (spi_Status & AT91C_SPI_RXBUFF)	
+   \                     ??AT91F_SPI_Interrupt_handler_0:
+   \   0000004C   6069               LDR      R0,[R4, #+20]
+   \   0000004E   4006               LSLS     R0,R0,#+25
+   \   00000050   01D5               BPL      ??AT91F_SPI_Interrupt_handler_2
+    132          	{
+    133          		spi_Rxbuff_Flag  = 1;
+   \   00000052   0120               MOVS     R0,#+1
+   \   00000054   2061               STR      R0,[R4, #+16]
+    134          		//pSPI -> SPI_IDR = AT91C_SPI_RXBUFF; // Interrupt is disabled to avoid inopportune interrupt  
+    135                          
+    136                  }	        
+    137                         
+    138                  
+    139                  /*
+    140          
+    141                  // The Transmit Counter Register has reached 0 since the last write in SPI_TCR or SPI_TNCR.
+    142          	if (spi_Status & AT91C_SPI_ENDTX)	
+    143          	{
+    144          		spi_Endtx_Flag  = 1;
+    145          		//pSPI -> SPI_IDR = AT91C_SPI_ENDTX; // Interrupt is disabled to avoid inopportune interrupt 
+    146                  }	
+    147                  
+    148                  
+    149           
+    150                  
+    151             
+    152          	// A data has been recieved and transmitted to the RBR.
+    153          	if (spi_Status & AT91C_SPI_RDRF)	
+    154          	{ 
+    155          		spi_Rdrf_Flag = 1;
+    156          		pSPI -> SPI_IDR = AT91C_SPI_RDRF; // Interrupt is disabled to avoid inopportune interrupt 
+    157                          
+    158          
+    159          	}
+    160          
+    161          	// The last data written in the TDR has been transmitted to the serializer
+    162          	if (spi_Status & AT91C_SPI_TDRE)	
+    163          	{
+    164          		spi_Tdre_Flag  = 1;
+    165          		pSPI -> SPI_IDR = AT91C_SPI_TDRE; // Interrupt is disabled to avoid inopportune interrupt  
+    166          	}
+    167          
+    168          	// A mode fault has occured (NCS0 was tied low).
+    169          	if (spi_Status & AT91C_SPI_MODF)	
+    170          	{
+    171          		spi_Modf_Flag  = 1;
+    172          		pSPI -> SPI_IDR = AT91C_SPI_MODF; // Interrupt is disabled to avoid inopportune interrupt      
+    173          	}
+    174          
+    175          	// An overrun error has occured.
+    176          	if (spi_Status & AT91C_SPI_OVRES)	
+    177          	{
+    178          		spi_Ovred_Flag  = 1;
+    179          		pSPI -> SPI_IDR = AT91C_SPI_OVRES; // Interrupt is disabled to avoid inopportune interrupt 
+    180          	}
+    181          	
+    182          
+    183          
+    184          	// Both SPI_TCR and SPI_TNCR have a value of 0.
+    185          	if (spi_Status & AT91C_SPI_TXBUFE)	
+    186          	{
+    187          		spi_Txbuff_Flag  = 1;
+    188          		pSPI -> SPI_IDR = AT91C_SPI_TXBUFE; // Interrupt is disabled to avoid inopportune interrupt         
+    189          	}
+    190          
+    191          	// NSS has risen
+    192          	if (spi_Status & AT91C_SPI_NSSR)	
+    193          	{
+    194          		spi_Nssr_Flag  = 1;
+    195          		pSPI -> SPI_IDR = AT91C_SPI_NSSR; // Interrupt is disabled to avoid inopportune interrupt
+    196                  }
+    197          
+    198                      
+    199          	// TDR and shift registers are empty
+    200          	if (spi_Status & AT91C_SPI_TXEMPTY)	
+    201          	{
+    202          		spi_Txempty_Flag  = 1;
+    203          		pSPI -> SPI_IDR = AT91C_SPI_TXEMPTY; // Interrupt is disabled to avoid inopportune interrupt   
+    204          	}
+    205                  
+    206                  */
+    207          
+    208          }//_____________________________________________________________________________
+   \                     ??AT91F_SPI_Interrupt_handler_2:
+   \   00000056   38BC               POP      {R3-R5}
+   \   00000058   01BC               POP      {R0}
+   \   0000005A   0047               BX       R0               ;; return
+    209          
+    210          
+    211          
+    212          
+    213          
+    214          //-----------------------------------------------------------------------------
+    215          //! Nazwa funkcji :    SpiMaster_Init
+    216          //! Funkcja inicjalizacji komunikacji SPI w trybie master
+    217          //-----------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    218          void SpiMaster_Init (void)
+    219          {
+   \                     SpiMaster_Init:
+   \   00000000   F1B5               PUSH     {R0,R4-R7,LR}
+    220          	unsigned char error;
+                 	              ^
+Warning[Pe550]: variable "error" was set but never used
+    221          	AT91PS_SPI     pSPI = AT91C_BASE_SPI;
+    222          	
+    223          	error = 0;
+    224          
+    225          	AT91F_SPI_Open ();	
+   \   00000002   ........           BL       AT91F_SPI_Open
+    226          
+    227                  pSPI -> SPI_IER =  	(AT91C_SPI_RDRF + AT91C_SPI_TDRE + AT91C_SPI_MODF + AT91C_SPI_OVRES+ 
+    228          					 AT91C_SPI_NSSR + AT91C_SPI_TXEMPTY + AT91C_SPI_SPIENS +AT91C_SPI_TXBUFE);
+   \   00000006   ....               LDR      R0,??DataTable16  ;; 0xfffe0014
+   \   00000008   ....               LDR      R1,??DataTable3  ;; 0x1038f
+   \   0000000A   0160               STR      R1,[R0, #+0]
+    229          
+    230                   __enable_interrupt();
+   \   0000000C   ........           BL       __iar_enable_interrupt
+   \   00000010   ....               LDR      R1,??DataTable4  ;; 0xfffe0000
+   \   00000012   0122               MOVS     R2,#+1
+   \   00000014   0A60               STR      R2,[R1, #+0]
+    231                   
+    232                   
+    233                   
+    234                   
+    235                            //SPI CONTROL REGISTER
+    236              //=========================================================================================
+    237              //| -------- | -------- | -------- | -------- | -------- | -------- | -------- | LASTXFER |
+    238              //=========================================================================================
+    239              
+    240              //=========================================================================================
+    241              //| -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- |
+    242              //========================================================================================= 
+    243              
+    244              //=========================================================================================
+    245              //| -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- |
+    246              //=========================================================================================
+    247              
+    248              //=========================================================================================
+    249              //|  SWRST   | -------- | -------- | -------- | -------- | -------- |  SPIDIS  |   SPEN   |
+    250              //=========================================================================================
+    251              //pSPI->SPI_CR = (AT91C_SPI_SPIEN | AT91C_SPI_SWRST);	
+    252              pSPI->SPI_CR = AT91C_SPI_SPIEN;
+    253              
+    254          
+    255          
+    256              
+    257                  //SPI MODE REGISTER
+    258              //=========================================================================================
+    259              //|                                         DLYBCS                                        |
+    260              //=========================================================================================
+    261              
+    262              //=========================================================================================
+    263              //| -------- | -------- | -------- | -------- |                    PCS                    |
+    264              //========================================================================================= 
+    265              
+    266              //=========================================================================================
+    267              //| -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- |
+    268              //=========================================================================================
+    269              
+    270              //=========================================================================================
+    271              //|   LLB    | -------- | -------- |  MODFDIS | -------- |  PCSDEC  |    PS    |   MSTR   |
+    272              //=========================================================================================
+    273              //pSPI->SPI_MR = (AT91C_SPI_MSTR | AT91C_SPI_MODFDIS | AT91C_SPI_PCSDEC |AT91C_SPI_PS_VARIABLE | ((0x0)<<16));
+    274          pSPI->SPI_MR = (AT91C_SPI_MSTR | AT91C_SPI_MODFDIS  |AT91C_SPI_PS_VARIABLE | ((0x0)<<16));
+   \   00000016   2A49               LDR      R1,??SpiMaster_Init_0  ;; 0xfffe0004
+   \   00000018   1322               MOVS     R2,#+19
+   \   0000001A   0A60               STR      R2,[R1, #+0]
+    275          
+    276          
+    277          
+    278          
+    279              
+    280              //SPI CHIP SELECT REGISTER 
+    281              //=========================================================================================
+    282              //|                                         DLYBCT                                        |
+    283              //=========================================================================================
+    284              
+    285              //=========================================================================================
+    286              //|                                          DLYBS                                        |
+    287              //========================================================================================= 
+    288              
+    289              //=========================================================================================
+    290              //|                                          SCBR                                         |
+    291              //=========================================================================================
+    292              
+    293              //=========================================================================================
+    294              //|                 BITS                      |   CSAAT  | -------- |   NCPHA  |   CPOL   |
+    295              //=========================================================================================
+    296             
+    297              
+    298              char CS_BAUD = MCK / SPIBAUD_CSR0; 
+    299              AT91F_SPI_CfgCs (AT91C_BASE_SPI, 0, AT91C_SPI_CPOL |  AT91C_SPI_BITS_16 | (AT91C_SPI_SCBR & (CS_BAUD << 8)) ); /*ustawienia dla RTC  :*/
+   \   0000001C   2949               LDR      R1,??SpiMaster_Init_0+0x4  ;; 0xfffe0030
+   \   0000001E   2A4A               LDR      R2,??SpiMaster_Init_0+0x8  ;; 0x5081
+   \   00000020   0A60               STR      R2,[R1, #+0]
+    300              CS_BAUD = MCK / SPIBAUD_CSR1; 
+    301              AT91F_SPI_CfgCs (AT91C_BASE_SPI, 1, AT91C_SPI_NCPHA |  AT91C_SPI_BITS_16 | AT91C_SPI_DLYBCT |(AT91C_SPI_SCBR & (CS_BAUD << 8)) ); /*ustawienia dla RF  :*/
+   \   00000022   2A49               LDR      R1,??SpiMaster_Init_0+0xC  ;; 0xfffe0034
+   \   00000024   2A4A               LDR      R2,??SpiMaster_Init_0+0x10  ;; 0x1001882
+   \   00000026   0A60               STR      R2,[R1, #+0]
+    302              CS_BAUD = MCK / SPIBAUD_CSR2; 
+    303              AT91F_SPI_CfgCs (AT91C_BASE_SPI, 2, AT91C_SPI_NCPHA |  AT91C_SPI_BITS_16 | AT91C_SPI_DLYBCT |(AT91C_SPI_SCBR & (CS_BAUD << 8)) ); 
+   \   00000028   2A49               LDR      R1,??SpiMaster_Init_0+0x14  ;; 0xfffe0038
+   \   0000002A   2B4A               LDR      R2,??SpiMaster_Init_0+0x18  ;; 0x1001082
+   \   0000002C   0A60               STR      R2,[R1, #+0]
+    304              CS_BAUD = MCK / SPIBAUD_CSR3; 
+    305                AT91F_SPI_CfgCs (AT91C_BASE_SPI, 3, AT91C_SPI_CPOL |  AT91C_SPI_BITS_16 | (AT91C_SPI_SCBR & (CS_BAUD << 8)) );
+   \   0000002E   2B49               LDR      R1,??SpiMaster_Init_0+0x1C  ;; 0xfffe003c
+   \   00000030   2B4A               LDR      R2,??SpiMaster_Init_0+0x20  ;; 0xc81
+   \   00000032   0A60               STR      R2,[R1, #+0]
+    306                          
+    307          
+    308              
+    309          
+    310          
+    311                    // konfiguracja PDC
+    312                  AT91F_PDC_Open(AT91C_BASE_PDC_SPI);  //wyczyszczenie PDC
+   \   00000034   2B49               LDR      R1,??SpiMaster_Init_0+0x24  ;; 0xfffe0120
+   \   00000036   0222               MOVS     R2,#+2
+   \   00000038   0A60               STR      R2,[R1, #+0]
+   \   0000003A   1302               LSLS     R3,R2,#+8
+   \   0000003C   0B60               STR      R3,[R1, #+0]
+   \   0000003E   0022               MOVS     R2,#+0
+   \   00000040   ....               LDR      R4,??DataTable29  ;; 0xfffe0118
+   \   00000042   2260               STR      R2,[R4, #+0]
+   \   00000044   ....               LDR      R4,??DataTable28  ;; 0xfffe011c
+   \   00000046   2260               STR      R2,[R4, #+0]
+   \   00000048   ....               LDR      R4,??DataTable23  ;; 0xfffe0110
+   \   0000004A   2260               STR      R2,[R4, #+0]
+   \   0000004C   ....               LDR      R5,??DataTable22  ;; 0xfffe0114
+   \   0000004E   2A60               STR      R2,[R5, #+0]
+   \   00000050   ....               LDR      R6,??DataTable25  ;; 0xfffe0108
+   \   00000052   3260               STR      R2,[R6, #+0]
+   \   00000054   ....               LDR      R6,??DataTable24  ;; 0xfffe010c
+   \   00000056   3260               STR      R2,[R6, #+0]
+   \   00000058   ....               LDR      R6,??DataTable19  ;; 0xfffe0100
+   \   0000005A   3260               STR      R2,[R6, #+0]
+   \   0000005C   ....               LDR      R6,??DataTable18  ;; 0xfffe0104
+   \   0000005E   3260               STR      R2,[R6, #+0]
+   \   00000060   0127               MOVS     R7,#+1
+   \   00000062   0F60               STR      R7,[R1, #+0]
+   \   00000064   5F08               LSRS     R7,R3,#+1
+   \   00000066   0F60               STR      R7,[R1, #+0]
+    313          
+    314                  AT91F_PDC_DisableTx (AT91C_BASE_PDC_SPI); 
+   \   00000068   0B60               STR      R3,[R1, #+0]
+    315                  AT91F_PDC_DisableRx (AT91C_BASE_PDC_SPI); 
+   \   0000006A   0223               MOVS     R3,#+2
+   \   0000006C   0B60               STR      R3,[R1, #+0]
+   \   0000006E   1E4B               LDR      R3,??SpiMaster_Init_0+0x28  ;; Real_Cs_RF + 24
+   \   00000070   1B68               LDR      R3,[R3, #+0]
+   \   00000072   6833               ADDS     R3,R3,#+104
+   \   00000074   0093               STR      R3,[SP, #+0]
+   \   00000076   1C4B               LDR      R3,??SpiMaster_Init_0+0x28  ;; Real_Cs_RF + 24
+   \   00000078   1B68               LDR      R3,[R3, #+0]
+    316               
+    317          
+    318                  unsigned long xxR= AT91F_SPI_ReceiveFrame (AT91C_BASE_SPI, pSPI_Buff->Buffer_Rx1, 0,pSPI_Buff->Buffer_Rx2,0); //Ustawia bufor odbiorczy bufor dodatkowy
+   \   0000007A   3768               LDR      R7,[R6, #+0]
+   \   0000007C   002F               CMP      R7,#+0
+   \   0000007E   04D1               BNE      ??SpiMaster_Init_1
+   \   00000080   ....               LDR      R7,??DataTable19  ;; 0xfffe0100
+   \   00000082   3B60               STR      R3,[R7, #+0]
+   \   00000084   3260               STR      R2,[R6, #+0]
+   \   00000086   009B               LDR      R3,[SP, #+0]
+   \   00000088   02E0               B.N      ??SpiMaster_Init_2
+   \                     ??SpiMaster_Init_1:
+   \   0000008A   2E68               LDR      R6,[R5, #+0]
+   \   0000008C   002E               CMP      R6,#+0
+   \   0000008E   01D1               BNE      ??SpiMaster_Init_3
+   \                     ??SpiMaster_Init_2:
+   \   00000090   2360               STR      R3,[R4, #+0]
+   \   00000092   2A60               STR      R2,[R5, #+0]
+    319                
+    320           
+    321                  AT91F_PDC_EnableTx (AT91C_BASE_PDC_SPI); 
+   \                     ??SpiMaster_Init_3:
+   \   00000094   8022               MOVS     R2,#+128
+   \   00000096   5200               LSLS     R2,R2,#+1        ;; #+256
+   \   00000098   0A60               STR      R2,[R1, #+0]
+    322                  AT91F_PDC_EnableRx (AT91C_BASE_PDC_SPI); 
+   \   0000009A   0122               MOVS     R2,#+1
+   \   0000009C   0A60               STR      R2,[R1, #+0]
+    323              
+    324                  
+    325                  pSPI -> SPI_IDR = 0xFFFFFFFF;  
+   \   0000009E   1349               LDR      R1,??SpiMaster_Init_0+0x2C  ;; 0xfffe0018
+   \   000000A0   0022               MOVS     R2,#+0
+   \   000000A2   D243               MVNS     R2,R2            ;; #-1
+   \   000000A4   0A60               STR      R2,[R1, #+0]
+    326                  
+    327                  
+    328                  pSPI_Buff->BuffToSend = pSPI_Buff->Buffer_Tx1;   
+   \   000000A6   1049               LDR      R1,??SpiMaster_Init_0+0x28  ;; Real_Cs_RF + 24
+   \   000000A8   0968               LDR      R1,[R1, #+0]
+   \   000000AA   D831               ADDS     R1,R1,#+216
+   \   000000AC   0E4A               LDR      R2,??SpiMaster_Init_0+0x28  ;; Real_Cs_RF + 24
+   \   000000AE   1268               LDR      R2,[R2, #+0]
+   \   000000B0   3432               ADDS     R2,R2,#+52
+   \   000000B2   0A60               STR      R2,[R1, #+0]
+    329          
+    330           
+    331                  AT91C_BASE_SPI -> SPI_IER = AT91C_SPI_ENDRX | AT91C_SPI_RXBUFF;
+   \   000000B4   5021               MOVS     R1,#+80
+   \   000000B6   0160               STR      R1,[R0, #+0]
+    332                  
+    333          }//_____________________________________________________________________________
+   \   000000B8   F8BC               POP      {R3-R7}
+   \   000000BA   01BC               POP      {R0}
+   \   000000BC   0047               BX       R0               ;; return
+   \   000000BE   C046               Nop      
+   \                     ??SpiMaster_Init_0:
+   \   000000C0   0400FEFF           DC32     0xfffe0004
+   \   000000C4   3000FEFF           DC32     0xfffe0030
+   \   000000C8   81500000           DC32     0x5081
+   \   000000CC   3400FEFF           DC32     0xfffe0034
+   \   000000D0   82180001           DC32     0x1001882
+   \   000000D4   3800FEFF           DC32     0xfffe0038
+   \   000000D8   82100001           DC32     0x1001082
+   \   000000DC   3C00FEFF           DC32     0xfffe003c
+   \   000000E0   810C0000           DC32     0xc81
+   \   000000E4   2001FEFF           DC32     0xfffe0120
+   \   000000E8   ........           DC32     Real_Cs_RF + 24
+   \   000000EC   1800FEFF           DC32     0xfffe0018
+    334          
+    335          
+    336          
+    337          
+    338          
+    339          //-----------------------------------------------------------------------------
+    340          //!  Nazwa funkcji :    SPI_Send_Buff
+    341          //!  Funkcja dodaje zadanie wys³ania poprzez SPI bufora danych do kolejki
+    342          //-----------------------------------------------------------------------------
+    343          //! 
+    344          //-----------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    345          void SPI_SendB_Buff (char *Data_To_Send, unsigned int QuantityByte, char CS)
+    346          {
+   \                     SPI_SendB_Buff:
+   \   00000000   F1B5               PUSH     {R0,R4-R7,LR}
+    347              
+    348             // if ((QuantityByte==0) || (!CS)) return;
+    349              if ((QuantityByte==0)) return;
+   \   00000002   0029               CMP      R1,#+0
+   \   00000004   37D0               BEQ      ??SPI_SendB_Buff_0
+    350              
+    351              short int QuantityWord   = QuantityByte/2;
+   \   00000006   4B08               LSRS     R3,R1,#+1
+   \   00000008   1B04               LSLS     R3,R3,#+16
+   \   0000000A   1B14               ASRS     R3,R3,#+16
+    352              short int RegToSendCount = SPI_Buff.WordToSendCount;
+                               ^
+Warning[Pe177]: variable "RegToSendCount" was declared but never referenced
+    353              //short int QuantityREG    = QuantityWord/2;
+    354                
+    355              if (QuantityWord>SPI_BUFFER_REG_SIZE) return;
+   \   0000000C   0D2B               CMP      R3,#+13
+   \   0000000E   32DA               BGE      ??SPI_SendB_Buff_0
+    356              
+    357          
+    358              
+    359              while(QuantityWord+ (SPI_Buff.WordToSendCount)>SPI_BUFFER_REG_SIZE);
+   \                     ??SPI_SendB_Buff_1:
+   \   00000010   ....               LDR      R1,??DataTable14  ;; SPI_Buff + 220
+   \   00000012   0978               LDRB     R1,[R1, #+0]
+   \   00000014   5918               ADDS     R1,R3,R1
+   \   00000016   0D29               CMP      R1,#+13
+   \   00000018   FADA               BGE      ??SPI_SendB_Buff_1
+    360              
+    361           
+    362              for (short int i=0; i<QuantityWord; i++)
+   \   0000001A   0024               MOVS     R4,#+0
+   \   0000001C   ....               LDR      R5,??DataTable30  ;; Real_Cs_RF
+   \   0000001E   012B               CMP      R3,#+1
+   \   00000020   1DDB               BLT      ??SPI_SendB_Buff_2
+   \   00000022   D143               MVNS     R1,R2
+    363              {
+    364          
+    365                pSPI_Buff->BuffToSend[((pSPI_Buff->WordToSendCount+i)*4)+1]=Data_To_Send[i*2];
+   \                     ??SPI_SendB_Buff_3:
+   \   00000024   AA69               LDR      R2,[R5, #+24]
+   \   00000026   D832               ADDS     R2,R2,#+216
+   \   00000028   1679               LDRB     R6,[R2, #+4]
+   \   0000002A   3619               ADDS     R6,R6,R4
+   \   0000002C   B600               LSLS     R6,R6,#+2
+   \   0000002E   1268               LDR      R2,[R2, #+0]
+   \   00000030   9219               ADDS     R2,R2,R6
+   \   00000032   0678               LDRB     R6,[R0, #+0]
+   \   00000034   5670               STRB     R6,[R2, #+1]
+    366                pSPI_Buff->BuffToSend[((pSPI_Buff->WordToSendCount+i)*4)]=Data_To_Send[(i*2)+1];
+   \   00000036   AA69               LDR      R2,[R5, #+24]
+   \   00000038   D832               ADDS     R2,R2,#+216
+   \   0000003A   1679               LDRB     R6,[R2, #+4]
+   \   0000003C   3619               ADDS     R6,R6,R4
+   \   0000003E   B600               LSLS     R6,R6,#+2
+   \   00000040   1268               LDR      R2,[R2, #+0]
+   \   00000042   4778               LDRB     R7,[R0, #+1]
+   \   00000044   9755               STRB     R7,[R2, R6]
+    367                
+    368                pSPI_Buff->BuffToSend[((pSPI_Buff->WordToSendCount+i)*4)+2]=(~CS);
+   \   00000046   AA69               LDR      R2,[R5, #+24]
+   \   00000048   D832               ADDS     R2,R2,#+216
+   \   0000004A   1679               LDRB     R6,[R2, #+4]
+   \   0000004C   3619               ADDS     R6,R6,R4
+   \   0000004E   B600               LSLS     R6,R6,#+2
+   \   00000050   1268               LDR      R2,[R2, #+0]
+   \   00000052   9219               ADDS     R2,R2,R6
+   \   00000054   9170               STRB     R1,[R2, #+2]
+    369                //pSPI_Buff->WordToSendCount=pSPI_Buff->WordToSendCount+i+1;  
+    370              }
+   \   00000056   641C               ADDS     R4,R4,#+1
+   \   00000058   801C               ADDS     R0,R0,#+2
+   \   0000005A   9C42               CMP      R4,R3
+   \   0000005C   E2DB               BLT      ??SPI_SendB_Buff_3
+    371              pSPI_Buff->WordToSendCount=pSPI_Buff->WordToSendCount+QuantityWord;
+   \                     ??SPI_SendB_Buff_2:
+   \   0000005E   A869               LDR      R0,[R5, #+24]
+   \   00000060   DC30               ADDS     R0,R0,#+220
+   \   00000062   0178               LDRB     R1,[R0, #+0]
+   \   00000064   C918               ADDS     R1,R1,R3
+   \   00000066   0170               STRB     R1,[R0, #+0]
+    372              
+    373          
+    374              
+    375              if (pSPI_Buff->Buffer_TxCount==0)
+   \   00000068   A869               LDR      R0,[R5, #+24]
+   \   0000006A   DD30               ADDS     R0,R0,#+221
+   \   0000006C   0078               LDRB     R0,[R0, #+0]
+   \   0000006E   0028               CMP      R0,#+0
+   \   00000070   01D1               BNE      ??SPI_SendB_Buff_0
+    376              {
+    377              SPI_Send_Executive();
+   \   00000072   ........           BL       SPI_Send_Executive
+   \                     ??SPI_SendB_Buff_0:
+   \   00000076   F8BC               POP      {R3-R7}
+   \   00000078   01BC               POP      {R0}
+   \   0000007A   0047               BX       R0               ;; return
+    378              }
+    379          }//_____________________________________________________________________________
+    380          
+    381          
+    382          
+    383          
+    384          //-----------------------------------------------------------------------------
+    385          //!  Nazwa funkcji :    SPI_Send_Executive pSPI_Buff->Buffer_Rx
+    386          //!  Funkcja wysy³a dane z bufora oczekuj¹cego a nastepnie zamienia bufory oczekuj¹cy z realizowanym
+    387          //-----------------------------------------------------------------------------
+    388          //! 
+    389          //-----------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    390          void SPI_Send_Executive ()
+    391          {
+   \                     SPI_Send_Executive:
+   \   00000000   31B5               PUSH     {R0,R4,R5,LR}
+    392                char QuantityWord;
+    393            
+    394                AT91C_BASE_SPI -> SPI_IER = AT91C_SPI_ENDRX;
+   \   00000002   ....               LDR      R0,??DataTable16  ;; 0xfffe0014
+   \   00000004   1021               MOVS     R1,#+16
+   \   00000006   0160               STR      R1,[R0, #+0]
+    395          
+    396                  spi_Endrx_Flag=0;
+   \   00000008   ....               LDR      R2,??DataTable30  ;; Real_Cs_RF
+   \   0000000A   0020               MOVS     R0,#+0
+   \   0000000C   9060               STR      R0,[R2, #+8]
+    397                  spi_Endtx_Flag=0;  
+   \   0000000E   D060               STR      R0,[R2, #+12]
+    398                  spi_Rxbuff_Flag=0;  
+   \   00000010   1061               STR      R0,[R2, #+16]
+    399                
+    400                             
+    401                  
+    402                //ustawienie buforów nadawczych i odbiorczych naprzemiennie Buffer_Rx1->Buffer_Rx2, Buffer_Rx2->Buffer_Rx1, Buffer_Tx1->Buffer_Tx2
+    403                if (pSPI_Buff->pBuffer_Tx == pSPI_Buff->Buffer_Tx1)
+   \   00000012   9169               LDR      R1,[R2, #+24]
+   \   00000014   0B00               MOVS     R3,R1
+   \   00000016   D033               ADDS     R3,R3,#+208
+   \   00000018   5C68               LDR      R4,[R3, #+4]
+   \   0000001A   0D00               MOVS     R5,R1
+   \   0000001C   3435               ADDS     R5,R5,#+52
+   \   0000001E   AC42               CMP      R4,R5
+   \   00000020   05D1               BNE      ??SPI_Send_Executive_0
+    404                {
+    405                   pSPI_Buff->pBuffer_Tx = pSPI_Buff->Buffer_Tx2;
+   \   00000022   0C00               MOVS     R4,R1
+   \   00000024   9C34               ADDS     R4,R4,#+156
+    406                   pSPI_Buff->pBuffer_Rx = pSPI_Buff->Buffer_Rx2;
+   \   00000026   0D00               MOVS     R5,R1
+   \   00000028   6835               ADDS     R5,R5,#+104
+    407                   pSPI_Buff->BuffToSend = pSPI_Buff->Buffer_Tx1; 
+   \   0000002A   3431               ADDS     R1,R1,#+52
+   \   0000002C   03E0               B        ??SPI_Send_Executive_1
+    408                }
+    409                else 
+    410                {
+    411                   pSPI_Buff->pBuffer_Tx  = pSPI_Buff->Buffer_Tx1; 
+   \                     ??SPI_Send_Executive_0:
+   \   0000002E   0C00               MOVS     R4,R1
+   \   00000030   3434               ADDS     R4,R4,#+52
+    412                   pSPI_Buff->pBuffer_Rx  = pSPI_Buff->Buffer_Rx1;
+   \   00000032   0D00               MOVS     R5,R1
+    413                   pSPI_Buff->BuffToSend = pSPI_Buff->Buffer_Tx2; 
+   \   00000034   9C31               ADDS     R1,R1,#+156
+   \                     ??SPI_Send_Executive_1:
+   \   00000036   9960               STR      R1,[R3, #+8]
+   \   00000038   5C60               STR      R4,[R3, #+4]
+   \   0000003A   1D60               STR      R5,[R3, #+0]
+    414                }
+    415               
+    416                QuantityWord=pSPI_Buff->WordToSendCount;
+   \   0000003C   197B               LDRB     R1,[R3, #+12]
+    417                pSPI_Buff->WordToSendCount=0;
+   \   0000003E   1873               STRB     R0,[R3, #+12]
+    418                pSPI_Buff->Buffer_TxCount=QuantityWord;
+   \   00000040   9369               LDR      R3,[R2, #+24]
+   \   00000042   DD33               ADDS     R3,R3,#+221
+   \   00000044   1970               STRB     R1,[R3, #+0]
+    419                unsigned long xxR= AT91F_SPI_ReceiveFrame (AT91C_BASE_SPI,pSPI_Buff->pBuffer_Rx, QuantityWord,0,0); 
+   \   00000046   9269               LDR      R2,[R2, #+24]
+   \   00000048   D032               ADDS     R2,R2,#+208
+   \   0000004A   1368               LDR      R3,[R2, #+0]
+   \   0000004C   ....               LDR      R4,??DataTable18  ;; 0xfffe0104
+   \   0000004E   2568               LDR      R5,[R4, #+0]
+   \   00000050   002D               CMP      R5,#+0
+   \   00000052   07D1               BNE      ??SPI_Send_Executive_2
+   \   00000054   ....               LDR      R5,??DataTable19  ;; 0xfffe0100
+   \   00000056   2B60               STR      R3,[R5, #+0]
+   \   00000058   2160               STR      R1,[R4, #+0]
+   \   0000005A   ....               LDR      R3,??DataTable23  ;; 0xfffe0110
+   \   0000005C   1860               STR      R0,[R3, #+0]
+   \   0000005E   ....               LDR      R3,??DataTable22  ;; 0xfffe0114
+   \   00000060   1860               STR      R0,[R3, #+0]
+   \   00000062   06E0               B        ??SPI_Send_Executive_3
+   \                     ??SPI_Send_Executive_2:
+   \   00000064   ....               LDR      R4,??DataTable22  ;; 0xfffe0114
+   \   00000066   2568               LDR      R5,[R4, #+0]
+   \   00000068   002D               CMP      R5,#+0
+   \   0000006A   02D1               BNE      ??SPI_Send_Executive_3
+   \   0000006C   ....               LDR      R5,??DataTable23  ;; 0xfffe0110
+   \   0000006E   2B60               STR      R3,[R5, #+0]
+   \   00000070   2160               STR      R1,[R4, #+0]
+    420                unsigned long xxT = AT91F_SPI_SendFrame (AT91C_BASE_SPI,pSPI_Buff->pBuffer_Tx,QuantityWord,0,0 );
+   \                     ??SPI_Send_Executive_3:
+   \   00000072   5268               LDR      R2,[R2, #+4]
+   \   00000074   ....               LDR      R3,??DataTable24  ;; 0xfffe010c
+   \   00000076   1C68               LDR      R4,[R3, #+0]
+   \   00000078   002C               CMP      R4,#+0
+   \   0000007A   07D1               BNE      ??SPI_Send_Executive_4
+   \   0000007C   ....               LDR      R4,??DataTable25  ;; 0xfffe0108
+   \   0000007E   2260               STR      R2,[R4, #+0]
+   \   00000080   1960               STR      R1,[R3, #+0]
+   \   00000082   ....               LDR      R1,??DataTable29  ;; 0xfffe0118
+   \   00000084   0860               STR      R0,[R1, #+0]
+   \   00000086   ....               LDR      R1,??DataTable28  ;; 0xfffe011c
+   \   00000088   0860               STR      R0,[R1, #+0]
+   \   0000008A   06E0               B        ??SPI_Send_Executive_5
+   \                     ??SPI_Send_Executive_4:
+   \   0000008C   ....               LDR      R0,??DataTable28  ;; 0xfffe011c
+   \   0000008E   0368               LDR      R3,[R0, #+0]
+   \   00000090   002B               CMP      R3,#+0
+   \   00000092   02D1               BNE      ??SPI_Send_Executive_5
+   \   00000094   ....               LDR      R3,??DataTable29  ;; 0xfffe0118
+   \   00000096   1A60               STR      R2,[R3, #+0]
+   \   00000098   0160               STR      R1,[R0, #+0]
+    421                
+    422          }//_____________________________________________________________________________
+   \                     ??SPI_Send_Executive_5:
+   \   0000009A   38BC               POP      {R3-R5}
+   \   0000009C   01BC               POP      {R0}
+   \   0000009E   0047               BX       R0               ;; return
+    423          
+    424          
+    425          
+    426          
+    427          
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    428          void SPI_SendWord(short int Val, char CS)
+    429          {
+   \                     SPI_SendWord:
+   \   00000000   01B5               PUSH     {R0,LR}
+    430            char tabSPI[3];
+    431            tabSPI[0]=(char)((Val>>8) & 0xFF);
+   \   00000002   6A46               MOV      R2,SP
+   \   00000004   0312               ASRS     R3,R0,#+8
+   \   00000006   1370               STRB     R3,[R2, #+0]
+    432            tabSPI[1]=(char)(Val & 0xFF);
+   \   00000008   5070               STRB     R0,[R2, #+1]
+    433            tabSPI[2]=0;
+   \   0000000A   0020               MOVS     R0,#+0
+   \   0000000C   9070               STRB     R0,[R2, #+2]
+    434            
+    435            SPI_SendB_Buff(tabSPI,2,CS);
+   \   0000000E   0A00               MOVS     R2,R1
+   \   00000010   0221               MOVS     R1,#+2
+   \   00000012   6846               MOV      R0,SP
+   \   00000014   ........           BL       SPI_SendB_Buff
+    436          }
+   \   00000018   08BC               POP      {R3}
+   \   0000001A   01BC               POP      {R0}
+   \   0000001C   0047               BX       R0               ;; return
+    437          
+    438          
+    439          
+    440              
+    441          
+    442          //-----------------------------------------------------------------------------
+    443          //! Nazwa funkcji :    SPI_Response_Interpretation
+    444          //! Funkcja interpretacji danych otrzymanych z lini SPI 
+    445          //! paramentr funkcji to iloœæ odebranych danych
+    446          //-----------------------------------------------------------------------------
+    447          
+    448          
+
+   \                                 In section .bss, align 4
+    449          char *zm_tmp1;
+   \                     zm_tmp1:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 4
+    450          char *zm_tmp2;
+   \                     zm_tmp2:
+   \   00000000                      DS8 4
+
+   \                                 In section .bss, align 1
+    451          char zm_tmp3;
+   \                     zm_tmp3:
+   \   00000000                      DS8 1
+
+   \                                 In section .data, align 4
+    452          
+    453          
+    454          char Real_Cs_RF=0xFF-Cs_RF;
+   \                     Real_Cs_RF:
+   \   00000000   FD                 DC8 253
+   \   00000001   000000             DC8 0, 0, 0
+   \                     pSPI:
+   \   00000004   0000FEFF           DC32 0FFFE0000H
+   \                     spi_Endrx_Flag:
+   \   00000008   00000000           DC32 0
+   \                     spi_Endtx_Flag:
+   \   0000000C   00000000           DC32 0
+   \                     spi_Rxbuff_Flag:
+   \   00000010   00000000           DC32 0
+   \                     spi_Status:
+   \   00000014   00000000           DC32 0
+   \                     pSPI_Buff:
+   \   00000018   ........           DC32 SPI_Buff
+    455          
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    456          void SPI_Response_Interpretation(char TxCount)
+    457          { 
+   \                     SPI_Response_Interpretation:
+   \   00000000   31B5               PUSH     {R0,R4,R5,LR}
+    458             char *TMP_pBuffer_Tx = pSPI_Buff->pBuffer_Tx;
+   \   00000002   ....               LDR      R0,??DataTable30  ;; Real_Cs_RF
+   \   00000004   8169               LDR      R1,[R0, #+24]
+   \   00000006   D031               ADDS     R1,R1,#+208
+   \   00000008   4C68               LDR      R4,[R1, #+4]
+    459             char *TMP_pBuffer_Rx = pSPI_Buff->pBuffer_Rx;
+   \   0000000A   0D68               LDR      R5,[R1, #+0]
+    460             char move;  
+    461             
+    462          
+    463             
+    464             if (TMP_pBuffer_Tx[2]==Real_Cs_RF)
+   \   0000000C   A178               LDRB     R1,[R4, #+2]
+   \   0000000E   0078               LDRB     R0,[R0, #+0]
+   \   00000010   8142               CMP      R1,R0
+   \   00000012   05D1               BNE      ??SPI_Response_Interpretation_0
+    465             {
+    466               SPI_RFM12_Execute(TMP_pBuffer_Tx, TMP_pBuffer_Rx);  
+   \   00000014   2900               MOVS     R1,R5
+   \   00000016   2000               MOVS     R0,R4
+   \   00000018   ........           BL       SPI_RFM12_Execute
+    467               TMP_pBuffer_Tx+=4;
+   \   0000001C   241D               ADDS     R4,R4,#+4
+    468               TMP_pBuffer_Rx+=4;
+   \   0000001E   2D1D               ADDS     R5,R5,#+4
+    469             }
+    470          
+    471             if (TMP_pBuffer_Tx[2]==0xFF-Cs_Clock)
+   \                     ??SPI_Response_Interpretation_0:
+   \   00000020   A078               LDRB     R0,[R4, #+2]
+   \   00000022   FE28               CMP      R0,#+254
+   \   00000024   03D1               BNE      ??SPI_Response_Interpretation_1
+    472             {
+    473               move=SPI_Clock_Execute(TMP_pBuffer_Tx+1, TMP_pBuffer_Rx);  
+                           ^
+Warning[Pe223]: function "SPI_Clock_Execute" declared implicitly
+   \   00000026   2900               MOVS     R1,R5
+   \   00000028   601C               ADDS     R0,R4,#+1
+   \   0000002A   ........           BL       SPI_Clock_Execute
+    474               TMP_pBuffer_Tx+=move;
+    475               TMP_pBuffer_Rx+=move;
+    476             }
+    477            
+    478             /*
+    479               char wsk=0;
+    480          
+    481              zm_tmp1=&TxCount;
+    482              zm_tmp2=&wsk;
+    483              
+    484              TxCount *=4;
+    485          
+    486              wsk=0;
+    487             
+    488              while (TxCount>wsk)  //dopuki wszystkie odebrane dane nie zosta³y zinterpretowane
+    489              {
+    490                
+    491                switch (0xF-((pSPI_Buff->pBuffer_Tx[wsk+2])&0xF))
+    492                {
+    493                  
+    494          /*
+                 ^
+Warning[Pe009]: nested comment is not allowed
+    495                  case Cs_Clock:  
+    496                     wsk += SPI_Clock_Execute(pSPI_Buff->pBuffer_Tx+wsk+1, pSPI_Buff->pBuffer_Rx+wsk); 
+    497                     //wsk *=2; 
+    498                      wsk=TxCount;
+    499                  break;
+    500          
+    501                  case Cs_RF:  
+    502                    wsk=0;
+    503                     SPI_RFM12_Execute(pSPI_Buff->pBuffer_Tx+wsk, pSPI_Buff->pBuffer_Rx+wsk);       
+    504                     wsk +=4;
+    505                     if (0xF-((pSPI_Buff->pBuffer_Tx[wsk+2])&0xF)==Cs_RF) wsk +=4;
+    506                     if (0xF-((pSPI_Buff->pBuffer_Tx[wsk+2])&0xF)==Cs_RF) wsk +=4;
+    507                     if (0xF-((pSPI_Buff->pBuffer_Tx[wsk+2])&0xF)==Cs_RF) wsk +=4;
+    508          
+    509                  break;
+    510                  
+    511                  default:
+    512                    wsk=TxCount;
+    513                    wsk=0;
+    514                     SPI_RFM12_Execute(pSPI_Buff->pBuffer_Tx+wsk, pSPI_Buff->pBuffer_Rx+wsk); 
+    515                     
+    516                  break;  
+    517             
+    518                }
+    519           
+    520                //zm_tmp3=(0xF-((pSPI_Buff->pBuffer_Tx[wsk+2])&0xF));
+    521                wsk=TxCount;
+    522              }
+    523            
+    524          wsk =0;
+    525               SPI_RFM12_Execute(pSPI_Buff->pBuffer_Tx+wsk, pSPI_Buff->pBuffer_Rx+wsk);  
+    526          
+    527          */
+    528            
+    529            
+    530            
+    531          }//_____________________________________________________________________________
+   \                     ??SPI_Response_Interpretation_1:
+   \   0000002E   38BC               POP      {R3-R5}
+   \   00000030   01BC               POP      {R0}
+   \   00000032   0047               BX       R0               ;; return
+    532          
+    533          
+    534          
+    535          
+    536          
+    537          
+    538          
+    539          
+    540          
+    541          
+    542          
+    543          
+    544          
+    545          
+    546          //FUNKCJE BIBLIOTECZNE *********************************************************
+    547          
+    548          
+    549          //*--------------------------------------------------------------------------------------
+    550          //* Function Name       	: AT91F_SPI_SWReset
+    551          //* Object              	: SPI Software reset and check reg after reset
+    552          //* Input Parameters    : none.
+    553          //* Output Parameters  : none.
+    554          //*--------------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    555          void AT91F_SPI_SWReset (const AT91PS_SPI pSpi)
+    556          {
+    557          	pSpi -> SPI_CR  = AT91C_SPI_SWRST; // SW reset
+   \                     AT91F_SPI_SWReset:
+   \   00000000   8021               MOVS     R1,#+128
+   \   00000002   0160               STR      R1,[R0, #+0]
+    558          }
+   \   00000004   7047               BX       LR               ;; return
+    559          
+    560          
+    561          
+    562          //*--------------------------------------------------------------------------------------
+    563          //* Function Name       	: AT91F_SPI_En_Dis
+    564          //* Object              	: SPI Enable  Disable
+    565          //* Input Parameters    : Enable.
+    566          //* Output Parameters  : error.
+    567          //*--------------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    568          void AT91F_SPI_En_Dis (const AT91PS_SPI pSpi, unsigned char Enable)
+    569          {
+   \                     AT91F_SPI_En_Dis:
+   \   00000000   01B5               PUSH     {R0,LR}
+    570          	volatile unsigned int error;
+    571          
+    572          	error = 0;
+   \   00000002   0022               MOVS     R2,#+0
+   \   00000004   0092               STR      R2,[SP, #+0]
+    573          
+    574          	switch (Enable)
+   \   00000006   0029               CMP      R1,#+0
+   \   00000008   04D0               BEQ      ??AT91F_SPI_En_Dis_0
+   \   0000000A   0129               CMP      R1,#+1
+   \   0000000C   04D0               BEQ      ??AT91F_SPI_En_Dis_1
+   \   0000000E   0229               CMP      R1,#+2
+   \   00000010   04D0               BEQ      ??AT91F_SPI_En_Dis_2
+   \   00000012   08E0               B        ??AT91F_SPI_En_Dis_3
+    575          	{ 
+    576          		case ENABLE_SPI:
+    577          		pSpi -> SPI_CR  = AT91C_SPI_SPIEN; // SPI is enable
+   \                     ??AT91F_SPI_En_Dis_0:
+   \   00000014   0121               MOVS     R1,#+1
+   \   00000016   02E0               B.N      ??AT91F_SPI_En_Dis_4
+    578          		Delay (0xFF);
+                 		^
+Warning[Pe223]: function "Delay" declared implicitly
+    579          		break;
+    580          
+    581          		case DISABLE_SPI:
+    582          		pSpi -> SPI_CR  = AT91C_SPI_SPIDIS; // SPI is Disable
+   \                     ??AT91F_SPI_En_Dis_1:
+   \   00000018   0221               MOVS     R1,#+2
+   \   0000001A   00E0               B.N      ??AT91F_SPI_En_Dis_4
+    583          		Delay (0xFF);
+    584          		break;
+    585          
+    586          		case ENABLE_DISABLE_SPI:
+    587          		pSpi -> SPI_CR  = (AT91C_SPI_SPIDIS | AT91C_SPI_SPIEN); // Enable and disable are set @ the same time => SPI shoulb be disable
+   \                     ??AT91F_SPI_En_Dis_2:
+   \   0000001C   0321               MOVS     R1,#+3
+   \                     ??AT91F_SPI_En_Dis_4:
+   \   0000001E   0160               STR      R1,[R0, #+0]
+    588          		Delay (0xFF);
+   \   00000020   FF20               MOVS     R0,#+255
+   \   00000022   ........           BL       Delay
+    589          		break;
+    590          	}
+    591          }
+   \                     ??AT91F_SPI_En_Dis_3:
+   \   00000026   08BC               POP      {R3}
+   \   00000028   01BC               POP      {R0}
+   \   0000002A   0047               BX       R0               ;; return
+    592          
+    593          
+    594          //*--------------------------------------------------------------------------------------
+    595          //* Function Name       : AT91F_Set_SPI_CSR
+    596          //* Object              : Allows programming SPI_CSR registers
+    597          //* Input Parameters    : Csr_Value.
+    598          //* Input Parameters    : Csr_Number.
+    599          //* Output Parameters   : none.
+    600          //*--------------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    601          void AT91F_Set_SPI_CSR (const AT91PS_SPI pSpi, unsigned long Csr_Value, unsigned long Csr_Number)
+    602          {
+   \                     AT91F_Set_SPI_CSR:
+   \   00000000   01B5               PUSH     {R0,LR}
+    603          	switch (Csr_Number)
+   \   00000002   002A               CMP      R2,#+0
+   \   00000004   06D0               BEQ      ??AT91F_Set_SPI_CSR_0
+   \   00000006   012A               CMP      R2,#+1
+   \   00000008   06D0               BEQ      ??AT91F_Set_SPI_CSR_1
+   \   0000000A   022A               CMP      R2,#+2
+   \   0000000C   06D0               BEQ      ??AT91F_Set_SPI_CSR_2
+   \   0000000E   032A               CMP      R2,#+3
+   \   00000010   06D0               BEQ      ??AT91F_Set_SPI_CSR_3
+   \   00000012   06E0               B        ??AT91F_Set_SPI_CSR_4
+    604          	{
+    605          		case CSR0:
+    606          		pSpi -> SPI_CSR[CSR0]  = Csr_Value; // CSR0 <- Csr_Value
+   \                     ??AT91F_Set_SPI_CSR_0:
+   \   00000014   0163               STR      R1,[R0, #+48]
+   \   00000016   04E0               B        ??AT91F_Set_SPI_CSR_4
+    607          		break;
+    608          
+    609          		case CSR1:
+    610          		pSpi -> SPI_CSR[CSR1]  = Csr_Value; // CSR1 <- Csr_Value
+   \                     ??AT91F_Set_SPI_CSR_1:
+   \   00000018   4163               STR      R1,[R0, #+52]
+   \   0000001A   02E0               B        ??AT91F_Set_SPI_CSR_4
+    611          		break;
+    612          		
+    613          		case CSR2:
+    614          		pSpi -> SPI_CSR[CSR2]  = Csr_Value; // CSR2 <- Csr_Value
+   \                     ??AT91F_Set_SPI_CSR_2:
+   \   0000001C   8163               STR      R1,[R0, #+56]
+   \   0000001E   00E0               B        ??AT91F_Set_SPI_CSR_4
+    615          		break;
+    616          
+    617          		case CSR3:
+    618          		pSpi -> SPI_CSR[CSR3]  = Csr_Value; // CSR3 <- Csr_Value
+   \                     ??AT91F_Set_SPI_CSR_3:
+   \   00000020   C163               STR      R1,[R0, #+60]
+    619          		break;
+    620          
+    621          		default:
+    622          		break; 
+    623          	}
+    624          }
+   \                     ??AT91F_Set_SPI_CSR_4:
+   \   00000022   08BC               POP      {R3}
+   \   00000024   01BC               POP      {R0}
+   \   00000026   0047               BX       R0               ;; return
+    625          
+    626          
+    627          //*--------------------------------------------------------------------------------------
+    628          //* Function Name       	: AT91F_SPI_Read_Data
+    629          //* Object              	: Read SPI_RDR
+    630          //* Input Parameters    : none.
+    631          //* Output Parameters  : Data_Recieved.
+    632          //*--------------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    633          unsigned long AT91F_SPI_Read_Data (const AT91PS_SPI pSpi)
+    634          {
+   \                     AT91F_SPI_Read_Data:
+   \   00000000   30B4               PUSH     {R4,R5}
+   \   00000002   0100               MOVS     R1,R0
+    635          	unsigned long Data_Recieved;
+    636          
+    637                  AT91C_BASE_PIOA->PIO_SODR = AT91C_PIO_PA3 ;AT91C_BASE_PIOA->PIO_CODR = AT91C_PIO_PA3; 
+   \   00000004   0822               MOVS     R2,#+8
+   \   00000006   064B               LDR      R3,??AT91F_SPI_Read_Data_0  ;; 0xfffff430
+   \   00000008   1A60               STR      R2,[R3, #+0]
+   \   0000000A   064C               LDR      R4,??AT91F_SPI_Read_Data_0+0x4  ;; 0xfffff434
+   \   0000000C   2260               STR      R2,[R4, #+0]
+    638          	/*spi_Rdrf_Flag = 0;
+    639          	pSpi -> SPI_IER = AT91C_SPI_RDRF; // Disabled in the interrupt handler
+    640          
+    641          	while (spi_Rdrf_Flag == 0);
+    642                  */
+    643          	Data_Recieved = (pSpi -> SPI_RDR & 0x000FFFFF); // Read RDR and mask non used bits
+   \   0000000E   8868               LDR      R0,[R1, #+8]
+   \   00000010   0003               LSLS     R0,R0,#+12
+   \   00000012   000B               LSRS     R0,R0,#+12
+    644          
+    645          	pSpi -> SPI_IER = AT91C_SPI_RDRF; // RDF re enabled (see handler)
+   \   00000014   0125               MOVS     R5,#+1
+   \   00000016   4D61               STR      R5,[R1, #+20]
+    646          
+    647                  AT91C_BASE_PIOA->PIO_SODR = AT91C_PIO_PA3 ;AT91C_BASE_PIOA->PIO_CODR = AT91C_PIO_PA3; 
+   \   00000018   1A60               STR      R2,[R3, #+0]
+   \   0000001A   2260               STR      R2,[R4, #+0]
+    648          	return Data_Recieved; // Return RDR (Read Data + PCS)
+   \   0000001C   30BC               POP      {R4,R5}
+   \   0000001E   7047               BX       LR               ;; return
+   \                     ??AT91F_SPI_Read_Data_0:
+   \   00000020   30F4FFFF           DC32     0xfffff430
+   \   00000024   34F4FFFF           DC32     0xfffff434
+    649          }
+    650          
+    651          
+    652          //*--------------------------------------------------------------------------------------
+    653          //* Function Name       : AT91F_SPI_Send_Data
+    654          //* Object              : Send a data
+    655          //* Input Parameters    : Data_To_Send.
+    656          //* Output Parameters   : none.
+    657          //*--------------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    658          void AT91F_SPI_Send_Data (const AT91PS_SPI pSpi, unsigned long Data_To_Send)
+    659          {
+    660          	// IMPORTANT: Data_To_Send = TD (in fixed mode)
+    661          	// IMPORTANT: Data_To_Send = TD + PCS + LASTXFER (in variable mode)
+    662          	spi_Tdre_Flag = 0;
+   \                     AT91F_SPI_Send_Data:
+   \   00000000   034A               LDR      R2,??AT91F_SPI_Send_Data_0  ;; spi_Tdre_Flag
+   \   00000002   0023               MOVS     R3,#+0
+   \   00000004   1370               STRB     R3,[R2, #+0]
+    663          
+    664          	Data_To_Send &= 0x010FFFFF; // mask non used bits
+    665          	pSpi -> SPI_TDR = Data_To_Send;
+   \   00000006   034A               LDR      R2,??AT91F_SPI_Send_Data_0+0x4  ;; 0x10fffff
+   \   00000008   0A40               ANDS     R2,R2,R1
+   \   0000000A   C260               STR      R2,[R0, #+12]
+    666          }
+   \   0000000C   7047               BX       LR               ;; return
+   \   0000000E   C046               Nop      
+   \                     ??AT91F_SPI_Send_Data_0:
+   \   00000010   ........           DC32     spi_Tdre_Flag
+   \   00000014   FFFF0F01           DC32     0x10fffff
+    667          
+    668          
+    669          //*--------------------------------------------------------------------------------------
+    670          //* Function Name       	: AT91F_SPI_Open
+    671          //* Object              	: Open the SPI0
+    672          //* Input Parameters    : none.
+    673          //* Output Parameters  : error.
+    674          //*--------------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    675          void  AT91F_SPI_Open (void)
+    676          {
+   \                     AT91F_SPI_Open:
+   \   00000000   31B5               PUSH     {R0,R4,R5,LR}
+    677          // MISO, MOSI, CLK, NPCS[3:0] are configured
+    678          // SPI (IP) clock is activated
+    679          // Interrupt Handler is configured
+    680          // SPI is resetted
+    681          
+    682          	AT91PS_SPI     pSPI = AT91C_BASE_SPI;
+    683          
+    684          	//  Cfp SPI PIO, PMC, ...
+    685          		// Configure SPI PIOs
+    686            		AT91F_SPI_CfgPIO ();
+   \   00000002   1648               LDR      R0,??AT91F_SPI_Open_0  ;; 0xfffff470
+   \   00000004   F021               MOVS     R1,#+240
+   \   00000006   C901               LSLS     R1,R1,#+7        ;; #+30720
+   \   00000008   0160               STR      R1,[R0, #+0]
+   \   0000000A   1548               LDR      R0,??AT91F_SPI_Open_0+0x4  ;; 0xfffff474
+   \   0000000C   8021               MOVS     R1,#+128
+   \   0000000E   8900               LSLS     R1,R1,#+2        ;; #+512
+   \   00000010   0160               STR      R1,[R0, #+0]
+   \   00000012   1448               LDR      R0,??AT91F_SPI_Open_0+0x8  ;; 0xfffff404
+   \   00000014   F421               MOVS     R1,#+244
+   \   00000016   C901               LSLS     R1,R1,#+7        ;; #+31232
+   \   00000018   0160               STR      R1,[R0, #+0]
+    687          
+    688          	  	// Configure PMC by enabling SPI clock
+    689            		AT91F_SPI_CfgPMC ();
+   \   0000001A   2020               MOVS     R0,#+32
+   \   0000001C   1249               LDR      R1,??AT91F_SPI_Open_0+0xC  ;; 0xfffffc10
+   \   0000001E   0860               STR      R0,[R1, #+0]
+    690          
+    691          		// Configure SPI interrupt
+    692          		AT91F_AIC_ConfigureIt ( AT91C_BASE_AIC, AT91C_ID_SPI, SPI_PRIOR, AT91C_AIC_SRCTYPE_INT_POSITIVE_EDGE, AT91F_SPI_Interrupt_handler);
+   \   00000020   1249               LDR      R1,??AT91F_SPI_Open_0+0x10  ;; 0xfffff094
+   \   00000022   0A68               LDR      R2,[R1, #+0]
+   \   00000024   124A               LDR      R2,??AT91F_SPI_Open_0+0x14  ;; 0xfffff124
+   \   00000026   1060               STR      R0,[R2, #+0]
+   \   00000028   124A               LDR      R2,??AT91F_SPI_Open_0+0x18  ;; AT91F_SPI_Interrupt_handler
+   \   0000002A   0A60               STR      R2,[R1, #+0]
+   \   0000002C   1249               LDR      R1,??AT91F_SPI_Open_0+0x1C  ;; 0xfffff014
+   \   0000002E   2622               MOVS     R2,#+38
+   \   00000030   0A60               STR      R2,[R1, #+0]
+   \   00000032   1249               LDR      R1,??AT91F_SPI_Open_0+0x20  ;; 0xfffff128
+   \   00000034   0860               STR      R0,[R1, #+0]
+    693          	  	AT91F_AIC_EnableIt (AT91C_BASE_AIC, AT91C_ID_SPI);	
+   \   00000036   1249               LDR      R1,??AT91F_SPI_Open_0+0x24  ;; 0xfffff120
+   \   00000038   0860               STR      R0,[R1, #+0]
+    694          
+    695          		// Reset the SPI (note it is possible to reset the SPI even if SPI is disabled)
+    696          		AT91F_SPI_SWReset (AT91C_BASE_SPI);
+   \   0000003A   1248               LDR      R0,??AT91F_SPI_Open_0+0x28  ;; 0xfffe0000
+   \   0000003C   8021               MOVS     R1,#+128
+   \   0000003E   0160               STR      R1,[R0, #+0]
+    697          
+    698          		spi_Txempty_Flag = 0;
+   \   00000040   114C               LDR      R4,??AT91F_SPI_Open_0+0x2C  ;; spi_Txempty_Flag
+   \   00000042   0025               MOVS     R5,#+0
+   \   00000044   2560               STR      R5,[R4, #+0]
+    699          
+    700          		pSPI -> SPI_IER =  	(AT91C_SPI_RDRF + AT91C_SPI_TDRE + AT91C_SPI_MODF + AT91C_SPI_OVRES+ 
+    701          							 AT91C_SPI_NSSR + AT91C_SPI_TXEMPTY + AT91C_SPI_SPIENS + AT91C_SPI_TXBUFE);
+   \   00000046   1149               LDR      R1,??AT91F_SPI_Open_0+0x30  ;; 0xfffe0014
+   \   00000048   114A               LDR      R2,??AT91F_SPI_Open_0+0x34  ;; 0x1038f
+   \   0000004A   0A60               STR      R2,[R1, #+0]
+    702          
+    703          		 AT91F_SPI_En_Dis (AT91C_BASE_SPI, ENABLE_SPI);
+   \   0000004C   0021               MOVS     R1,#+0
+   \   0000004E   ........           BL       AT91F_SPI_En_Dis
+    704          
+    705          		spi_Txempty_Flag = 0;
+   \   00000052   2560               STR      R5,[R4, #+0]
+    706          }
+   \   00000054   38BC               POP      {R3-R5}
+   \   00000056   01BC               POP      {R0}
+   \   00000058   0047               BX       R0               ;; return
+   \   0000005A   C046               Nop      
+   \                     ??AT91F_SPI_Open_0:
+   \   0000005C   70F4FFFF           DC32     0xfffff470
+   \   00000060   74F4FFFF           DC32     0xfffff474
+   \   00000064   04F4FFFF           DC32     0xfffff404
+   \   00000068   10FCFFFF           DC32     0xfffffc10
+   \   0000006C   94F0FFFF           DC32     0xfffff094
+   \   00000070   24F1FFFF           DC32     0xfffff124
+   \   00000074   ........           DC32     AT91F_SPI_Interrupt_handler
+   \   00000078   14F0FFFF           DC32     0xfffff014
+   \   0000007C   28F1FFFF           DC32     0xfffff128
+   \   00000080   20F1FFFF           DC32     0xfffff120
+   \   00000084   0000FEFF           DC32     0xfffe0000
+   \   00000088   ........           DC32     spi_Txempty_Flag
+   \   0000008C   1400FEFF           DC32     0xfffe0014
+   \   00000090   8F030100           DC32     0x1038f
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable3:
+   \   00000000   8F030100           DC32     0x1038f
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable4:
+   \   00000000   0000FEFF           DC32     0xfffe0000
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable14:
+   \   00000000   ........           DC32     SPI_Buff + 220
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable16:
+   \   00000000   1400FEFF           DC32     0xfffe0014
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable18:
+   \   00000000   0401FEFF           DC32     0xfffe0104
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable19:
+   \   00000000   0001FEFF           DC32     0xfffe0100
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable22:
+   \   00000000   1401FEFF           DC32     0xfffe0114
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable23:
+   \   00000000   1001FEFF           DC32     0xfffe0110
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable24:
+   \   00000000   0C01FEFF           DC32     0xfffe010c
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable25:
+   \   00000000   0801FEFF           DC32     0xfffe0108
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable28:
+   \   00000000   1C01FEFF           DC32     0xfffe011c
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable29:
+   \   00000000   1801FEFF           DC32     0xfffe0118
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable30:
+   \   00000000   ........           DC32     Real_Cs_RF
+    707          
+    708          
+    709          
+    710          
+    711          
+    712          
+
+   Maximum stack usage in bytes:
+
+     Function                    .cstack
+     --------                    -------
+     AT91F_SPI_En_Dis                 8
+     AT91F_SPI_Interrupt_handler     16
+     AT91F_SPI_Open                  16
+     AT91F_SPI_Read_Data              8
+     AT91F_SPI_SWReset                0
+     AT91F_SPI_Send_Data              0
+     AT91F_Set_SPI_CSR                8
+     SPI_Response_Interpretation     16
+     SPI_SendB_Buff                  24
+     SPI_SendWord                     8
+     SPI_Send_Executive              16
+     SpiMaster_Init                  24
+
+
+   Section sizes:
+
+     Function/Label              Bytes
+     --------------              -----
+     spi_Rdrf_Flag                  1
+     spi_Tdre_Flag                  1
+     spi_Modf_Flag                  1
+     spi_Ovred_Flag                 1
+     spi_Nssr_Flag                  1
+     spi_Txempty_Flag               4
+     spi_Spiens_Flag                1
+     spi_Txbuff_Flag                4
+     SPI_Buff                     224
+     AT91F_SPI_Interrupt_handler   92
+     SpiMaster_Init               240
+     SPI_SendB_Buff               124
+     SPI_Send_Executive           160
+     SPI_SendWord                  30
+     zm_tmp1                        4
+     zm_tmp2                        4
+     zm_tmp3                        1
+     Real_Cs_RF                    28
+     SPI_Response_Interpretation   52
+     AT91F_SPI_SWReset              6
+     AT91F_SPI_En_Dis              44
+     AT91F_Set_SPI_CSR             40
+     AT91F_SPI_Read_Data           40
+     AT91F_SPI_Send_Data           24
+     AT91F_SPI_Open               148
+     ??DataTable3                   4
+     ??DataTable4                   4
+     ??DataTable14                  4
+     ??DataTable16                  4
+     ??DataTable18                  4
+     ??DataTable19                  4
+     ??DataTable22                  4
+     ??DataTable23                  4
+     ??DataTable24                  4
+     ??DataTable25                  4
+     ??DataTable28                  4
+     ??DataTable29                  4
+     ??DataTable30                  4
+      Others                       64
+
+ 
+   247 bytes in section .bss
+    28 bytes in section .data
+ 1 116 bytes in section Debug.txt
+ 
+ 1 052 bytes of CODE memory (+ 64 bytes shared)
+   275 bytes of DATA memory
+
+Errors: none
+Warnings: 6

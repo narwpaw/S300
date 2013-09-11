@@ -1,0 +1,879 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           12/Jun/2013  19:50:46 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v1.4 -              #
+#                    12.06.2013\cdc\serial_driver.c                           #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\cdc\serial_driver.c" -D AT91SAM7S256 -D       #
+#                    AT91SAM7SEK -D iH -D _LCD_NEGATIV_OLD_ -D __ALARM -D     #
+#                    __WIFI_MODULE -D _DEBUG_ -D S300iOld -D _TESTER_ -lC     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\TESTER S300X (Old)\List\" --diag_suppress     #
+#                    Pa082 -o "D:\Zeuron\Projekty\S300\S300-program v1.4 -    #
+#                    12.06.2013\TESTER S300X (Old)\Obj\" --no_unroll          #
+#                    --no_inline --no_tbaa --no_scheduling --debug --endian   #
+#                    little --cpu ARM7TDMI -e --fpu None --dlib_config        #
+#                    "C:\Program Files (x86)\IAR Systems\Embedded Workbench   #
+#                    5.0\ARM\INC\DLib_Config_Normal.h" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\lib\AT91SAM7S256\" -I                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.4 - 12.06.2013\cdc\" -I "D:\Zeuron\Projekty\S300\S300 #
+#                    -program v1.4 - 12.06.2013\core\" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\startup\" -I "D:\Zeuron\Projekty\S300\S300-pr #
+#                    ogram v1.4 - 12.06.2013\Framework\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\Framework\Configuration\" -I "C:\Program      #
+#                    Files (x86)\IAR Systems\Embedded Workbench               #
+#                    5.0\ARM\INC\" --section .text=Debug.txt --interwork      #
+#                    --cpu_mode thumb -Om                                     #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v1.4 -              #
+#                    12.06.2013\TESTER S300X (Old)\List\serial_driver.lst     #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v1.4 -              #
+#                    12.06.2013\TESTER S300X (Old)\Obj\serial_driver.o        #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v1.4 - 12.06.2013\cdc\serial_driver.c
+      1          /* ----------------------------------------------------------------------------
+      2           *         ATMEL Microcontroller Software Support  -  ROUSSET  -
+      3           * ----------------------------------------------------------------------------
+      4           * Copyright (c) 2006, Atmel Corporation
+      5          
+      6           * All rights reserved.
+      7           *
+      8           * Redistribution and use in source and binary forms, with or without
+      9           * modification, are permitted provided that the following conditions are met:
+     10           *
+     11           * - Redistributions of source code must retain the above copyright notice,
+     12           * this list of conditions and the disclaiimer below.
+     13           *
+     14           * - Redistributions in binary form must reproduce the above copyright notice,
+     15           * this list of conditions and the disclaimer below in the documentation and/or
+     16           * other materials provided with the distribution.
+     17           *
+     18           * Atmel's name may not be used to endorse or promote products derived from
+     19           * this software without specific prior written permission.
+     20           *
+     21           * DISCLAIMER: THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR
+     22           * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+     23           * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+     24           * DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,
+     25           * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+     26           * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,
+     27           * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+     28           * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+     29           * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+     30           * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+     31           * ----------------------------------------------------------------------------
+     32           */
+     33          
+     34          /*
+     35          $Id: serial_driver.c,v 1.1.2.1 2006/12/05 08:33:25 danielru Exp $
+     36          */
+     37          
+     38          //------------------------------------------------------------------------------
+     39          //      Includes
+     40          //------------------------------------------------------------------------------
+     41          
+     42          #include "core/common.h"
+     43          #include "core/device.h"
+     44          #include "core/board.h"
+     45          #include "core/trace.h"
+     46          #include "core/usb.h"
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork struct <unnamed> *USB_GetSetup(S_usb const *)
+   \                     USB_GetSetup:
+   \   00000000   0069               LDR      R0,[R0, #+16]
+   \   00000002   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork char USB_Write(S_usb const *, unsigned char, void const *, unsigned int, Callback_f, void *)
+   \                     USB_Write:
+   \   00000000   31B5               PUSH     {R0,R4,R5,LR}
+   \   00000002   0400               MOVS     R4,R0
+   \   00000004   0D00               MOVS     R5,R1
+   \   00000006   0498               LDR      R0,[SP, #+16]
+   \   00000008   0599               LDR      R1,[SP, #+20]
+   \   0000000A   03B4               PUSH     {R0,R1}
+   \   0000000C   2900               MOVS     R1,R5
+   \   0000000E   2000               MOVS     R0,R4
+   \   00000010   2468               LDR      R4,[R4, #+0]
+   \   00000012   6469               LDR      R4,[R4, #+20]
+   \   00000014   6468               LDR      R4,[R4, #+4]
+   \   00000016   ........           BL       __iar_via_R4
+   \   0000001A   02B0               ADD      SP,SP,#+8
+   \   0000001C   38BC               POP      {R3-R5}
+   \   0000001E   02BC               POP      {R1}
+   \   00000020   0847               BX       R1               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork char USB_SendZLP0(S_usb const *, Callback_f, void *)
+   \                     USB_SendZLP0:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   0400               MOVS     R4,R0
+   \   00000004   0800               MOVS     R0,R1
+   \   00000006   1100               MOVS     R1,R2
+   \   00000008   03B4               PUSH     {R0,R1}
+   \   0000000A   0023               MOVS     R3,#+0
+   \   0000000C   1A00               MOVS     R2,R3
+   \   0000000E   1100               MOVS     R1,R2
+   \   00000010   2000               MOVS     R0,R4
+   \   00000012   ........           BL       USB_Write
+   \   00000016   02B0               ADD      SP,SP,#+8
+   \   00000018   10BC               POP      {R4}
+   \   0000001A   02BC               POP      {R1}
+   \   0000001C   0847               BX       R1               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork char USB_Read(S_usb const *, unsigned char, void *, unsigned int, Callback_f, void *)
+   \                     USB_Read:
+   \   00000000   31B5               PUSH     {R0,R4,R5,LR}
+   \   00000002   0400               MOVS     R4,R0
+   \   00000004   0D00               MOVS     R5,R1
+   \   00000006   0498               LDR      R0,[SP, #+16]
+   \   00000008   0599               LDR      R1,[SP, #+20]
+   \   0000000A   03B4               PUSH     {R0,R1}
+   \   0000000C   2900               MOVS     R1,R5
+   \   0000000E   2000               MOVS     R0,R4
+   \   00000010   2468               LDR      R4,[R4, #+0]
+   \   00000012   6469               LDR      R4,[R4, #+20]
+   \   00000014   A468               LDR      R4,[R4, #+8]
+   \   00000016   ........           BL       __iar_via_R4
+   \   0000001A   02B0               ADD      SP,SP,#+8
+   \   0000001C   38BC               POP      {R3-R5}
+   \   0000001E   02BC               POP      {R1}
+   \   00000020   0847               BX       R1               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void USB_Init(S_usb const *)
+   \                     USB_Init:
+   \   00000000   01B5               PUSH     {R0,LR}
+   \   00000002   0168               LDR      R1,[R0, #+0]
+   \   00000004   4969               LDR      R1,[R1, #+20]
+   \   00000006   0968               LDR      R1,[R1, #+0]
+   \   00000008   ........           BL       __iar_via_R1
+   \   0000000C   08BC               POP      {R3}
+   \   0000000E   01BC               POP      {R0}
+   \   00000010   0047               BX       R0               ;; return
+     47          #include "core/standard.h"
+     48          #include "cdc.h"
+     49          #include "serial_driver.h"
+     50          
+     51          //------------------------------------------------------------------------------
+     52          //      Global variables
+     53          //------------------------------------------------------------------------------
+     54          
+     55          // Descriptors
+     56          //------------------------------------------------------------------------------
+     57          //! \brief  Standard USB device descriptor
+     58          //! \see    S_usb_device_descriptor
+
+   \                                 In section .rodata, align 4
+     59          const S_usb_device_descriptor sDevice = {
+   \                     sDevice:
+   \   00000000   1201               DC8 18, 1
+   \   00000002   1001               DC16 272
+   \   00000004   02000008           DC8 2, 0, 0, 8
+   \   00000008   EB0319610100       DC16 1003, 24857, 1
+   \   0000000E   010203010000       DC8 1, 2, 3, 1, 0, 0
+     60          
+     61              sizeof(S_usb_device_descriptor), // Size of this descriptor
+     62              USB_DEVICE_DESCRIPTOR,           // DEVICE Descriptor Type
+     63              USB1_10,                         // USB 1.10 specification
+     64              USB_CLASS_COMMUNICATION,         // USB Communication class code
+     65              0x00,                            // No device subclass code
+     66              0x00,                            // No device protocol code
+     67              USB_ENDPOINT0_MAXPACKETSIZE,     // Maximum packet size for endpoint zero
+     68              USB_VENDOR_ATMEL,                // ATMEL Vendor ID
+     69              SER_PRODUCT_ID,                  // Product ID (6119)
+     70              0x0001,                          // Device release number 0.01
+     71              0x01,                            // Index of manufacturer description
+     72              0x02,                            // Index of product description
+     73              0x03,                            // Index of serial number description
+     74              0x01                             // One possible configuration
+     75          };
+     76          
+     77          //! \brief  Device configuration descriptor
+     78          //! \see    S_ser_configuration_descriptor
+
+   \                                 In section .rodata, align 4
+     79          const S_ser_configuration_descriptor sConfiguration = {
+   \                     sConfiguration:
+   \   00000000   0902               DC8 9, 2
+   \   00000002   4300               DC16 67
+   \   00000004   020100E03209       DC8 2, 1, 0, 224, 50, 9, 4, 0, 0, 1, 2, 2, 1, 0, 5, 36, 0
+   \              040000010202
+   \              0100052400  
+   \   00000015   1001               DC16 272
+   \   00000017   052401010104       DC8 5, 36, 1, 1, 1, 4, 36, 2, 7, 5, 36, 6, 0, 1, 7, 5, 131, 3
+   \              240207052406
+   \              000107058303
+   \   00000029   4000               DC16 64
+   \   0000002B   100904010002       DC8 16, 9, 4, 1, 0, 2, 10, 0, 0, 0, 7, 5, 1, 2
+   \              0A0000000705
+   \              0102        
+   \   00000039   4000               DC16 64
+   \   0000003B   0007058202         DC8 0, 7, 5, 130, 2
+   \   00000040   4000               DC16 64
+   \   00000042   0000               DC8 0, 0
+     80          
+     81              // Standard configuration descriptor
+     82              {
+     83                  // Size of this descriptor
+     84                  sizeof(S_usb_configuration_descriptor),
+     85                  // CONFIGURATION descriptor type
+     86                  USB_CONFIGURATION_DESCRIPTOR,
+     87                  // Total size of this configuration (including other descriptors)
+     88                  sizeof(S_ser_configuration_descriptor),
+     89                  // Two interfaces are used by this configuration
+     90                  0x02,
+     91                  // Value 0x01 is used to select this configuration
+     92                  0x01,
+     93                  // No string is used to describe this configuration
+     94                  0x00,
+     95                  // Device is self-powered and does not support remote wakeup
+     96                  USB_CONFIG_SELF_WAKEUP,
+     97                  // Maximum power consumption of the device is 100mA
+     98                  USB_POWER_MA(100)
+     99              },
+    100              // Communication class interface descriptor
+    101              {
+    102                  sizeof(S_usb_interface_descriptor), // Size of this descriptor in bytes
+    103                  USB_INTERFACE_DESCRIPTOR,           // INTERFACE Descriptor Type
+    104                  0x00,                               // Interface 0
+    105                  0x00,                               // No alternate settings
+    106                  0x01,                               // One endpoint used
+    107                  CDC_INTERFACE_COMMUNICATION,        // Communication interface class
+    108                  CDC_ABSTRACT_CONTROL_MODEL,         // Abstract control model subclass
+    109                  0x01,                               // No protocol code
+    110                  0x00                                // No associated string descriptor
+    111              },
+    112              // Header functional descriptor
+    113              {
+    114                  sizeof(S_cdc_header_descriptor), // Size of this descriptor in bytes
+    115                  CDC_CS_INTERFACE,                // CS_INTERFACE descriptor type
+    116                  CDC_HEADER,                      // Header functional descriptor
+    117                  CDC1_10,                         // CDC version 1.10
+    118              },
+    119              // Call management functional descriptor
+    120              {
+    121                  sizeof(S_cdc_call_management_descriptor), // Size of this descriptor
+    122                  CDC_CS_INTERFACE,                         // CS_INTERFACE type
+    123                  CDC_CALL_MANAGEMENT,                      // Call management descriptor
+    124                  0x01,                                     // Call management is
+    125                                                            // handled by the device
+    126                  0x01                                      // Data interface is 0x01
+    127              },
+    128              // Abstract control management functional descriptor
+    129              {
+    130                  // Size of this descriptor in bytes
+    131                  sizeof(S_cdc_abstract_control_management_descriptor),
+    132                  // CS_INTERFACE descriptor type
+    133                  CDC_CS_INTERFACE,
+    134                  // Abstract control management functional descriptor
+    135                  CDC_ABSTRACT_CONTROL_MANAGEMENT,
+    136                  // Every notification/request except NetworkConnection supported
+    137                  0x07
+    138              },
+    139              // Union functional descriptor with one slave interface
+    140              {
+    141                  // Union functional descriptor
+    142                  {
+    143                      sizeof(S_cdc_union_descriptor)+1, // Size of this descriptor
+    144                      CDC_CS_INTERFACE,                 // CS_INTERFACE descriptor type
+    145                      CDC_UNION,                        // Union functional descriptor
+    146                      0x00,                             // Master interface is 0x00
+    147                  },                                    // (Communication class interface)
+    148                  0x01                                  // First slave interface is 0x01
+    149              },                                        // (Data class interface)
+    150              // Notification endpoint descriptor
+    151              {
+    152                  sizeof(S_usb_endpoint_descriptor),  // Size of this descriptor in bytes
+    153                  USB_ENDPOINT_DESCRIPTOR,            // ENDPOINT descriptor type
+    154                  USB_ENDPOINT_IN | SER_EPT_NOTIFICATION, // IN endpoint, address = 0x03
+    155                  ENDPOINT_TYPE_INTERRUPT,            // INTERRUPT endpoint type
+    156                  64,                                 // Maximum packet size is 64 bytes
+    157                  0x10                                // Endpoint polled every 10ms
+    158              },
+    159              // Data class interface descriptor
+    160              {
+    161                  sizeof(S_usb_interface_descriptor), // Size of this descriptor in bytes
+    162                  USB_INTERFACE_DESCRIPTOR,           // INTERFACE descriptor type
+    163                  0x01,                               // Interface 0x01
+    164                  0x00,                               // No alternate settings
+    165                  0x02,                               // Two endpoints used
+    166                  CDC_INTERFACE_DATA,                 // Data class code
+    167                  0x00,                               // No subclass code
+    168                  0x00,                               // No protocol code
+    169                  0x00                                // No description string
+    170              },
+    171              // Bulk-OUT endpoint descriptor
+    172              {
+    173                  sizeof(S_usb_endpoint_descriptor), // Size of this descriptor in bytes
+    174                  USB_ENDPOINT_DESCRIPTOR,           // ENDPOINT descriptor type
+    175                  USB_ENDPOINT_OUT | SER_EPT_DATA_OUT,   // OUT endpoint, address = 0x01
+    176                  ENDPOINT_TYPE_BULK,                // Bulk endpoint
+    177                  64,                                // Endpoint size is 64 bytes
+    178                  0x00                               // Must be 0x00 for full-speed bulk
+    179              },                                     // endpoints
+    180              // Bulk-IN endpoint descriptor
+    181              {
+    182                  sizeof(S_usb_endpoint_descriptor), // Size of this descriptor in bytes
+    183                  USB_ENDPOINT_DESCRIPTOR,           // ENDPOINT descriptor type
+    184                  USB_ENDPOINT_IN | SER_EPT_DATA_IN,     // IN endpoint, address = 0x02
+    185                  ENDPOINT_TYPE_BULK,                // Bulk endpoint
+    186                  64,                                // Endpoint size is 64 bytes
+    187                  0x00                               // Must be 0x00 for full-speed bulk
+    188              },                                     // endpoints
+    189          };
+    190          
+    191          //! \brief  Language ID string descriptor
+
+   \                                 In section .rodata, align 4
+    192          const S_usb_language_id sLanguageID = {
+   \                     sLanguageID:
+   \   00000000   0403               DC8 4, 3
+   \   00000002   0904               DC16 1033
+    193          
+    194              USB_STRING_DESCRIPTOR_SIZE(1),
+    195              USB_STRING_DESCRIPTOR,
+    196              USB_LANGUAGE_ENGLISH_US
+    197          };
+    198          
+    199          //! \brief  Manufacturer string descriptor
+
+   \                                 In section .rodata, align 4
+    200          const char pManufacturer[] = {
+   \                     pManufacturer:
+   \   00000000   0C0341005400       DC8 12, 3, 65, 0, 84, 0, 77, 0, 69, 0, 76, 0
+   \              4D0045004C00
+    201          
+    202              USB_STRING_DESCRIPTOR_SIZE(5),
+    203              USB_STRING_DESCRIPTOR,
+    204              USB_UNICODE('A'),
+    205              USB_UNICODE('T'),
+    206              USB_UNICODE('M'),
+    207              USB_UNICODE('E'),
+    208              USB_UNICODE('L')
+    209          };
+    210          
+    211          //! \brief  Product string descriptor
+
+   \                                 In section .rodata, align 4
+    212          const char pProduct[] = {
+   \                     pProduct:
+   \   00000000   1C0341005400       DC8 28, 3, 65, 0, 84, 0, 57, 0, 49, 0, 85, 0, 83, 0, 66, 0, 83, 0, 101
+   \              390031005500
+   \              530042005300
+   \              65          
+   \   00000013   007200690061       DC8 0, 114, 0, 105, 0, 97, 0, 108, 0
+   \              006C00      
+    213          
+    214              USB_STRING_DESCRIPTOR_SIZE(13),
+    215              USB_STRING_DESCRIPTOR,
+    216              USB_UNICODE('A'),
+    217              USB_UNICODE('T'),
+    218              USB_UNICODE('9'),
+    219              USB_UNICODE('1'),
+    220              USB_UNICODE('U'),
+    221              USB_UNICODE('S'),
+    222              USB_UNICODE('B'),
+    223              USB_UNICODE('S'),
+    224              USB_UNICODE('e'),
+    225              USB_UNICODE('r'),
+    226              USB_UNICODE('i'),
+    227              USB_UNICODE('a'),
+    228              USB_UNICODE('l')
+    229          };
+    230          
+    231          //! \brief  Serial number string descriptor
+
+   \                                 In section .rodata, align 4
+    232          const char pSerialNumber[] = {
+   \                     pSerialNumber:
+   \   00000000   1A0330003100       DC8 26, 3, 48, 0, 49, 0, 50, 0, 51, 0, 52, 0, 53, 0, 54, 0, 55, 0, 56
+   \              320033003400
+   \              350036003700
+   \              38          
+   \   00000013   003900410046       DC8 0, 57, 0, 65, 0, 70, 0, 0, 0
+   \              000000      
+    233          
+    234              USB_STRING_DESCRIPTOR_SIZE(12),
+    235              USB_STRING_DESCRIPTOR,
+    236              USB_UNICODE('0'),
+    237              USB_UNICODE('1'),
+    238              USB_UNICODE('2'),
+    239              USB_UNICODE('3'),
+    240              USB_UNICODE('4'),
+    241              USB_UNICODE('5'),
+    242              USB_UNICODE('6'),
+    243              USB_UNICODE('7'),
+    244              USB_UNICODE('8'),
+    245              USB_UNICODE('9'),
+    246              USB_UNICODE('A'),
+    247              USB_UNICODE('F')
+    248          };
+    249          
+    250          //! \brief  List of string descriptors
+
+   \                                 In section .data, align 4
+    251          const char *pStrings[] = {
+   \                     pStrings:
+   \   00000000   ............       DC32 sLanguageID, pManufacturer, pProduct, pSerialNumber
+   \              ............
+   \              ........    
+    252          
+    253              (char *) &sLanguageID,
+    254              pManufacturer,
+    255              pProduct,
+    256              pSerialNumber
+    257          };
+    258          
+    259          //! \brief List of endpoint descriptors
+
+   \                                 In section .data, align 4
+    260          const S_usb_endpoint_descriptor *pEndpoints[] = {
+   \                     pEndpoints:
+   \   00000000   ............       DC32 sConfiguration + 35H, sConfiguration + 3CH, sConfiguration + 25H
+   \              ............
+    261          
+    262              &(sConfiguration.sDataOut),
+    263              &(sConfiguration.sDataIn),
+    264              &(sConfiguration.sNotification)
+    265          };
+    266          
+    267          //! \brief  Standard descriptors list
+
+   \                                 In section .rodata, align 4
+    268          const S_std_descriptors sDescriptors = {
+   \                     sDescriptors:
+   \   00000000   ............       DC32 sDevice, sConfiguration, pStrings, pEndpoints
+   \              ............
+   \              ........    
+    269          
+    270              &sDevice,
+    271              (S_usb_configuration_descriptor *) &sConfiguration,
+    272              pStrings,
+    273              pEndpoints
+    274          };
+    275          
+    276          //------------------------------------------------------------------------------
+    277          //      Internal functions
+    278          //------------------------------------------------------------------------------
+    279          //------------------------------------------------------------------------------
+    280          //! \brief  Sets asynchronous line-character formatting properties
+    281          //!
+    282          //!         This function is used as a callback when receiving the data part
+    283          //!         of a SET_LINE_CODING request.
+    284          //! \param  pSer         Pointer to a S_ser instance
+    285          //! \see    S_ser
+    286          //! \see    usbcdc11.pdf - Section 6.2.12
+    287          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    288          static void ACM_SetLineCoding(const S_ser *pSer)
+    289          {
+   \                     ACM_SetLineCoding:
+   \   00000000   01B5               PUSH     {R0,LR}
+    290              USB_SendZLP0(pSer->sClass.pUsb, 0, 0);
+   \   00000002   0022               MOVS     R2,#+0
+   \   00000004   1100               MOVS     R1,R2
+   \   00000006   0068               LDR      R0,[R0, #+0]
+   \   00000008   ........           BL       USB_SendZLP0
+    291          }
+   \   0000000C   08BC               POP      {R3}
+   \   0000000E   01BC               POP      {R0}
+   \   00000010   0047               BX       R0               ;; return
+    292          
+    293          //------------------------------------------------------------------------------
+    294          //! \brief  Sends the currently configured line coding to the host
+    295          //! \param  pSer               Pointer to a S_ser instance
+    296          //! \see    S_ser
+    297          //! \see    usbcdc11.pdf - Section 6.2.13
+    298          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    299          static void ACM_GetLineCoding(const S_ser *pSer)
+    300          {
+   \                     ACM_GetLineCoding:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   0400               MOVS     R4,R0
+    301              USB_Write(pSer->sClass.pUsb,
+    302                        0,
+    303                        (void *) &(pSer->sLineCoding),
+    304                        sizeof(S_cdc_line_coding),
+    305                        0,
+    306                        0);
+   \   00000004   0021               MOVS     R1,#+0
+   \   00000006   0800               MOVS     R0,R1
+   \   00000008   03B4               PUSH     {R0,R1}
+   \   0000000A   0723               MOVS     R3,#+7
+   \   0000000C   2200               MOVS     R2,R4
+   \   0000000E   0C32               ADDS     R2,R2,#+12
+   \   00000010   2068               LDR      R0,[R4, #+0]
+   \   00000012   ........           BL       USB_Write
+   \   00000016   02B0               ADD      SP,SP,#+8
+    307          }
+   \   00000018   10BC               POP      {R4}
+   \   0000001A   01BC               POP      {R0}
+   \   0000001C   0047               BX       R0               ;; return
+    308          
+    309          //------------------------------------------------------------------------------
+    310          //! \brief  Sets the state of control line parameters.
+    311          //! \param  pSer              Pointer to a S_ser instance
+    312          //! \param  isActivateCarrier Indicates if the device should activate
+    313          //!                           its carrier
+    314          //! \param  isDTEPresent      Indicates if the terminal is present
+    315          //! \see    S_ser
+    316          //! \see    usbcdc11.pdf - Section 6.2.14
+    317          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    318          static void ACM_SetControlLineState(S_ser *pSer,
+    319                                              bool  isActivateCarrier,
+    320                                              bool  isDTEPresent)
+    321          {
+   \                     ACM_SetControlLineState:
+   \   00000000   01B5               PUSH     {R0,LR}
+    322              pSer->isCarrierActivated = isActivateCarrier;
+   \   00000002   C174               STRB     R1,[R0, #+19]
+    323              USB_SendZLP0(pSer->sClass.pUsb, 0, 0);
+   \   00000004   0022               MOVS     R2,#+0
+   \   00000006   1100               MOVS     R1,R2
+   \   00000008   0068               LDR      R0,[R0, #+0]
+   \   0000000A   ........           BL       USB_SendZLP0
+    324          }
+   \   0000000E   08BC               POP      {R3}
+   \   00000010   01BC               POP      {R0}
+   \   00000012   0047               BX       R0               ;; return
+    325          
+    326          //------------------------------------------------------------------------------
+    327          //      Exported functions
+    328          //------------------------------------------------------------------------------
+    329          //------------------------------------------------------------------------------
+    330          //! \brief  SETUP request handler for an Abstract Control Model device
+    331          //! \param  pSer Pointer to a S_ser instance
+    332          //! \see    S_ser
+    333          //! \see    usbcdc11.pdf - Section 6.2
+    334          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    335          void SER_RequestHandler(S_ser *pSer)
+    336          {
+   \                     SER_RequestHandler:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   0400               MOVS     R4,R0
+    337              S_usb_request *pSetup = USB_GetSetup(pSer->sClass.pUsb);
+   \   00000004   2068               LDR      R0,[R4, #+0]
+   \   00000006   ........           BL       USB_GetSetup
+    338          
+    339              //TRACE_DEBUG_M("NewReq ");
+    340          
+    341              // Handle the request
+    342              switch (pSetup->bRequest) {
+   \   0000000A   4178               LDRB     R1,[R0, #+1]
+   \   0000000C   2029               CMP      R1,#+32
+   \   0000000E   04D0               BEQ      ??SER_RequestHandler_0
+   \   00000010   2129               CMP      R1,#+33
+   \   00000012   0ED0               BEQ      ??SER_RequestHandler_1
+   \   00000014   2229               CMP      R1,#+34
+   \   00000016   10D0               BEQ      ??SER_RequestHandler_2
+   \   00000018   1DE0               B        ??SER_RequestHandler_3
+    343          
+    344              //-----------------------
+    345              case CDC_SET_LINE_CODING:
+    346              //-----------------------
+    347                  //TRACE_DEBUG_M("sLineCoding ");
+    348          
+    349                  // Start the read operation with ACM_SetLineCoding as the callback
+    350                  USB_Read(pSer->sClass.pUsb,
+    351                           0,
+    352                           (void *) &(pSer->sLineCoding),
+    353                           sizeof(S_cdc_line_coding),
+    354                           (Callback_f) ACM_SetLineCoding,
+    355                           pSer);
+   \                     ??SER_RequestHandler_0:
+   \   0000001A   2100               MOVS     R1,R4
+   \   0000001C   1148               LDR      R0,??SER_RequestHandler_4  ;; ACM_SetLineCoding
+   \   0000001E   03B4               PUSH     {R0,R1}
+   \   00000020   0723               MOVS     R3,#+7
+   \   00000022   2200               MOVS     R2,R4
+   \   00000024   0C32               ADDS     R2,R2,#+12
+   \   00000026   0021               MOVS     R1,#+0
+   \   00000028   2068               LDR      R0,[R4, #+0]
+   \   0000002A   ........           BL       USB_Read
+   \   0000002E   02B0               ADD      SP,SP,#+8
+   \   00000030   14E0               B        ??SER_RequestHandler_5
+    356          
+    357                  break;
+    358          
+    359              //-----------------------
+    360              case CDC_GET_LINE_CODING:
+    361              //-----------------------
+    362                  TRACE_DEBUG_M("gLineCoding ");
+    363                  ACM_GetLineCoding(pSer);
+   \                     ??SER_RequestHandler_1:
+   \   00000032   2000               MOVS     R0,R4
+   \   00000034   ........           BL       ACM_GetLineCoding
+   \   00000038   10E0               B        ??SER_RequestHandler_5
+    364          
+    365                  break;
+    366          
+    367              //------------------------------
+    368              case CDC_SET_CONTROL_LINE_STATE:
+    369              //------------------------------
+    370                  {
+    371                      bool isActivateCarrier = false;
+   \                     ??SER_RequestHandler_2:
+   \   0000003A   0021               MOVS     R1,#+0
+    372                      bool isDTEPresent = false;
+   \   0000003C   0A00               MOVS     R2,R1
+    373          
+    374                      //TRACE_DEBUG_M("sControlLineState(");
+    375          
+    376                      if (ISSET(pSetup->wValue, CDC_DTE_PRESENT)) {
+   \   0000003E   4388               LDRH     R3,[R0, #+2]
+   \   00000040   DB07               LSLS     R3,R3,#+31
+   \   00000042   00D5               BPL      ??SER_RequestHandler_6
+    377          
+    378                          isDTEPresent = true;
+   \   00000044   0122               MOVS     R2,#+1
+    379                      }
+    380          
+    381                      if (ISSET(pSetup->wValue, CDC_ACTIVATE_CARRIER)) {
+   \                     ??SER_RequestHandler_6:
+   \   00000046   4088               LDRH     R0,[R0, #+2]
+   \   00000048   8007               LSLS     R0,R0,#+30
+   \   0000004A   00D5               BPL      ??SER_RequestHandler_7
+    382          
+    383                          isActivateCarrier = true;
+   \   0000004C   0121               MOVS     R1,#+1
+    384                      }
+    385          
+    386                      //TRACE_DEBUG_M("%d,%d) ", isDTEPresent, isActivateCarrier);
+    387          
+    388                      ACM_SetControlLineState(pSer, isActivateCarrier, isDTEPresent);
+   \                     ??SER_RequestHandler_7:
+   \   0000004E   2000               MOVS     R0,R4
+   \   00000050   ........           BL       ACM_SetControlLineState
+   \   00000054   02E0               B        ??SER_RequestHandler_5
+    389                  }
+    390                  break;
+    391          
+    392              //------
+    393              default:
+    394              //------
+    395                  // Forward request to standard request handler
+    396                  STD_RequestHandler((S_std_class *) pSer);
+   \                     ??SER_RequestHandler_3:
+   \   00000056   2000               MOVS     R0,R4
+   \   00000058   ........           BL       STD_RequestHandler
+    397          
+    398                  break;
+    399              }
+    400          }
+   \                     ??SER_RequestHandler_5:
+   \   0000005C   10BC               POP      {R4}
+   \   0000005E   01BC               POP      {R0}
+   \   00000060   0047               BX       R0               ;; return
+   \   00000062   C046               Nop      
+   \                     ??SER_RequestHandler_4:
+   \   00000064   ........           DC32     ACM_SetLineCoding
+    401          
+    402          //------------------------------------------------------------------------------
+    403          //! \brief  Initializes a CDC serial driver
+    404          //!
+    405          //!         This method sets the standard descriptors of the device and the
+    406          //!         default CDC configuration.
+    407          //! \param  pSer Pointer to a S_ser instance
+    408          //! \param  pUsb Pointer to the S_usb driver instance to use
+    409          //! \see    S_ser
+    410          //! \see    S_usb
+    411          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    412          void SER_Init(S_ser *pSer, const S_usb *pUsb)
+    413          {
+   \                     SER_Init:
+   \   00000000   01B5               PUSH     {R0,LR}
+    414              // Initialize standard class attributes
+    415              pSer->sClass.pUsb = pUsb;
+   \   00000002   0160               STR      R1,[R0, #+0]
+    416              pSer->sClass.pDescriptors = &sDescriptors;
+   \   00000004   074A               LDR      R2,??SER_Init_0  ;; sDescriptors
+   \   00000006   4260               STR      R2,[R0, #+4]
+    417          
+    418              // Initialize ACM attributes
+    419              // Line coding
+    420              pSer->sLineCoding.dwDTERate = 0;
+   \   00000008   0022               MOVS     R2,#+0
+   \   0000000A   C260               STR      R2,[R0, #+12]
+    421              pSer->sLineCoding.bCharFormat = 0;
+   \   0000000C   1300               MOVS     R3,R2
+   \   0000000E   0374               STRB     R3,[R0, #+16]
+    422              pSer->sLineCoding.bParityType = 0;
+   \   00000010   4374               STRB     R3,[R0, #+17]
+    423              pSer->sLineCoding.bDataBits = 0;
+   \   00000012   8374               STRB     R3,[R0, #+18]
+    424          
+    425              // Carrier
+    426              pSer->isCarrierActivated = false;
+   \   00000014   C274               STRB     R2,[R0, #+19]
+    427          
+    428              // Initialize the USB driver
+    429              USB_Init(pUsb);
+   \   00000016   0800               MOVS     R0,R1
+   \   00000018   ........           BL       USB_Init
+    430          }
+   \   0000001C   08BC               POP      {R3}
+   \   0000001E   01BC               POP      {R0}
+   \   00000020   0047               BX       R0               ;; return
+   \   00000022   C046               Nop      
+   \                     ??SER_Init_0:
+   \   00000024   ........           DC32     sDescriptors
+    431          
+    432          //------------------------------------------------------------------------------
+    433          //! \brief  Reads data from the Data OUT endpoint
+    434          //! \param  pSer      Pointer to a S_ser instance
+    435          //! \param  pBuffer   Buffer in which to store the received data
+    436          //! \param  dLength   Length of data buffer
+    437          //! \param  fCallback Optional callback function
+    438          //! \param  pArgument Optional parameter for the callback function
+    439          //! \return SER_STATUS_SUCCESS if transfer has started successfully;
+    440          //!         SER_STATUS_LOCKED if endpoint is currently in use;
+    441          //!         SER_STATUS_ERROR if transfer cannot be started.
+    442          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    443          unsigned char SER_Read(S_ser *pSer,
+    444                                 void *pBuffer,
+    445                                 unsigned int dLength,
+    446                                 Callback_f fCallback,
+    447                                 void *pArgument)
+    448          {
+   \                     SER_Read:
+   \   00000000   31B5               PUSH     {R0,R4,R5,LR}
+   \   00000002   0400               MOVS     R4,R0
+   \   00000004   0D00               MOVS     R5,R1
+   \   00000006   1800               MOVS     R0,R3
+   \   00000008   0499               LDR      R1,[SP, #+16]
+    449              return USB_Read(pSer->sClass.pUsb, SER_EPT_DATA_OUT, pBuffer,
+    450                              dLength, fCallback, pArgument);
+   \   0000000A   03B4               PUSH     {R0,R1}
+   \   0000000C   1300               MOVS     R3,R2
+   \   0000000E   2A00               MOVS     R2,R5
+   \   00000010   0121               MOVS     R1,#+1
+   \   00000012   2068               LDR      R0,[R4, #+0]
+   \   00000014   ........           BL       USB_Read
+   \   00000018   02B0               ADD      SP,SP,#+8
+   \   0000001A   38BC               POP      {R3-R5}
+   \   0000001C   02BC               POP      {R1}
+   \   0000001E   0847               BX       R1               ;; return
+    451          }
+    452          
+    453          //------------------------------------------------------------------------------
+    454          //! \brief  Sends data through the Data IN endpoint
+    455          //! \param  pSer      Pointer to a S_ser instance
+    456          //! \param  pBuffer   Buffer holding the data to transmit
+    457          //! \param  dLength   Length of data buffer
+    458          //! \param  fCallback Optional callback function
+    459          //! \param  pArgument Optional parameter for the callback function
+    460          //! \return SER_STATUS_SUCCESS if transfer has started successfully;
+    461          //!         SER_STATUS_LOCKED if endpoint is currently in use;
+    462          //!         SER_STATUS_ERROR if transfer cannot be started.
+    463          //------------------------------------------------------------------------------
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    464          unsigned char SER_Write(S_ser *pSer,
+    465                                  void *pBuffer,
+    466                                  unsigned int dLength,
+    467                                  Callback_f fCallback,
+    468                                  void *pArgument)
+    469          {
+   \                     SER_Write:
+   \   00000000   31B5               PUSH     {R0,R4,R5,LR}
+   \   00000002   0400               MOVS     R4,R0
+   \   00000004   0D00               MOVS     R5,R1
+   \   00000006   1800               MOVS     R0,R3
+   \   00000008   0499               LDR      R1,[SP, #+16]
+    470              return USB_Write(pSer->sClass.pUsb, SER_EPT_DATA_IN, pBuffer,
+    471                               dLength, fCallback, pArgument);
+   \   0000000A   03B4               PUSH     {R0,R1}
+   \   0000000C   1300               MOVS     R3,R2
+   \   0000000E   2A00               MOVS     R2,R5
+   \   00000010   0221               MOVS     R1,#+2
+   \   00000012   2068               LDR      R0,[R4, #+0]
+   \   00000014   ........           BL       USB_Write
+   \   00000018   02B0               ADD      SP,SP,#+8
+   \   0000001A   38BC               POP      {R3-R5}
+   \   0000001C   02BC               POP      {R1}
+   \   0000001E   0847               BX       R1               ;; return
+    472          }
+
+   Maximum stack usage in bytes:
+
+     Function                .cstack
+     --------                -------
+     ACM_GetLineCoding           16
+     ACM_SetControlLineState      8
+     ACM_SetLineCoding            8
+     SER_Init                     8
+     SER_Read                    24
+     SER_RequestHandler          16
+     SER_Write                   24
+     USB_GetSetup                 0
+     USB_Init                     8
+     USB_Read                    24
+     USB_SendZLP0                16
+     USB_Write                   24
+
+
+   Section sizes:
+
+     Function/Label          Bytes
+     --------------          -----
+     USB_GetSetup               4
+     USB_Write                 34
+     USB_SendZLP0              30
+     USB_Read                  34
+     USB_Init                  18
+     sDevice                   20
+     sConfiguration            68
+     sLanguageID                4
+     pManufacturer             12
+     pProduct                  28
+     pSerialNumber             28
+     pStrings                  16
+     pEndpoints                12
+     sDescriptors              16
+     ACM_SetLineCoding         18
+     ACM_GetLineCoding         30
+     ACM_SetControlLineState   20
+     SER_RequestHandler       104
+     SER_Init                  40
+     SER_Read                  32
+     SER_Write                 32
+      Others                    4
+
+ 
+  28 bytes in section .data
+ 176 bytes in section .rodata
+ 400 bytes in section Debug.txt
+ 
+ 276 bytes of CODE  memory (+ 124 bytes shared)
+ 176 bytes of CONST memory
+  28 bytes of DATA  memory
+
+Errors: none
+Warnings: none

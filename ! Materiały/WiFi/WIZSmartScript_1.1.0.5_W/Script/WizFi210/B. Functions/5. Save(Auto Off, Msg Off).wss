@@ -1,0 +1,92 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+UXMessageText(1, "Working...")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+ifFALSE SerialPortOpen(@COM, @BAUD, 0)
+{
+	UXConsoleText(2, "[SerialPortOpen Error]", 0, 1, 1)
+	goto TEST-ERROR
+}
+SerialStartMonitor(@COM)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT")
+SerialSendString(@COM, #SParam11, 2)
+ifTRUE SerialFindString(@COM, "OK", "", 100, 10)
+{
+	goto ATCOMMAND-MODE
+}
+Sleep(100)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "+++")
+SerialSendString(@COM, #SParam11, 0)
+Sleep(1500)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 10)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(100)
+
+
+:ATCOMMAND-MODE
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "ATC0")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 30)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(100)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+XDUM=1")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 30)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(100)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT&W0")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 30)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(100)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT&Y0")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 30)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(100)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+:TEST-OK
+UXMessageText(1, "OK")
+goto TEST-END
+
+:TEST-ERROR
+UXMessageText(2, "Error")
+
+:TEST-END
+Sleep(10)
+SerialPortClose(@COM)
+Sleep(10)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

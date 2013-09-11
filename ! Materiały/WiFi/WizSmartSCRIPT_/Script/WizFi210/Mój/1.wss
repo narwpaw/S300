@@ -1,0 +1,191 @@
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+UXMessageText(1, "Working...")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+ifFALSE SerialPortOpen(@COM, @BAUD, 0)
+{
+	UXConsoleText(2, "[SerialPortOpen Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+SerialStartMonitor(@COM)
+
+
+
+
+
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+WD")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+
+
+
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+WAUTO=0,IASE_local_wireless")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+WAUTH=0")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+WWPA=iasemlocal")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+NDHCP=1")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+
+
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+XDUM=1")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "ATA")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 200)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(15000)
+
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+NCTCP=173.203.98.29,80")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(3000)
+
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+CID=?")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(100)
+
+
+
+
+
+
+
+MakeString(#SParam11, "S0")
+SerialSendString(@COM, #SParam11, 2)
+Sleep(1)
+MakeString(#SParam11, "GET /v2/feeds/34428.csv HTTP/1.1")
+SerialSendString(@COM, #SParam11, 2)
+SerialSendByte(@COM, 0x0A, 2)
+Sleep(1)
+MakeString(#SParam11, "User-Agent: curl/7.19.5 (i486-pc-linux-gnu) libcurl/7.19.5 OpenSSL/0.9.8g zlib/1.2.3.3libidn/1.15")
+SerialSendString(@COM, #SParam11, 2)
+SerialSendByte(@COM, 0x0A, 2)
+Sleep(1)
+MakeString(#SParam11, "Host: api.pachube.com")
+SerialSendString(@COM, #SParam11, 2)
+SerialSendByte(@COM, 0x0A, 2)
+Sleep(1)
+MakeString(#SParam11, "Accept: */*")
+SerialSendString(@COM, #SParam11, 2)
+SerialSendByte(@COM, 0x0A, 2)
+Sleep(1)
+MakeString(#SParam11, "X-PachubeApiKey:_5TVUszs376KgB2OUHoH4-o6OZ5CV5ie_6dzlQYnROI")
+SerialSendString(@COM, #SParam11, 2)
+SerialSendByte(@COM, 0x0A, 2)
+Sleep(1)
+MakeString(#SParam11, "Connection: keep-alive")
+SerialSendString(@COM, #SParam11, 2)
+SerialSendByte(@COM, 0x0A, 2)
+Sleep(1)
+MakeString(#SParam11, "E")
+SerialSendString(@COM, #SParam11, 2)
+SerialSendByte(@COM, 0x0A, 2)
+
+Sleep(10000)
+
+
+
+
+
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+:TEST-OK
+UXMessageText(1, "OK")
+goto TEST-END
+
+:TEST-ERROR
+UXMessageText(2, "Error")
+
+:TEST-END
+Sleep(10)
+SerialPortClose(@COM)
+Sleep(10)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

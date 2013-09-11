@@ -1,0 +1,11 @@
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "@TypeACommand")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, @TypeAWait)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+

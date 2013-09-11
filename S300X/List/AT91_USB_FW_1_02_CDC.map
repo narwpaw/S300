@@ -1,0 +1,1493 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ELF Linker V5.10.5.372/W32                    09/Jul/2012  21:05:21 #
+# Copyright 2007 IAR Systems. All rights reserved.                            #
+#                                                                             #
+#    Output file  =  D:\Zeuron\Projekty\S300\S300-program v0.6 -              #
+#                    18.05.2012\S300X\Exe\AT91_USB_FW_1_02_CDC.out            #
+#    Map file     =  D:\Zeuron\Projekty\S300\S300-program v0.6 -              #
+#                    18.05.2012\S300X\List\AT91_USB_FW_1_02_CDC.map           #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\Application_prog.o"                 #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\Clock.o"                            #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\Interrupt.o"                        #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\LCD_light_PWM.o"                    #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\Lcd_Negativ_Old.o"                  #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\Modbus.o"                           #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\RF.o" "D:\Zeuron\Projekty\S300\S300 #
+#                    -program v0.6 - 18.05.2012\S300X\Obj\RF_Exe.o"           #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\RS_WIN.o"                           #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\SPI.o"                              #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\ScreenMENU2.o"                      #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\USART.o"                            #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\WizFi.o"                            #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\WizFiCommand.o"                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\at91stdio.o"                        #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\board.o"                            #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\device.o"                           #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\flash.o"                            #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\language.o"                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\lcd.o"                              #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\main.o"                             #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\serial_driver.o"                    #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\spi_main.o"                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\standard.o"                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\startup.o"                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Obj\udp.o" -o                           #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\Exe\AT91_USB_FW_1_02_CDC.out" --map     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\List\AT91_USB_FW_1_02_CDC.map" --log    #
+#                    initialization,modules,sections,veneers --log_file       #
+#                    "D:\Zeuron\Projekty\S300\S300-program v0.6 -             #
+#                    18.05.2012\S300X\List\AT91_USB_FW_1_02_CDC.log"          #
+#                    --config "D:\Zeuron\Projekty\S300\S300-program v0.6 -    #
+#                    18.05.2012\config\at91SAM7S256_NoRemap.icf"              #
+#                    --semihosting --entry __iar_program_start                #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+*******************************************************************************
+*** RUNTIME MODEL ATTRIBUTES
+***
+
+__endian      = little
+__thumb_aware = enabled
+
+
+*******************************************************************************
+*** PLACEMENT SUMMARY
+***
+
+"A1":  place at mem:0x0 { ro section .intvec };
+"P1":  place in [from mem:0x100 to mem:0x3ffff] { ro };
+"P2":  place in [from mem:0x200000 to mem:0x20ffff] {
+          rw, block CSTACK, block SVC_STACK, block IRQ_STACK, block FIQ_STACK,
+          block UND_STACK, block ABT_STACK, block HEAP };
+
+  Section            Kind        Address     Size  Object
+  -------            ----        -------     ----  ------
+"A1":                                        0x40
+  .intvec            ro code  0x00000000     0x40  startup.o [1]
+                            - 0x00000040     0x40
+
+"P1":                                     0x240c4
+  Veneer             ro code  0x00000100     0x10  - Linker created -
+  Veneer             ro code  0x00000110     0x10  - Linker created -
+  Veneer             ro code  0x00000120     0x10  - Linker created -
+  Debug.txt          ro code  0x00000130  0x10884  ScreenMENU2.o [1]
+  Veneer             ro code  0x000109b4     0x10  - Linker created -
+  Debug.txt          ro code  0x000109c4   0x33d8  lcd.o [1]
+  Debug.txt          ro code  0x00013d9c   0x16ec  WizFiCommand.o [1]
+  Debug.txt          ro code  0x00015488   0x14b0  main.o [1]
+  .rodata            const    0x00016938   0x1450  lcd.o [1]
+  .rodata            const    0x00017d88   0x1428  language.o [1]
+  Debug.txt          ro code  0x000191b0   0x12ec  Application_prog.o [1]
+  Veneer             ro code  0x0001a49c     0x10  - Linker created -
+  Veneer             ro code  0x0001a4ac     0x10  - Linker created -
+  .text              ro code  0x0001a4bc    0xfac  xprintffull.o [2]
+  Debug.txt          ro code  0x0001b468    0xb84  udp.o [1]
+  .rodata            const    0x0001bfec    0x82c  ScreenMENU2.o [1]
+  Debug.txt          ro code  0x0001c818    0x77c  RS_WIN.o [1]
+  Debug.txt          ro code  0x0001cf94    0x648  RF.o [1]
+  Debug.txt          ro code  0x0001d5dc    0x5c4  WizFi.o [1]
+  Debug.txt          ro code  0x0001dba0    0x580  RF_Exe.o [1]
+  .rodata            const    0x0001e120    0x400  lcd.o [1]
+  .rodata            const    0x0001e520    0x400  lcd.o [1]
+  .rodata            const    0x0001e920    0x3f4  lcd.o [1]
+  Veneer             ro code  0x0001ed14      0x4  - Linker created -
+  .text              ro code  0x0001ed18    0x3a8  DblDiv.o [3]
+  Debug.txt          ro code  0x0001f0c0    0x360  spi_main.o [1]
+  .rodata            const    0x0001f420    0x350  ScreenMENU2.o [1]
+  Veneer             ro code  0x0001f770      0x4  - Linker created -
+  .text              ro code  0x0001f774    0x2b0  DblMul.o [3]
+  Debug.txt          ro code  0x0001fa24    0x294  standard.o [1]
+  .rodata            const    0x0001fcb8    0x24c  ScreenMENU2.o [1]
+  Debug.txt          ro code  0x0001ff04    0x24c  Clock.o [1]
+  Veneer             ro code  0x00020150      0x4  - Linker created -
+  .text              ro code  0x00020154    0x220  DblSub.o [3]
+  Veneer             ro code  0x00020374      0x4  - Linker created -
+  .text              ro code  0x00020378    0x214  FltDiv.o [3]
+  .rodata            const    0x0002058c    0x200  Modbus.o [1]
+  Veneer             ro code  0x0002078c      0x4  - Linker created -
+  .text              ro code  0x00020790    0x1d4  I32DivMod.o [3]
+  Veneer             ro code  0x00020964      0x4  - Linker created -
+  .text              ro code  0x00020968    0x1c0  FltMul.o [3]
+  .rodata            const    0x00020b28    0x180  ScreenMENU2.o [1]
+  Veneer             ro code  0x00020ca8      0x4  - Linker created -
+  .text              ro code  0x00020cac    0x168  DblAdd.o [3]
+  Veneer             ro code  0x00020e14      0x4  - Linker created -
+  .text              ro code  0x00020e18    0x160  FltSub.o [3]
+  Debug.txt          ro code  0x00020f78    0x12c  USART.o [1]
+  .text              ro code  0x000210a4    0x124  I64DivMod.o [3]
+  Debug.txt          ro code  0x000211c8    0x118  serial_driver.o [1]
+  .rodata            const    0x000212e0    0x114  WizFiCommand.o [1]
+  .text              ro code  0x000213f4    0x114  xdscale.o [2]
+  Veneer             ro code  0x00021508      0x4  - Linker created -
+  .text              ro code  0x0002150c     0xdc  FltAdd.o [3]
+  Debug.txt          ro code  0x000215e8     0xd8  lcd.o [1]
+  text               ro code  0x000216c0     0xd4  startup.o [1]
+  .rodata            const    0x00021794     0xcc  ScreenMENU2.o [1]
+  Veneer             ro code  0x00021860      0x4  - Linker created -
+  .text              ro code  0x00021864     0xc4  memcpy.o [3]
+  .rodata            const    0x00021928     0xc0  ScreenMENU2.o [1]
+  Veneer             ro code  0x000219e8      0x4  - Linker created -
+  .text              ro code  0x000219ec     0xbc  DblToFlt.o [3]
+  .rodata            const    0x00021aa8     0xb8  ScreenMENU2.o [1]
+  .text              ro code  0x00021b60     0xb8  xdnorm.o [2]
+  Debug.txt          ro code  0x00021c18     0xb8  main.o [1]
+  .rodata            const    0x00021cd0     0xa8  ScreenMENU2.o [1]
+  Veneer             ro code  0x00021d78      0x4  - Linker created -
+  .text              ro code  0x00021d7c     0xa4  FltToS64.o [3]
+  Debug.txt          ro code  0x00021e20     0xa4  Interrupt.o [1]
+  .rodata            const    0x00021ec4     0xa0  flash.o [1]
+  Veneer             ro code  0x00021f64      0x4  - Linker created -
+  .text              ro code  0x00021f68     0x9c  DblToI32.o [3]
+  Veneer             ro code  0x00022004      0x4  - Linker created -
+  .text              ro code  0x00022008     0x98  memchr.o [3]
+  .rodata            const    0x000220a0     0x90  lcd.o [1]
+  ICODE              ro code  0x00022130     0x90  device.o [1]
+  .rodata            const    0x000221c0     0x8c  ScreenMENU2.o [1]
+  Debug.txt          ro code  0x0002224c     0x8c  board.o [1]
+  Debug.txt          ro code  0x000222d8     0x80  LCD_light_PWM.o [1]
+  .rodata            const    0x00022358     0x78  lcd.o [1]
+  Veneer             ro code  0x000223d0      0x4  - Linker created -
+  .text              ro code  0x000223d4     0x78  I32ToFlt.o [3]
+  Veneer             ro code  0x0002244c      0x4  - Linker created -
+  .text              ro code  0x00022450     0x74  I32ToDbl.o [3]
+  .rodata            const    0x000224c4     0x6c  ScreenMENU2.o [1]
+  Veneer             ro code  0x00022530      0x4  - Linker created -
+  .text              ro code  0x00022534     0x6c  I64ToFlt.o [3]
+  Veneer             ro code  0x000225a0      0x4  - Linker created -
+  .text              ro code  0x000225a4     0x68  FltToDbl.o [3]
+  .rodata            const    0x0002260c     0x60  ScreenMENU2.o [1]
+  .text              ro code  0x0002266c     0x60  DblSubNrml.o [3]
+  Debug.txt          ro code  0x000226cc     0x60  udp.o [1]
+  .rodata            const    0x0002272c     0x58  ScreenMENU2.o [1]
+  Veneer             ro code  0x00022784      0x4  - Linker created -
+  .text              ro code  0x00022788     0x58  FltToS32.o [3]
+  Veneer             ro code  0x000227e0      0x4  - Linker created -
+  .text              ro code  0x000227e4     0x58  strlen.o [3]
+  .rodata            const    0x0002283c     0x54  ScreenMENU2.o [1]
+  .rodata            const    0x00022890     0x54  ScreenMENU2.o [1]
+  .rodata            const    0x000228e4     0x54  ScreenMENU2.o [1]
+  .rodata            const    0x00022938     0x4c  WizFi.o [1]
+  Debug.txt          ro code  0x00022984     0x4c  device.o [1]
+  .rodata            const    0x000229d0     0x48  ScreenMENU2.o [1]
+  .text              ro code  0x00022a18     0x48  memset48.o [3]
+  Debug.txt          ro code  0x00022a60     0x48  SPI.o [1]
+  Debug.txt          ro code  0x00022aa8     0x46  Modbus.o [1]
+  Debug.txt          ro code  0x00022af0     0x46  SPI.o [1]
+  .rodata            const    0x00022b38     0x44  serial_driver.o [1]
+  .text              ro code  0x00022b7c     0x40  data_init.o [3]
+  Veneer             ro code  0x00022bbc      0x4  - Linker created -
+  .text              ro code  0x00022bc0     0x40  DblCmpLe.o [3]
+  Veneer             ro code  0x00022c00      0x4  - Linker created -
+  .text              ro code  0x00022c04     0x40  DblCmpGe.o [3]
+  .text              ro code  0x00022c44     0x40  rle_init.o [3]
+  Debug.txt          ro code  0x00022c84     0x3c  Modbus.o [1]
+  .rodata            const    0x00022cc0     0x38  ScreenMENU2.o [1]
+  .rodata            const    0x00022cf8     0x34  udp.o [1]
+  Debug.txt          ro code  0x00022d2c     0x34  USART.o [1]
+  .text              ro code  0x00022d60     0x32  strstr.o [2]
+  Debug.txt          ro code  0x00022d94     0x32  USART.o [1]
+  .rodata            const    0x00022dc8     0x30  ScreenMENU2.o [1]
+  .text              ro code  0x00022df8     0x30  sprintf.o [2]
+  Veneer             ro code  0x00022e28      0x4  - Linker created -
+  .text              ro code  0x00022e2c     0x30  FltCmpLe.o [3]
+  Veneer             ro code  0x00022e5c      0x4  - Linker created -
+  .text              ro code  0x00022e60     0x30  FltCmpGe.o [3]
+  Debug.txt          ro code  0x00022e90     0x30  udp.o [1]
+  .rodata            const    0x00022ec0     0x2c  WizFiCommand.o [1]
+  .rodata            const    0x00022eec     0x2c  main.o [1]
+  Debug.txt          ro code  0x00022f18     0x2c  Interrupt.o [1]
+  .rodata            const    0x00022f44     0x28  ScreenMENU2.o [1]
+  Veneer             ro code  0x00022f6c      0x4  - Linker created -
+  .text              ro code  0x00022f70     0x28  uwrite4.o [3]
+  .rodata            const    0x00022f98     0x24  ScreenMENU2.o [1]
+  Veneer             ro code  0x00022fbc      0x4  - Linker created -
+  .text              ro code  0x00022fc0     0x24  FltCmpEq.o [3]
+  Veneer             ro code  0x00022fe4      0xc  - Linker created -
+  Veneer             ro code  0x00022ff0      0xc  - Linker created -
+  .text              ro code  0x00022ffc     0x24  cmain.o [3]
+  .text              ro code  0x00023020     0x24  FltFlgInv.o [3]
+  .text              ro code  0x00023044     0x24  div.o [2]
+  .text              ro code  0x00023068     0x22  strcat.o [2]
+  Debug.txt          ro code  0x0002308c     0x22  serial_driver.o [1]
+  Debug.txt          ro code  0x000230b0     0x22  serial_driver.o [1]
+  .iar.init_table    const    0x000230d4     0x20  - Linker created -
+  .rodata            const    0x000230f4     0x20  ScreenMENU2.o [1]
+  Veneer             ro code  0x00023114      0x4  - Linker created -
+  .text              ro code  0x00023118     0x20  uread4.o [3]
+  Veneer             ro code  0x00023138      0x4  - Linker created -
+  .text              ro code  0x0002313c     0x20  strchr.o [3]
+  Debug.txt          ro code  0x0002315c     0x20  udp.o [1]
+  Debug.txt          ro code  0x0002317c     0x1e  serial_driver.o [1]
+  .rodata            const    0x0002319c     0x1c  ScreenMENU2.o [1]
+  .rodata            const    0x000231b8     0x1c  serial_driver.o [1]
+  .rodata            const    0x000231d4     0x1c  serial_driver.o [1]
+  .text              ro code  0x000231f0     0x1c  exit.o [4]
+  Debug.txt          ro code  0x0002320c     0x1c  SPI.o [1]
+  .text              ro code  0x00023228     0x1c  zero_init.o [3]
+  Debug.txt          ro code  0x00023244     0x1a  Modbus.o [1]
+  Debug.txt          ro code  0x00023260     0x1a  SPI.o [1]
+  Debug.txt          ro code  0x0002327c     0x1a  SPI.o [1]
+  Debug.txt          ro code  0x00023298     0x1a  USART.o [1]
+  Debug.txt          ro code  0x000232b4     0x1a  udp.o [1]
+  .rodata            const    0x000232d0     0x18  ScreenMENU2.o [1]
+  .rodata            const    0x000232e8     0x18  ScreenMENU2.o [1]
+  .rodata            const    0x00023300     0x18  WizFiCommand.o [1]
+  .rodata            const    0x00023318     0x18  main.o [1]
+  .rodata            const    0x00023330     0x18  main.o [1]
+  .rodata            const    0x00023348     0x18  udp.o [1]
+  .text              ro code  0x00023360     0x18  FltFlgInx.o [3]
+  .text              ro code  0x00023378     0x18  FltFlgOvf.o [3]
+  .text              ro code  0x00023390     0x18  FltFlgUnf.o [3]
+  .text              ro code  0x000233a8     0x18  FltFlgDivZer.o [3]
+  Veneer             ro code  0x000233c0      0x4  - Linker created -
+  Debug.txt          ro code  0x000233c4     0x18  RS_WIN.o [1]
+  Debug.txt          ro code  0x000233dc     0x18  USART.o [1]
+  Debug.txt          ro code  0x000233f4     0x18  flash.o [1]
+  Debug.txt          ro code  0x0002340c     0x18  udp.o [1]
+  Debug.txt          ro code  0x00023424     0x18  udp.o [1]
+  Debug.txt          ro code  0x0002343c     0x18  udp.o [1]
+  Debug.txt          ro code  0x00023454     0x18  udp.o [1]
+  Debug.txt          ro code  0x0002346c     0x18  udp.o [1]
+  Debug.txt          ro code  0x00023484     0x16  standard.o [1]
+  .rodata            const    0x0002349c     0x14  ScreenMENU2.o [1]
+  .rodata            const    0x000234b0     0x14  ScreenMENU2.o [1]
+  .rodata            const    0x000234c4     0x14  serial_driver.o [1]
+  .text              ro code  0x000234d8     0x14  call_main.o [2]
+  Debug.txt          ro code  0x000234ec     0x14  SPI.o [1]
+  Debug.txt          ro code  0x00023500     0x14  USART.o [1]
+  Debug.txt          ro code  0x00023514     0x14  USART.o [1]
+  Debug.txt          ro code  0x00023528     0x12  main.o [1]
+  Debug.txt          ro code  0x0002353c     0x12  main.o [1]
+  Debug.txt          ro code  0x00023550     0x12  main.o [1]
+  Debug.txt          ro code  0x00023564     0x12  main.o [1]
+  Debug.txt          ro code  0x00023578     0x12  serial_driver.o [1]
+  Debug.txt          ro code  0x0002358c     0x12  standard.o [1]
+  Debug.txt          ro code  0x000235a0     0x12  standard.o [1]
+  Debug.txt          ro code  0x000235b4     0x12  standard.o [1]
+  Debug.txt          ro code  0x000235c8     0x12  standard.o [1]
+  .rodata            const    0x000235dc     0x10  ScreenMENU2.o [1]
+  .rodata            const    0x000235ec     0x10  ScreenMENU2.o [1]
+  .rodata            const    0x000235fc     0x10  ScreenMENU2.o [1]
+  .rodata            const    0x0002360c     0x10  WizFiCommand.o [1]
+  .rodata            const    0x0002361c     0x10  WizFiCommand.o [1]
+  .rodata            const    0x0002362c     0x10  serial_driver.o [1]
+  Veneer             ro code  0x0002363c      0x4  - Linker created -
+  .text              ro code  0x00023640     0x10  cexit.o [3]
+  Veneer             ro code  0x00023650      0x4  - Linker created -
+  Debug.txt          ro code  0x00023654     0x10  RS_WIN.o [1]
+  Veneer             ro code  0x00023664      0x4  - Linker created -
+  Debug.txt          ro code  0x00023668     0x10  RS_WIN.o [1]
+  Debug.txt          ro code  0x00023678     0x10  device.o [1]
+  .rodata            const    0x00023688      0xc  ScreenMENU2.o [1]
+  .rodata            const    0x00023694      0xc  ScreenMENU2.o [1]
+  .rodata            const    0x000236a0      0xc  ScreenMENU2.o [1]
+  .rodata            const    0x000236ac      0xc  WizFiCommand.o [1]
+  .rodata            const    0x000236b8      0xc  WizFiCommand.o [1]
+  .rodata            const    0x000236c4      0xc  WizFiCommand.o [1]
+  .rodata            const    0x000236d0      0xc  WizFiCommand.o [1]
+  .rodata            const    0x000236dc      0xc  WizFiCommand.o [1]
+  .rodata            const    0x000236e8      0xc  serial_driver.o [1]
+  .text              ro code  0x000236f4      0xc  xsprout.o [2]
+  .text              ro code  0x00023700      0xc  exit.o [2]
+  Debug.txt          ro code  0x0002370c      0xc  Interrupt.o [1]
+  Debug.txt          ro code  0x00023718      0xc  WizFi.o [1]
+  Debug.txt          ro code  0x00023724      0xc  main.o [1]
+  Debug.txt          ro code  0x00023730      0xa  LCD_light_PWM.o [1]
+  Debug.txt          ro code  0x0002373c      0xa  Modbus.o [1]
+  Debug.txt          ro code  0x00023748      0xa  Modbus.o [1]
+  Debug.txt          ro code  0x00023754      0xa  SPI.o [1]
+  Debug.txt          ro code  0x00023760      0xa  SPI.o [1]
+  Debug.txt          ro code  0x0002376c      0xa  main.o [1]
+  .rodata            const    0x00023778      0x8  Clock.o [1]
+  .rodata            const    0x00023780      0x8  ScreenMENU2.o [1]
+  .rodata            const    0x00023788      0x8  ScreenMENU2.o [1]
+  .rodata            const    0x00023790      0x8  ScreenMENU2.o [1]
+  .rodata            const    0x00023798      0x8  ScreenMENU2.o [1]
+  .rodata            const    0x000237a0      0x8  ScreenMENU2.o [1]
+  .rodata            const    0x000237a8      0x8  ScreenMENU2.o [1]
+  .rodata            const    0x000237b0      0x8  ScreenMENU2.o [1]
+  .rodata            const    0x000237b8      0x8  ScreenMENU2.o [1]
+  .rodata            const    0x000237c0      0x8  ScreenMENU2.o [1]
+  .rodata            const    0x000237c8      0x8  ScreenMENU2.o [1]
+  .rodata            const    0x000237d0      0x8  WizFi.o [1]
+  .rodata            const    0x000237d8      0x8  WizFiCommand.o [1]
+  .rodata            const    0x000237e0      0x8  WizFiCommand.o [1]
+  .rodata            const    0x000237e8      0x8  lcd.o [1]
+  .rodata            const    0x000237f0      0x8  main.o [1]
+  .rodata            const    0x000237f8      0x8  main.o [1]
+  .rodata            const    0x00023800      0x8  xprintffull.o [2]
+  Veneer             ro code  0x00023808      0x4  - Linker created -
+  .text              ro code  0x0002380c      0x8  memclr4.o [3]
+  .text              ro code  0x00023814      0x8  abs.o [2]
+  Veneer             ro code  0x0002381c      0x4  - Linker created -
+  Debug.txt          ro code  0x00023820      0x8  RS_WIN.o [1]
+  Debug.txt          ro code  0x00023828      0x8  SPI.o [1]
+  Debug.txt          ro code  0x00023830      0x8  SPI.o [1]
+  Debug.txt          ro code  0x00023838      0x8  SPI.o [1]
+  Debug.txt          ro code  0x00023840      0x8  board.o [1]
+  Debug.txt          ro code  0x00023848      0x8  standard.o [1]
+  Debug.txt          ro code  0x00023850      0x6  Modbus.o [1]
+  Debug.txt          ro code  0x00023858      0x6  Modbus.o [1]
+  Debug.txt          ro code  0x00023860      0x6  RF.o [1]
+  Debug.txt          ro code  0x00023868      0x6  SPI.o [1]
+  Debug.txt          ro code  0x00023870      0x6  SPI.o [1]
+  Debug.txt          ro code  0x00023878      0x6  SPI.o [1]
+  Debug.txt          ro code  0x00023880      0x6  SPI.o [1]
+  Debug.txt          ro code  0x00023888      0x6  USART.o [1]
+  Debug.txt          ro code  0x00023890      0x6  USART.o [1]
+  Debug.txt          ro code  0x00023898      0x6  board.o [1]
+  Debug.txt          ro code  0x000238a0      0x6  main.o [1]
+  Debug.txt          ro code  0x000238a8      0x6  main.o [1]
+  Debug.txt          ro code  0x000238b0      0x6  udp.o [1]
+  Debug.txt          ro code  0x000238b8      0x6  udp.o [1]
+  .rodata            const    0x000238c0      0x4  Clock.o [1]
+  .rodata            const    0x000238c4      0x4  ScreenMENU2.o [1]
+  .rodata            const    0x000238c8      0x4  ScreenMENU2.o [1]
+  .rodata            const    0x000238cc      0x4  ScreenMENU2.o [1]
+  .rodata            const    0x000238d0      0x4  serial_driver.o [1]
+  .text              ro code  0x000238d4      0x4  IntDivZer.o [3]
+  .text              ro code  0x000238d8      0x4  swi_return.o [4]
+  Debug.txt          ro code  0x000238dc      0x4  Interrupt.o [1]
+  Debug.txt          ro code  0x000238e0      0x4  Interrupt.o [1]
+  Debug.txt          ro code  0x000238e4      0x4  Interrupt.o [1]
+  Debug.txt          ro code  0x000238e8      0x4  USART.o [1]
+  Debug.txt          ro code  0x000238ec      0x4  USART.o [1]
+  Debug.txt          ro code  0x000238f0      0x4  board.o [1]
+  Debug.txt          ro code  0x000238f4      0x4  board.o [1]
+  Debug.txt          ro code  0x000238f8      0x4  board.o [1]
+  Debug.txt          ro code  0x000238fc      0x4  serial_driver.o [1]
+  Debug.txt          ro code  0x00023900      0x2  RF.o [1]
+  Debug.txt          ro code  0x00023904      0x2  main.o [1]
+  Debug.txt          ro code  0x00023908      0x2  serial_driver.o [1]
+  Debug.txt          ro code  0x0002390c      0x2  standard.o [1]
+  Debug.txt          ro code  0x00023910      0x2  standard.o [1]
+  Initializer bytes  ro data  0x00023912    0x8b2  <for P2-1>
+                            - 0x000241c4  0x240c4
+
+"P2":                                      0xffbd
+  CSTACK                      0x00200000    0xd00  <Block>
+    CSTACK           uninit   0x00200000    0xd00  <Block tail>
+  SVC_STACK                   0x00200d00     0xf0  <Block>
+    SVC_STACK        uninit   0x00200d00     0xf0  <Block tail>
+  IRQ_STACK                   0x00200df0     0xf0  <Block>
+    IRQ_STACK        uninit   0x00200df0     0xf0  <Block tail>
+  FIQ_STACK                   0x00200ee0     0x40  <Block>
+    FIQ_STACK        uninit   0x00200ee0     0x40  <Block tail>
+  UND_STACK                   0x00200f20     0x40  <Block>
+    UND_STACK        uninit   0x00200f20     0x40  <Block tail>
+  ABT_STACK                   0x00200f60     0x40  <Block>
+    ABT_STACK        uninit   0x00200f60     0x40  <Block tail>
+  .bss               zero     0x00200fa0   0xc670  Application_prog.o [1]
+  .bss               zero     0x0020d610    0x63c  Application_prog.o [1]
+  .bss               zero     0x0020dc4c    0x56c  Modbus.o [1]
+  .bss               zero     0x0020e1b8    0x1a4  Application_prog.o [1]
+  .bss               zero     0x0020e35c    0x1a0  spi_main.o [1]
+  .bss               zero     0x0020e4fc    0x190  RF_Exe.o [1]
+  .bss               zero     0x0020e68c     0xd8  Application_prog.o [1]
+  .bss               zero     0x0020e764     0x28  Application_prog.o [1]
+  .bss               zero     0x0020e78c     0x24  ScreenMENU2.o [1]
+  .bss               zero     0x0020e7b0     0x20  RF.o [1]
+  .bss               zero     0x0020e7d0     0x20  main.o [1]
+  .bss               zero     0x0020e7f0     0x19  RF.o [1]
+  .bss               zero     0x0020e80c     0x18  RF.o [1]
+  .bss               zero     0x0020e824     0x18  ScreenMENU2.o [1]
+  .bss               zero     0x0020e83c     0x18  ScreenMENU2.o [1]
+  .bss               zero     0x0020e854     0x10  Application_prog.o [1]
+  .bss               zero     0x0020e864      0xc  Clock.o [1]
+  .bss               zero     0x0020e870      0xc  ScreenMENU2.o [1]
+  .bss               zero     0x0020e880      0x8  WizFi.o [1]
+  .bss               zero     0x0020e888      0x8  WizFi.o [1]
+  .bss               zero     0x0020e890      0x8  main.o [1]
+  .bss               zero     0x0020e898      0x8  main.o [1]
+  .bss               zero     0x0020e8a0      0x4  RS_WIN.o [1]
+  .bss               zero     0x0020e8a4      0x4  ScreenMENU2.o [1]
+  .bss               zero     0x0020e8a8      0x4  main.o [1]
+  .bss               zero     0x0020e8ac      0x4  main.o [1]
+  .bss               zero     0x0020e8b0      0x4  main.o [1]
+  .bss               zero     0x0020e8b4      0x4  main.o [1]
+  .bss               zero     0x0020e8b8      0x4  spi_main.o [1]
+  .bss               zero     0x0020e8bc      0x3  ScreenMENU2.o [1]
+  .bss               zero     0x0020e8c0      0x2  lcd.o [1]
+  .bss               zero     0x0020e8c2      0x2  ScreenMENU2.o [1]
+  .bss               zero     0x0020e8c4      0x2  ScreenMENU2.o [1]
+  .bss               zero     0x0020e8c6      0x2  ScreenMENU2.o [1]
+  .bss               zero     0x0020e8c8      0x2  ScreenMENU2.o [1]
+  .bss               zero     0x0020e8ca      0x1  Interrupt.o [1]
+  .bss               zero     0x0020e8cb      0x1  RS_WIN.o [1]
+  .bss               zero     0x0020e8cc      0x1  ScreenMENU2.o [1]
+  .bss               zero     0x0020e8cd      0x1  ScreenMENU2.o [1]
+  .bss               zero     0x0020e8ce      0x1  ScreenMENU2.o [1]
+  .bss               zero     0x0020e8cf      0x1  ScreenMENU2.o [1]
+  .bss               zero     0x0020e8d0      0x1  ScreenMENU2.o [1]
+  .bss               zero     0x0020e8d1      0x1  USART.o [1]
+  .bss               zero     0x0020e8d2      0x1  USART.o [1]
+  .bss               zero     0x0020e8d3      0x1  main.o [1]
+  .bss               zero     0x0020e8d4      0x1  main.o [1]
+  .bss               zero     0x0020e8d5      0x1  fenv.o [3]
+  P2-1                        0x0020e8d8   0x16e5  <Init block>
+    .data            inited   0x0020e8d8    0x56c  main.o [1]
+    .data            inited   0x0020ee48    0x494  ScreenMENU2.o [1]
+    .data            inited   0x0020f2dc    0x400  lcd.o [1]
+    .textrw          inited   0x0020f6dc    0x2b4  flash.o [1]
+    .data            inited   0x0020f990    0x24c  USART.o [1]
+    .data            inited   0x0020fbe0    0x1b0  main.o [1]
+    .data            inited   0x0020fd90     0xa0  main.o [1]
+    .data            inited   0x0020fe30     0xa0  main.o [1]
+    .data            inited   0x0020fed0     0x34  RF_Exe.o [1]
+    .data            inited   0x0020ff04     0x28  lcd.o [1]
+    .data            inited   0x0020ff2c     0x20  Application_prog.o [1]
+    .data            inited   0x0020ff4c     0x1c  spi_main.o [1]
+    .data            inited   0x0020ff68     0x18  lcd.o [1]
+    .data            inited   0x0020ff80     0x10  serial_driver.o [1]
+    .data            inited   0x0020ff90      0xc  serial_driver.o [1]
+    .data            inited   0x0020ff9c      0x8  main.o [1]
+    .data            inited   0x0020ffa4      0x4  Application_prog.o [1]
+    .data            inited   0x0020ffa8      0x4  Clock.o [1]
+    .data            inited   0x0020ffac      0x4  lcd.o [1]
+    .data            inited   0x0020ffb0      0x4  lcd.o [1]
+    .data            inited   0x0020ffb4      0x4  main.o [1]
+    .data            inited   0x0020ffb8      0x2  ScreenMENU2.o [1]
+    .data            inited   0x0020ffba      0x1  lcd.o [1]
+    .data            inited   0x0020ffbb      0x1  main.o [1]
+    .data            inited   0x0020ffbc      0x1  main.o [1]
+                            - 0x0020ffbd   0xffbd
+
+
+*******************************************************************************
+*** MODULE SUMMARY
+***
+
+    Module              ro code  rw code  ro data  rw data
+    ------              -------  -------  -------  -------
+D:\Zeuron\Projekty\S300\S300-program v0.6 - 18.05.2012\S300X\Obj: [1]
+    Application_prog.o    4 844                11   53 124
+    Clock.o                 588                16       16
+    Interrupt.o             232                          1
+    LCD_light_PWM.o         138
+    Modbus.o                188               512    1 388
+    RF.o                  1 616                         81
+    RF_Exe.o              1 408                 9      452
+    RS_WIN.o              1 980                          5
+    SPI.o                   310
+    ScreenMENU2.o        67 716             6 393    1 290
+    USART.o                 512                12      590
+    WizFi.o               1 488                84       16
+    WizFiCommand.o        5 868               452
+    board.o                 166
+    device.o                236
+    flash.o                  24      692      857
+    language.o                              5 160
+    lcd.o                13 488             9 433    1 099
+    main.o                5 588               186    2 220
+    serial_driver.o         402               205       28
+    spi_main.o              864                12      448
+    standard.o              766
+    startup.o               276
+    udp.o                 3 282                76
+    ------------------------------------------------------
+    Total:              111 980      692   23 418   60 758
+
+dl4t_tl_in.a: [2]
+    abs.o                     8
+    call_main.o              20
+    div.o                    36
+    exit.o                   12
+    sprintf.o                48
+    strcat.o                 34
+    strstr.o                 50
+    xdnorm.o                184
+    xdscale.o               276
+    xprintffull.o         4 012                 8
+    xsprout.o                12
+    ------------------------------------------------------
+    Total:                4 692                 8
+
+rt4t_al.a: [3]
+    DblAdd.o                360
+    DblCmpGe.o               64
+    DblCmpLe.o               64
+    DblDiv.o                936
+    DblMul.o                688
+    DblSub.o                544
+    DblSubNrml.o             96
+    DblToFlt.o              188
+    DblToI32.o              156
+    FltAdd.o                220
+    FltCmpEq.o               36
+    FltCmpGe.o               48
+    FltCmpLe.o               48
+    FltDiv.o                532
+    FltFlgDivZer.o           24
+    FltFlgInv.o              36
+    FltFlgInx.o              24
+    FltFlgOvf.o              24
+    FltFlgUnf.o              24
+    FltMul.o                448
+    FltSub.o                352
+    FltToDbl.o              104
+    FltToS32.o               88
+    FltToS64.o              164
+    I32DivMod.o             468
+    I32ToDbl.o              116
+    I32ToFlt.o              120
+    I64DivMod.o             292
+    I64ToFlt.o              108
+    IntDivZer.o               4
+    cexit.o                  16
+    cmain.o                  36
+    data_init.o              64
+    fenv.o                                               1
+    memchr.o                152
+    memclr4.o                 8
+    memcpy.o                196
+    memset48.o               72
+    rle_init.o               64
+    strchr.o                 32
+    strlen.o                 88
+    uread4.o                 32
+    uwrite4.o                40
+    zero_init.o              28
+    ------------------------------------------------------
+    Total:                7 204                          1
+
+shs_l.a: [4]
+    exit.o                   28
+    swi_return.o              4
+    ------------------------------------------------------
+    Total:                   32
+
+    Gaps                     76                18       18
+    Linker created          256                32    4 000
+----------------------------------------------------------
+    Grand Total:        124 240      692   23 476   64 777
+
+
+*******************************************************************************
+*** ENTRY LIST
+***
+
+Entry                      Address    Size  Type      Object
+-----                      -------    ----  ----      ------
+?main                   0x00022ffc          Code  Gb  cmain.o [3]
+ABT_STACK$$Base         0x00200f60           --   Gb  - Linker created -
+ABT_STACK$$Limit        0x00200fa0           --   Gb  - Linker created -
+ACM_GetLineCoding       0x000211dd    0x1e  Code  Lc  serial_driver.o [1]
+ACM_SetControlLineState
+                        0x000211fd    0x14  Code  Lc  serial_driver.o [1]
+ACM_SetLineCoding       0x000211c9    0x12  Code  Lc  serial_driver.o [1]
+APC                     0x0020e8d3     0x1  Data  Gb  main.o [1]
+AP_Associate            0x0001d99d    0x58  Code  Gb  WizFi.o [1]
+AP_AssociateResponseInterpreter
+                        0x0001d9f5   0x158  Code  Gb  WizFi.o [1]
+AT91F_AIC_ConfigureIt   0x00022f19    0x2c  Code  Wk  Interrupt.o [1]
+AT91F_AIC_EnableIt      0x0002370d     0xc  Code  Wk  Interrupt.o [1]
+AT91F_BUTTON_Init       0x00022985    0x4c  Code  Wk  device.o [1]
+AT91F_LCD_Init          0x00021c19    0xb8  Code  Wk  main.o [1]
+AT91F_PDC_DisableRx     0x00023881     0x6  Code  Wk  SPI.o [1]
+AT91F_PDC_DisableTx     0x00023831     0x8  Code  Wk  SPI.o [1]
+AT91F_PDC_EnableRx      0x00023879     0x6  Code  Wk  SPI.o [1]
+AT91F_PDC_EnableTx      0x00023829     0x8  Code  Wk  SPI.o [1]
+AT91F_PDC_IsNextRxEmpty
+                        0x00023761     0xa  Code  Wk  SPI.o [1]
+AT91F_PDC_IsNextTxEmpty
+                        0x00023749     0xa  Code  Wk  Modbus.o [1]
+AT91F_PDC_IsRxEmpty     0x00023755     0xa  Code  Wk  SPI.o [1]
+AT91F_PDC_IsTxEmpty     0x0002373d     0xa  Code  Wk  Modbus.o [1]
+AT91F_PDC_Open          0x00022a61    0x48  Code  Wk  SPI.o [1]
+AT91F_PDC_ReceiveFrame  0x00022af1    0x46  Code  Wk  SPI.o [1]
+AT91F_PDC_SendFrame     0x00022aa9    0x46  Code  Wk  Modbus.o [1]
+AT91F_PDC_SetNextRx     0x00023869     0x6  Code  Wk  SPI.o [1]
+AT91F_PDC_SetNextTx     0x00023851     0x6  Code  Wk  Modbus.o [1]
+AT91F_PDC_SetRx         0x00023871     0x6  Code  Wk  SPI.o [1]
+AT91F_PDC_SetTx         0x00023859     0x6  Code  Wk  Modbus.o [1]
+AT91F_PIO_CfgInput      0x00023861     0x6  Code  Wk  RF.o [1]
+AT91F_PIO_CfgOutput     0x00023899     0x6  Code  Wk  board.o [1]
+AT91F_PIO_CfgPeriph     0x00023731     0xa  Code  Wk  LCD_light_PWM.o [1]
+AT91F_PIO_CfgPullup     0x00023841     0x8  Code  Wk  board.o [1]
+AT91F_PIO_ClearOutput   0x000238f9     0x4  Code  Wk  board.o [1]
+AT91F_PIO_GetInput      0x000238f1     0x4  Code  Wk  board.o [1]
+AT91F_PIO_GetInterruptStatus
+                        0x000238e1     0x4  Code  Wk  Interrupt.o [1]
+AT91F_PIO_InterruptEnable
+                        0x000238dd     0x4  Code  Wk  Interrupt.o [1]
+AT91F_PIO_SetOutput     0x000238f5     0x4  Code  Wk  board.o [1]
+AT91F_PMC_EnablePeriphClock
+                        0x000238e5     0x4  Code  Wk  Interrupt.o [1]
+AT91F_SPI_CfgCs         0x00023839     0x8  Code  Wk  SPI.o [1]
+AT91F_SPI_CfgPIO        0x0002320d    0x1c  Code  Wk  SPI.o [1]
+AT91F_SPI_CfgPMC        0x000234ed    0x14  Code  Wk  SPI.o [1]
+AT91F_SPI_En_Dis        0x0001f381    0x3c  Code  Gb  spi_main.o [1]
+AT91F_SPI_Interrupt_handler
+                        0x0001f0c1    0x50  Code  Gb  spi_main.o [1]
+AT91F_SPI_Open          0x0001f3bd    0x64  Code  Gb  spi_main.o [1]
+AT91F_SPI_ReceiveFrame  0x00023261    0x1a  Code  Wk  SPI.o [1]
+AT91F_SPI_SWReset       0x0001f379     0x6  Code  Gb  spi_main.o [1]
+AT91F_SPI_SendFrame     0x0002327d    0x1a  Code  Wk  SPI.o [1]
+AT91F_US1_CfgPIO        0x000233dd    0x18  Code  Wk  USART.o [1]
+AT91F_US1_CfgPMC        0x00023515    0x14  Code  Wk  USART.o [1]
+AT91F_US_Baudrate       0x00022d95    0x32  Code  Wk  USART.o [1]
+AT91F_US_Configure      0x00022d2d    0x34  Code  Wk  USART.o [1]
+AT91F_US_EnableIt       0x000238ed     0x4  Code  Wk  USART.o [1]
+AT91F_US_EnableRx       0x00023889     0x6  Code  Wk  USART.o [1]
+AT91F_US_EnableTx       0x00023891     0x6  Code  Wk  USART.o [1]
+AT91F_US_ReceiveFrame   0x00023299    0x1a  Code  Wk  USART.o [1]
+AT91F_US_SendFrame      0x00023245    0x1a  Code  Wk  Modbus.o [1]
+AT91F_US_SetBaudrate    0x00023501    0x14  Code  Wk  USART.o [1]
+AT91F_US_SetTimeguard   0x000238e9     0x4  Code  Wk  USART.o [1]
+AT91F_WDTRestart        0x00023725     0xc  Code  Wk  main.o [1]
+AT_DNSLOOKUP            0x0002360c    0x10  Data  Gb  WizFiCommand.o [1]
+AT_NCLOSEALL            0x0002361c    0x10  Data  Gb  WizFiCommand.o [1]
+AT_NCTCP                0x000236dc     0xc  Data  Gb  WizFiCommand.o [1]
+AT_NDHCP_0              0x00023300     0xc  Data  Gb  WizFiCommand.o [1]
+AT_NDHCP_1              0x0002330c     0xc  Data  Gb  WizFiCommand.o [1]
+AT_NSET                 0x000236b8     0xc  Data  Gb  WizFiCommand.o [1]
+AT_WA                   0x000237e0     0x8  Data  Gb  WizFiCommand.o [1]
+AT_WD                   0x000237d8     0x8  Data  Gb  WizFiCommand.o [1]
+AT_WWEP1                0x000236c4     0xc  Data  Gb  WizFiCommand.o [1]
+AT_WWPA                 0x000236d0     0xc  Data  Gb  WizFiCommand.o [1]
+AT_XDUM0                0x000236ac     0xc  Data  Gb  WizFiCommand.o [1]
+AddRfTask               0x0001a149    0xc0  Code  Gb  Application_prog.o [1]
+AddRow                  0x00006529    0xb0  Code  Gb  ScreenMENU2.o [1]
+AddRsTask               0x0001a091    0xb8  Code  Gb  Application_prog.o [1]
+AdvanceSet_Event        0x00002dc5    0x7c  Code  Gb  ScreenMENU2.o [1]
+AdvanceSet_Paint        0x00002d6d    0x58  Code  Gb  ScreenMENU2.o [1]
+AlarmExecute            0x00015b19   0x1fc  Code  Gb  main.o [1]
+AlarmOn                 0x0020e8eb     0x1  Data  Gb  main.o [1]
+AlarmPassChange_Event   0x0000e739   0x1f0  Code  Gb  ScreenMENU2.o [1]
+AlarmPassChange_Paint   0x0000e695    0xa4  Code  Gb  ScreenMENU2.o [1]
+AlarmPass_Event         0x0000e3b9   0x1c4  Code  Gb  ScreenMENU2.o [1]
+AlarmPass_Paint         0x0000e349    0x70  Code  Gb  ScreenMENU2.o [1]
+AlarmPass_Refresh       0x0000e57d   0x118  Code  Gb  ScreenMENU2.o [1]
+AlarmScreenAction       0x0020fd90    0x10  Data  Gb  main.o [1]
+Alarm_Event             0x0000e17d    0xfc  Code  Gb  ScreenMENU2.o [1]
+Alarm_Paint             0x0000e0d1    0xac  Code  Gb  ScreenMENU2.o [1]
+Alarm_Refresh           0x0000e279    0xd0  Code  Gb  ScreenMENU2.o [1]
+AlfaType                0x0020ee65     0x1  Data  Gb  ScreenMENU2.o [1]
+AnaVarToMaster          0x0001cf91     0x4  Code  Gb  RS_WIN.o [1]
+AnalogGraph_Event       0x0000a251   0x290  Code  Gb  ScreenMENU2.o [1]
+AnalogGraph_Paint       0x00009e61   0x3f0  Code  Gb  ScreenMENU2.o [1]
+AnalogToChange          0x0020eea8     0x4  Data  Gb  ScreenMENU2.o [1]
+AnimationNr             0x0020e8be     0x1  Data  Gb  ScreenMENU2.o [1]
+Arial_18                0x00016938  0x1450  Data  Gb  lcd.o [1]
+Arial_7                 0x0001e920   0x3f4  Data  Gb  lcd.o [1]
+Ask_Event               0x000124e1   0x10c  Code  Gb  lcd.o [1]
+Ask_Paint               0x00012419    0xc8  Code  Gb  lcd.o [1]
+BRD_ConfigurePullUp     0x00022291    0x1a  Code  Gb  board.o [1]
+BRD_ConfigureVBus       0x000222ad    0x24  Code  Gb  board.o [1]
+BRD_ConnectPullUp       0x00022269    0x12  Code  Gb  board.o [1]
+BRD_DisconnectPullUp    0x0002227d    0x12  Code  Gb  board.o [1]
+BRD_IsVBusConnected     0x0002224d    0x1a  Code  Gb  board.o [1]
+BRD_SetFlashWaitStates  0x00023679    0x10  Code  Wk  device.o [1]
+BateriaWyladowana       0x000236a0     0xc  Data  Gb  ScreenMENU2.o [1]
+BateriaWyladowanaDuza   0x0020eec4    0x18  Data  Gb  ScreenMENU2.o [1]
+BigTemperLabel_Event    0x00008b85   0x174  Code  Gb  ScreenMENU2.o [1]
+BigTemperLabel_Paint    0x00008a35   0x150  Code  Gb  ScreenMENU2.o [1]
+BinVarToMaster          0x0001cf8d     0x2  Code  Gb  RS_WIN.o [1]
+Buff_TX_0               0x0020ddd8    0x14  Data  Gb  Modbus.o [1]
+Buff_TX_1               0x0020df74   0x244  Data  Gb  Modbus.o [1]
+Busy_program            0x0020ff36     0x1  Data  Gb  Application_prog.o [1]
+Button                  0x00013691   0x2dc  Code  Gb  lcd.o [1]
+ButtonAction_Event      0x000088cd   0x168  Code  Gb  ScreenMENU2.o [1]
+ButtonAction_Paint      0x00008789   0x144  Code  Gb  ScreenMENU2.o [1]
+ButtonBipCounter        0x0020ff78     0x8  Data  Gb  lcd.o [1]
+ButtonEventTime         0x0020ff70     0x8  Data  Gb  lcd.o [1]
+ButtonName              0x0001c68c   0x18c  Data  Gb  ScreenMENU2.o [1]
+ButtonOptions_Event     0x000086ed    0x9c  Code  Gb  ScreenMENU2.o [1]
+ButtonOptions_Paint     0x00008665    0x88  Code  Gb  ScreenMENU2.o [1]
+ButtonToChange          0x0020ee9c     0x4  Data  Gb  ScreenMENU2.o [1]
+CBK_Init                0x00015545    0x50  Code  Lc  main.o [1]
+CBK_NewRequest          0x000155ad    0x14  Code  Lc  main.o [1]
+CBK_Resume              0x000155a1     0xc  Code  Lc  main.o [1]
+CCKier                  0x0020e8bd     0x1  Data  Gb  ScreenMENU2.o [1]
+CSTACK$$Base            0x00200000           --   Gb  - Linker created -
+CSTACK$$Limit           0x00200d00           --   Gb  - Linker created -
+CanvasPixel             0x00010b3d    0x3e  Code  Gb  lcd.o [1]
+CharToStr               0x0001189d    0x7c  Code  Gb  lcd.o [1]
+CharToStr2              0x00011919    0x3e  Code  Gb  lcd.o [1]
+CharToStrData           0x00011959    0x34  Code  Gb  lcd.o [1]
+CheckChannel            0x00000d51    0x98  Code  Gb  ScreenMENU2.o [1]
+CheckExistDomenaIP      0x00014585    0x94  Code  Gb  WizFiCommand.o [1]
+CheckIP                 0x00010065    0x58  Code  Gb  ScreenMENU2.o [1]
+CheckLCD                0x00013b81    0x74  Code  Gb  lcd.o [1]
+CheckScreenUse          0x00019f55    0x8c  Code  Gb  Application_prog.o [1]
+CheckSum                0x0001cf49    0x3c  Code  Gb  RS_WIN.o [1]
+CheckVarChangeHTTP      0x0001d5dd    0xdc  Code  Gb  WizFi.o [1]
+ChoseCol                0x0020ee5b     0x1  Data  Gb  ScreenMENU2.o [1]
+ChoseRow                0x0020ee5a     0x1  Data  Gb  ScreenMENU2.o [1]
+CleanAll_Event          0x00002e41    0xd4  Code  Gb  ScreenMENU2.o [1]
+CleanCanvas             0x00010a41    0x28  Code  Gb  lcd.o [1]
+CleanCanvasArea         0x00010a69    0xd2  Code  Gb  lcd.o [1]
+CleanFlash              0x0020f8dd    0xac  Code  Gb  flash.o [1]
+ComandCLK               0x0020e864     0xc  Data  Lc  Clock.o [1]
+Convers_DW_B            0x0020e8a0     0x4  Data  Gb  RS_WIN.o [1]
+CopyToCanvas            0x00010b7d    0x2a  Code  Gb  lcd.o [1]
+CopyToCanvasPoint       0x00010ba9    0xcc  Code  Gb  lcd.o [1]
+CountLines              0x00019fe1    0x4c  Code  Gb  Application_prog.o [1]
+CurModifSheet           0x0020ee4d     0x1  Data  Gb  ScreenMENU2.o [1]
+CurTimeQual             0x0020e8fa     0x2  Data  Gb  main.o [1]
+CurentChartModyfi       0x0020ee4a     0x1  Data  Gb  ScreenMENU2.o [1]
+CurrentSheet            0x0020ee4c     0x1  Data  Gb  ScreenMENU2.o [1]
+CyklPerSek              0x0020e938     0x4  Data  Gb  main.o [1]
+CyklPerSekCount         0x0020e930     0x4  Data  Gb  main.o [1]
+DEV_Resume              0x00022169    0x50  Code  Gb  device.o [1]
+DateTime                0x0020e8d8     0x8  Data  Gb  main.o [1]
+DateToStr               0x00011815    0x86  Code  Gb  lcd.o [1]
+Delay                   0x00015621    0x12  Code  Gb  main.o [1]
+DeyOfWeekLongStr        0x00021928    0xc0  Data  Gb  ScreenMENU2.o [1]
+DeyOfWeekStr            0x00020c88    0x20  Data  Gb  ScreenMENU2.o [1]
+Diff_X                  0x0020e790     0x8  Data  Gb  ScreenMENU2.o [1]
+Diff_Y                  0x0020e798     0x8  Data  Gb  ScreenMENU2.o [1]
+DispWait                0x0020ee52     0x1  Data  Gb  ScreenMENU2.o [1]
+Down                    0x0020ff18     0x4  Data  Gb  lcd.o [1]
+ExecuteSpecialThermVar  0x00001d79    0x38  Code  Gb  ScreenMENU2.o [1]
+FIQ_STACK$$Base         0x00200ee0           --   Gb  - Linker created -
+FIQ_STACK$$Limit        0x00200f20           --   Gb  - Linker created -
+FLASH                   0x0020fd8c     0x4  Data  Gb  main.o [1]
+FlagChangeTime          0x0020e8ef     0x1  Data  Gb  main.o [1]
+FlashProgramOfset       0x0020e918     0x4  Data  Gb  main.o [1]
+FlashProgramReserveOfset
+                        0x0020ffb4     0x4  Data  Gb  main.o [1]
+FlashWrite              0x0020f789   0x154  Code  Gb  flash.o [1]
+FloToStr                0x00012a19   0xa90  Code  Gb  lcd.o [1]
+ForwardUSB2Serial       0x000155c1    0x60  Code  Lc  main.o [1]
+ForwardUSB2Serialferst  0x0020e8ed     0x1  Data  Gb  main.o [1]
+Frame                   0x000232d0    0x18  Data  Gb  ScreenMENU2.o [1]
+GetDateTimeFromRTC      0x0001ff21    0x20  Code  Gb  Clock.o [1]
+GetSpecialAnalogVar     0x00014a21    0x7c  Code  Gb  WizFiCommand.o [1]
+GetSpecialBinarVar      0x00014a9d    0x68  Code  Gb  WizFiCommand.o [1]
+GetTouchPoint           0x00013bf5   0x1a8  Code  Gb  lcd.o [1]
+GraphTab                0x0001fd54   0x1b0  Data  Gb  ScreenMENU2.o [1]
+HTTP_Query              0x00014bd9   0x5a0  Code  Gb  WizFiCommand.o [1]
+HTTP_QueryResponse      0x00015179   0x310  Code  Gb  WizFiCommand.o [1]
+HTTP_Task               0x0001db4d    0x54  Code  Gb  WizFi.o [1]
+H_line                  0x000134a9    0xd0  Code  Gb  lcd.o [1]
+Host_WiFi_Event         0x0000fa89   0x1b0  Code  Gb  ScreenMENU2.o [1]
+Host_WiFi_Paint         0x0000f825   0x264  Code  Gb  ScreenMENU2.o [1]
+IRQ_STACK$$Base         0x00200df0           --   Gb  - Linker created -
+IRQ_STACK$$Limit        0x00200ee0           --   Gb  - Linker created -
+ISR_Driver              0x00015489     0xe  Code  Gb  main.o [1]
+ISR_VBus                0x00015499    0xa0  Code  Gb  main.o [1]
+IndWys                  0x0020fed0     0x1  Data  Gb  RF_Exe.o [1]
+Info_Event              0x0000d519    0x40  Code  Gb  ScreenMENU2.o [1]
+Info_Paint              0x0000d2ed   0x1b4  Code  Gb  ScreenMENU2.o [1]
+Info_Refresh            0x0000d4a1    0x78  Code  Gb  ScreenMENU2.o [1]
+InitFlash               0x000233f5    0x18  Code  Gb  flash.o [1]
+InitFramework           0x00015639    0xe8  Code  Gb  main.o [1]
+InitPioInterrupt        0x00021e7d    0x44  Code  Gb  Interrupt.o [1]
+InitPointer             0x0020e8bc     0x1  Data  Gb  ScreenMENU2.o [1]
+InitRF_Interrupt        0x0001d029    0x2c  Code  Gb  RF.o [1]
+InitRTC                 0x0001ff05    0x1c  Code  Gb  Clock.o [1]
+InitWizFi               0x0001d6b9    0x70  Code  Gb  WizFi.o [1]
+Init_LCD_Light_PWM      0x000222f9    0x60  Code  Gb  LCD_light_PWM.o [1]
+Init_LCD_TS             0x00010fb9    0x6c  Code  Gb  lcd.o [1]
+InsertNewPass1          0x0020e848     0xc  Data  Gb  ScreenMENU2.o [1]
+InsertOldPass1          0x0020e83c     0xc  Data  Gb  ScreenMENU2.o [1]
+InsertPass1             0x0020e824     0xc  Data  Gb  ScreenMENU2.o [1]
+IntCA81Flag             0x0020e808     0x1  Data  Gb  RF.o [1]
+IpConfig_Event          0x00010345   0x200  Code  Gb  ScreenMENU2.o [1]
+IpConfig_Paint          0x000100bd   0x288  Code  Gb  ScreenMENU2.o [1]
+IpTCP_Event             0x0000ff1d   0x148  Code  Gb  ScreenMENU2.o [1]
+IpTCP_Paint             0x0000fe6d    0xb0  Code  Gb  ScreenMENU2.o [1]
+LCD_Canvas              0x0020f2dc   0x400  Data  Gb  lcd.o [1]
+Label                   0x00011025   0x384  Code  Gb  lcd.o [1]
+Label20                 0x00011409   0x384  Code  Gb  lcd.o [1]
+LabelLength             0x000113a9    0x60  Code  Gb  lcd.o [1]
+LaderChange_Event       0x00006489    0xa0  Code  Gb  ScreenMENU2.o [1]
+LaderChange_Paint       0x00006439    0x50  Code  Gb  ScreenMENU2.o [1]
+LaderCol                0x0020ee59     0x1  Data  Gb  ScreenMENU2.o [1]
+LaderLine               0x0020ee58     0x1  Data  Gb  ScreenMENU2.o [1]
+Lader_Event             0x000043c5   0x2f0  Code  Gb  ScreenMENU2.o [1]
+Lader_Paint             0x000041c1   0x204  Code  Gb  ScreenMENU2.o [1]
+LastScene               0x0020ff35     0x1  Data  Gb  Application_prog.o [1]
+LiczOds                 0x0020e92c     0x4  Data  Gb  main.o [1]
+List_Event              0x00011f91   0x488  Code  Gb  lcd.o [1]
+List_Paint              0x00011ac9   0x4c8  Code  Gb  lcd.o [1]
+Logo_Ceuron             0x000221cc    0x80  Data  Gb  ScreenMENU2.o [1]
+MESSAGE                 0x000010b9   0x1fc  Code  Gb  ScreenMENU2.o [1]
+MESSAGE_Refresh         0x000012b5    0x9c  Code  Gb  ScreenMENU2.o [1]
+MainSide_Event          0x00001351   0x288  Code  Gb  ScreenMENU2.o [1]
+MainSide_Paint          0x00000de9   0x2d0  Code  Gb  ScreenMENU2.o [1]
+MainSide_Refresh        0x000015d9   0x57c  Code  Gb  ScreenMENU2.o [1]
+MainSide_puls           0x0020e8cc     0x1  Data  Gb  ScreenMENU2.o [1]
+MainStage               0x0020d610   0x63c  Data  Gb  Application_prog.o [1]
+MasterSlave_Event       0x0000c001   0x1a8  Code  Gb  ScreenMENU2.o [1]
+MasterSlave_Paint       0x0000bf9d    0x64  Code  Gb  ScreenMENU2.o [1]
+MasterToAnaVar          0x0001cf85     0x2  Code  Gb  RS_WIN.o [1]
+MasterToBinVar          0x0001cf89     0x2  Code  Gb  RS_WIN.o [1]
+MenuAccessPass_Event    0x0000308d   0x258  Code  Gb  ScreenMENU2.o [1]
+MenuAccessPass_Paint    0x00002ff9    0x94  Code  Gb  ScreenMENU2.o [1]
+MenuLevel               0x0020ee90     0x4  Data  Gb  ScreenMENU2.o [1]
+MenuLevel_old           0x0020e93c     0x4  Data  Gb  main.o [1]
+MenuPaint               0x00000131   0x448  Code  Gb  ScreenMENU2.o [1]
+MenuPaintExecute        0x0020ee5e     0x1  Data  Gb  ScreenMENU2.o [1]
+MenuRefresh             0x000009ed   0x1c4  Code  Gb  ScreenMENU2.o [1]
+MenuSide_Event          0x00002f85    0x74  Code  Gb  ScreenMENU2.o [1]
+MenuSide_Paint          0x00002f15    0x70  Code  Gb  ScreenMENU2.o [1]
+Message                 0x000125ed    0xd0  Code  Gb  lcd.o [1]
+Message_Paint           0x0001290d   0x10c  Code  Gb  lcd.o [1]
+NET                     0x0020fbe0   0x190  Data  Gb  main.o [1]
+NetInfo_Event           0x00010739    0x80  Code  Gb  ScreenMENU2.o [1]
+NetInfo_Paint           0x00010545   0x1f4  Code  Gb  ScreenMENU2.o [1]
+NetInfo_Refresh         0x000107b9   0x1fc  Code  Gb  ScreenMENU2.o [1]
+NetPeriodicity_Event    0x0000fd39   0x134  Code  Gb  ScreenMENU2.o [1]
+NetPeriodicity_Paint    0x0000fc39   0x100  Code  Gb  ScreenMENU2.o [1]
+Net_Event               0x0000f161   0x14c  Code  Gb  ScreenMENU2.o [1]
+Net_Paint               0x0000f099    0xc8  Code  Gb  ScreenMENU2.o [1]
+NeuronIdChange          0x0020eea4     0x4  Data  Gb  ScreenMENU2.o [1]
+NeuronNrChange          0x0020ee4b     0x1  Data  Gb  ScreenMENU2.o [1]
+NeuronNrChange_Evant    0x0000d0cd   0x220  Code  Gb  ScreenMENU2.o [1]
+NeuronNrChange_Paint    0x0000cf6d   0x160  Code  Gb  ScreenMENU2.o [1]
+NeuronsList             0x0020e1b8   0x1a4  Data  Gb  Application_prog.o [1]
+NeuronsListLine         0x0020ee4e     0x1  Data  Gb  ScreenMENU2.o [1]
+NeuronsList_Event       0x0000c965   0x300  Code  Gb  ScreenMENU2.o [1]
+NeuronsList_Paint       0x0000c6d1   0x294  Code  Gb  ScreenMENU2.o [1]
+NeuronsList_Refresh     0x0000cc65   0x308  Code  Gb  ScreenMENU2.o [1]
+NodeStanIO_Event        0x0000ee05    0x60  Code  Gb  ScreenMENU2.o [1]
+NodeStanIO_Paint        0x0000ed41    0xc4  Code  Gb  ScreenMENU2.o [1]
+NodeStanIO_Refresh      0x0000ee65   0x234  Code  Gb  ScreenMENU2.o [1]
+NodeTestTrans_Event     0x0000ec29    0x6c  Code  Gb  ScreenMENU2.o [1]
+NodeTestTrans_Paint     0x0000eaa1   0x188  Code  Gb  ScreenMENU2.o [1]
+NodeTestTrans_Refresh   0x0000ec95    0xac  Code  Gb  ScreenMENU2.o [1]
+Node_Event              0x0000e9a5    0xfc  Code  Gb  ScreenMENU2.o [1]
+Node_Paint              0x0000e929    0x7c  Code  Gb  ScreenMENU2.o [1]
+NumberScene             0x0020ff34     0x1  Data  Gb  Application_prog.o [1]
+Number_Event            0x00012755   0x1b8  Code  Gb  lcd.o [1]
+Number_Paint            0x000126bd    0x98  Code  Gb  lcd.o [1]
+OpenScreenSet           0x0020ee5d     0x1  Data  Gb  ScreenMENU2.o [1]
+OpisWezl                0x0020ee66     0x1  Data  Gb  ScreenMENU2.o [1]
+Options_Event           0x0000a579    0x8c  Code  Gb  ScreenMENU2.o [1]
+Options_Paint           0x0000a4e1    0x98  Code  Gb  ScreenMENU2.o [1]
+PaintProc               0x000032e5   0xedc  Code  Gb  ScreenMENU2.o [1]
+PioInterrupt            0x00021e21    0x5c  Code  Gb  Interrupt.o [1]
+PortStageRead           0x000191b1     0xa  Code  Gb  Application_prog.o [1]
+PortStageSet            0x000191bd    0x18  Code  Gb  Application_prog.o [1]
+ProcAnl_iko             0x00020c50    0x10  Data  Gb  ScreenMENU2.o [1]
+ProcClock_Action        0x00019a19    0x8c  Code  Gb  Application_prog.o [1]
+ProcClock_graf          0x0001f490    0x18  Data  Gb  ScreenMENU2.o [1]
+ProcConect_Action       0x00019835     0x6  Code  Gb  Application_prog.o [1]
+ProcConstAnal_Action    0x00019345     0x6  Code  Gb  Application_prog.o [1]
+ProcDay_Action          0x00019aa5    0x24  Code  Gb  Application_prog.o [1]
+ProcDay_graf            0x0001f4a8    0x18  Data  Gb  ScreenMENU2.o [1]
+ProcDec_Action          0x000198ed    0x38  Code  Gb  Application_prog.o [1]
+ProcDiv_Action          0x000197b9    0x7c  Code  Gb  Application_prog.o [1]
+ProcDiv_graf            0x0001f68c    0x38  Data  Gb  ScreenMENU2.o [1]
+ProcDownRight_Action    0x00019845     0x6  Code  Gb  Application_prog.o [1]
+ProcDown_Action         0x0001983d     0x6  Code  Gb  Application_prog.o [1]
+ProcEven_Action         0x0001974d    0x1c  Code  Gb  Application_prog.o [1]
+ProcEven_graf           0x0001f5ac    0x38  Data  Gb  ScreenMENU2.o [1]
+ProcGetAnal_graf        0x0001f6dc    0x34  Data  Gb  ScreenMENU2.o [1]
+ProcGetReg_Action       0x000192bd    0x50  Code  Gb  Application_prog.o [1]
+ProcGlobType_down       0x0020ee5c     0x1  Data  Gb  ScreenMENU2.o [1]
+ProcInc_Action          0x000198b1    0x3c  Code  Gb  Application_prog.o [1]
+ProcLim_Action          0x00019731    0x1c  Code  Gb  Application_prog.o [1]
+ProcLim_graf            0x0001f574    0x38  Data  Gb  ScreenMENU2.o [1]
+ProcLog_iko             0x00020c40    0x10  Data  Gb  ScreenMENU2.o [1]
+ProcMinus_Action        0x00019775     0xc  Code  Gb  Application_prog.o [1]
+ProcMinus_graf          0x0001f61c    0x38  Data  Gb  ScreenMENU2.o [1]
+ProcMul_Action          0x00019781    0x38  Code  Gb  Application_prog.o [1]
+ProcMul_graf            0x0001f654    0x38  Data  Gb  ScreenMENU2.o [1]
+ProcNOT_Action          0x00019699     0xe  Code  Gb  Application_prog.o [1]
+ProcNot_graf            0x0001f6c4    0x18  Data  Gb  ScreenMENU2.o [1]
+ProcPlus_Action         0x00019769     0xc  Code  Gb  Application_prog.o [1]
+ProcPlus_graf           0x0001f5e4    0x38  Data  Gb  ScreenMENU2.o [1]
+ProcSPK_Action          0x00019925    0xa4  Code  Gb  Application_prog.o [1]
+ProcSPK_graf            0x0001f45c    0x1c  Data  Gb  ScreenMENU2.o [1]
+ProcSetAnal_Action      0x0001930d    0x34  Code  Gb  Application_prog.o [1]
+ProcSetAnal_graf        0x0001f710    0x34  Data  Gb  ScreenMENU2.o [1]
+ProcSetScn_Action       0x0001985d    0x54  Code  Gb  Application_prog.o [1]
+ProcSet_graf            0x00020bb4    0x1c  Data  Gb  ScreenMENU2.o [1]
+ProcSet_iko             0x00020c18    0x10  Data  Gb  ScreenMENU2.o [1]
+ProcStB_Action          0x0001934d    0x20  Code  Gb  Application_prog.o [1]
+ProcStI_Action          0x000191d5    0x68  Code  Gb  Application_prog.o [1]
+ProcStNI_Action         0x0001923d    0x7a  Code  Gb  Application_prog.o [1]
+ProcStQ_Action          0x0001936d    0x32  Code  Gb  Application_prog.o [1]
+ProcStS_Action          0x000193a1    0x24  Code  Gb  Application_prog.o [1]
+ProcSt_Button           0x0001f744    0x14  Data  Gb  ScreenMENU2.o [1]
+ProcSt_graf             0x0001f428    0x18  Data  Gb  ScreenMENU2.o [1]
+ProcSt_iko              0x00020c08    0x10  Data  Gb  ScreenMENU2.o [1]
+ProcSumL_Action         0x000199c9     0xa  Code  Gb  Application_prog.o [1]
+ProcTLI1_Action         0x0001970d    0x22  Code  Gb  Application_prog.o [1]
+ProcTLI1_graf           0x0001f538    0x3c  Data  Gb  ScreenMENU2.o [1]
+ProcTime_graf           0x0001f478    0x18  Data  Gb  ScreenMENU2.o [1]
+ProcTime_iko            0x00020c28    0x18  Data  Gb  ScreenMENU2.o [1]
+ProcTimerSet_Action     0x000199d5    0x44  Code  Gb  Application_prog.o [1]
+ProcToggleRS_Action     0x000196a9    0x20  Code  Gb  Application_prog.o [1]
+ProcToggleRS_graf       0x0001f4c0    0x3c  Data  Gb  ScreenMENU2.o [1]
+ProcToggleT_Action      0x000196c9    0x42  Code  Gb  Application_prog.o [1]
+ProcToggleT_graf        0x0001f4fc    0x3c  Data  Gb  ScreenMENU2.o [1]
+ProcUpToRightDown_Action
+                        0x00019855     0x6  Code  Gb  Application_prog.o [1]
+ProcUpToRight_Action    0x0001984d     0x6  Code  Gb  Application_prog.o [1]
+ProcWOUTC_Action        0x000195d5    0xc4  Code  Gb  Application_prog.o [1]
+ProcWOUTC_graf          0x0001f440    0x1c  Data  Gb  ScreenMENU2.o [1]
+ProcWOUTR_Action        0x00019549    0x8c  Code  Gb  Application_prog.o [1]
+ProcWOUTR_graf          0x00020bec    0x1c  Data  Gb  ScreenMENU2.o [1]
+ProcWOUTS_Action        0x000194bd    0x8c  Code  Gb  Application_prog.o [1]
+ProcWOUTS_graf          0x00020bd0    0x1c  Data  Gb  ScreenMENU2.o [1]
+ProcWOUT_Action         0x000193c5    0xec  Code  Gb  Application_prog.o [1]
+Procedure_Event         0x000053c5   0xba4  Code  Gb  ScreenMENU2.o [1]
+Procedure_Paint         0x00004719   0xcac  Code  Gb  ScreenMENU2.o [1]
+Program                 0x00019ac9   0x448  Code  Gb  Application_prog.o [1]
+ProgramChange           0x0020ee50     0x1  Data  Gb  ScreenMENU2.o [1]
+ProgramChangeExecute    0x0001a46d    0x30  Code  Gb  Application_prog.o [1]
+PtogTime                0x0020ff3c     0x4  Data  Gb  Application_prog.o [1]
+Punkt_dostepuWiFi_Event
+                        0x0000f4d1   0x12c  Code  Gb  ScreenMENU2.o [1]
+Punkt_dostepuWiFi_Paint
+                        0x0000f375   0x15c  Code  Gb  ScreenMENU2.o [1]
+QWERTY                  0x0001fcbc    0x48  Data  Gb  ScreenMENU2.o [1]
+RF_ChOkBlock            0x0020e8c5     0x1  Data  Gb  ScreenMENU2.o [1]
+RF_Channel_Event        0x0000c4a5   0x22c  Code  Gb  ScreenMENU2.o [1]
+RF_Channel_Paint        0x0000c1a9   0x1b0  Code  Gb  ScreenMENU2.o [1]
+RF_Channel_Refresh      0x0000c359   0x14c  Code  Gb  ScreenMENU2.o [1]
+RF_Channel_nr_tmp       0x0020e8c4     0x1  Data  Gb  ScreenMENU2.o [1]
+RF_CheckChannel         0x0001d5a9    0x34  Code  Gb  RF.o [1]
+RF_CurrentTask          0x0020fed1     0x1  Data  Gb  RF_Exe.o [1]
+RF_ExecuteOrder         0x0001dc4d   0x234  Code  Gb  RF_Exe.o [1]
+RF_Init                 0x0001d0ad    0x38  Code  Gb  RF.o [1]
+RF_Int                  0x0001d055    0x50  Code  Gb  RF.o [1]
+RF_MasterExecut         0x0001dead   0x274  Code  Gb  RF_Exe.o [1]
+RF_NodeTest             0x0020fed8     0xc  Data  Gb  RF_Exe.o [1]
+RF_Period               0x0020feec     0x4  Data  Gb  RF_Exe.o [1]
+RF_ReciveByte           0x0001d3f1    0x8c  Code  Gb  RF.o [1]
+RF_ReciveFarm           0x0001dba1    0xac  Code  Gb  RF_Exe.o [1]
+RF_Rx                   0x0020e80c    0x18  Data  Gb  RF.o [1]
+RF_SendData             0x0001dea1     0xc  Code  Gb  RF_Exe.o [1]
+RF_SendFarm             0x0001d47d    0xd4  Code  Gb  RF.o [1]
+RF_SpecialTask          0x0020fed2     0x1  Data  Gb  RF_Exe.o [1]
+RF_Status               0x0020e7b0    0x20  Data  Gb  RF.o [1]
+RF_TaskTab              0x0020e4fc   0x190  Data  Gb  RF_Exe.o [1]
+RF_Tx                   0x0020e7f0    0x18  Data  Gb  RF.o [1]
+RF_transmit             0x0001d551    0x58  Code  Gb  RF.o [1]
+RamToFlash              0x000164f1    0xd4  Code  Gb  main.o [1]
+ReadADC                 0x00010efd    0xbc  Code  Gb  lcd.o [1]
+ReadTP                  0x00010e51    0xac  Code  Gb  lcd.o [1]
+RealPrcLines            0x0020ff38     0x1  Data  Gb  Application_prog.o [1]
+RealRows                0x0020ff68     0x1  Data  Gb  lcd.o [1]
+Real_Cs_RF              0x0020ff4c     0x1  Data  Gb  spi_main.o [1]
+Rectangle               0x00013b3d    0x42  Code  Gb  lcd.o [1]
+RefreshNeuronsList      0x0001a02d    0x64  Code  Gb  Application_prog.o [1]
+Region$$Table$$Base     0x000230d4          Data  Gb  - Linker created -
+Region$$Table$$Limit    0x000230f4          Data  Gb  - Linker created -
+Rej_poz                 0x0020ee94     0x4  Data  Gb  ScreenMENU2.o [1]
+RemRow                  0x000065d9    0x94  Code  Gb  ScreenMENU2.o [1]
+RemRow_Event            0x000066ed    0x68  Code  Gb  ScreenMENU2.o [1]
+RemRow_Paint            0x0000666d    0x80  Code  Gb  ScreenMENU2.o [1]
+RepaintLCD              0x000109c5    0x7c  Code  Gb  lcd.o [1]
+Restart_Event           0x0000b2c9    0x64  Code  Gb  ScreenMENU2.o [1]
+RowsPoz                 0x0020ff69     0x1  Data  Gb  lcd.o [1]
+SER_Init                0x00021279    0x28  Code  Gb  serial_driver.o [1]
+SER_Read                0x000212a1    0x20  Code  Gb  serial_driver.o [1]
+SER_RequestHandler      0x00021211    0x68  Code  Gb  serial_driver.o [1]
+SER_Write               0x000212c1    0x20  Code  Gb  serial_driver.o [1]
+SK                      0x0020e8cb     0x1  Data  Gb  RS_WIN.o [1]
+SPI_Buff                0x0020e35c   0x1a0  Data  Gb  spi_main.o [1]
+SPI_Clock_Execute       0x0002005d    0xf4  Code  Gb  Clock.o [1]
+SPI_RFM12_Execute       0x0001d0f1   0x300  Code  Gb  RF.o [1]
+SPI_Response_Interpretation
+                        0x0001f339    0x3a  Code  Gb  spi_main.o [1]
+SPI_SendB_Buff          0x0001f1cd    0x94  Code  Gb  spi_main.o [1]
+SPI_SendWord            0x0001f319    0x20  Code  Gb  spi_main.o [1]
+SPI_Send_Executive      0x0001f265    0xac  Code  Gb  spi_main.o [1]
+SPK_1                   0x00020c60    0x28  Data  Gb  ScreenMENU2.o [1]
+STD_ConfigureEndpoints  0x0001fa25    0x34  Code  Lc  standard.o [1]
+STD_GetConfiguration    0x0001fa71    0x32  Code  Lc  standard.o [1]
+STD_GetConfigurationDescriptor
+                        0x0001fb31    0x30  Code  Lc  standard.o [1]
+STD_GetDeviceDescriptor
+                        0x0001fb0d    0x24  Code  Lc  standard.o [1]
+STD_GetDeviceStatus     0x0001faa5    0x40  Code  Lc  standard.o [1]
+STD_GetEndpointStatus   0x0001fae5    0x28  Code  Lc  standard.o [1]
+STD_GetStringDescriptor
+                        0x0001fb61    0x2e  Code  Lc  standard.o [1]
+STD_RequestHandler      0x0001fb91   0x128  Code  Gb  standard.o [1]
+STD_SetConfiguration    0x0001fa59    0x18  Code  Lc  standard.o [1]
+SVC_STACK$$Base         0x00200d00           --   Gb  - Linker created -
+SVC_STACK$$Limit        0x00200df0           --   Gb  - Linker created -
+SaveChanges_Evant       0x00006755    0xa4  Code  Gb  ScreenMENU2.o [1]
+SceneNrCount            0x00019f11    0x44  Code  Gb  Application_prog.o [1]
+SceneNrLast             0x0020ff37     0x1  Data  Gb  Application_prog.o [1]
+ScreenAlarmSet_Event    0x00007925   0x248  Code  Gb  ScreenMENU2.o [1]
+ScreenAlarmSet_Paint    0x00007695   0x290  Code  Gb  ScreenMENU2.o [1]
+ScreenDesign1_Event     0x000083d1   0x294  Code  Gb  ScreenMENU2.o [1]
+ScreenDesign1_Paint     0x00008181   0x250  Code  Gb  ScreenMENU2.o [1]
+ScreenEvent             0x000005b1   0x43c  Code  Gb  ScreenMENU2.o [1]
+ScreenGraph             0x00007e69   0x318  Code  Gb  ScreenMENU2.o [1]
+ScreenSetTab_0          0x0001c004   0x3c8  Data  Gb  ScreenMENU2.o [1]
+ScreenSetTab_1          0x0001c3cc   0x2c0  Data  Gb  ScreenMENU2.o [1]
+ScreenSet_Event         0x00006a1d   0x17c  Code  Gb  ScreenMENU2.o [1]
+ScreenSet_Paint         0x000067f9   0x224  Code  Gb  ScreenMENU2.o [1]
+ScreenSever_Event       0x0000bdf1   0x1ac  Code  Gb  ScreenMENU2.o [1]
+ScreenSever_Paint       0x0000bbcd   0x224  Code  Gb  ScreenMENU2.o [1]
+ScreenTimetableSet_Event
+                        0x00007449   0x24c  Code  Gb  ScreenMENU2.o [1]
+ScreenTimetableSet_Paint
+                        0x00007161   0x2e8  Code  Gb  ScreenMENU2.o [1]
+ScreenUse               0x0020ff3a     0x2  Data  Gb  Application_prog.o [1]
+SetRTC_DateTime         0x0001ff41   0x11c  Code  Gb  Clock.o [1]
+SetSpecialBinarVar      0x00014b05    0xd4  Code  Gb  WizFiCommand.o [1]
+SetTask                 0x0001a209   0x264  Code  Gb  Application_prog.o [1]
+SetTouchScreen_Event    0x0000b0d1   0x1f8  Code  Gb  ScreenMENU2.o [1]
+SetTouchScreen_Paint    0x0000af19   0x1b8  Code  Gb  ScreenMENU2.o [1]
+SetTouchStep            0x0020e78d     0x1  Data  Gb  ScreenMENU2.o [1]
+Set_LCD_Light_PWM_Fill  0x000222d9    0x20  Code  Gb  LCD_light_PWM.o [1]
+SetupLang_Event         0x0000a851    0x88  Code  Gb  ScreenMENU2.o [1]
+SetupLang_Paint         0x0000a7d9    0x78  Code  Gb  ScreenMENU2.o [1]
+SetupNewPass_Event      0x0000ad65   0x1b4  Code  Gb  ScreenMENU2.o [1]
+SetupNewPass_Paint      0x0000acd9    0x8c  Code  Gb  ScreenMENU2.o [1]
+SetupOldPass_Event      0x0000ab1d   0x1bc  Code  Gb  ScreenMENU2.o [1]
+SetupOldPass_Paint      0x0000aa95    0x88  Code  Gb  ScreenMENU2.o [1]
+SetupPass_Event         0x0000a985   0x110  Code  Gb  ScreenMENU2.o [1]
+SetupPass_Paint         0x0000a8d9    0xac  Code  Gb  ScreenMENU2.o [1]
+SetupTimeCarPoz         0x0020ffb8     0x1  Data  Gb  ScreenMENU2.o [1]
+SetupTime_Event         0x0000b835   0x398  Code  Gb  ScreenMENU2.o [1]
+SetupTime_Paint         0x0000b32d   0x2e4  Code  Gb  ScreenMENU2.o [1]
+SetupTime_Refresh       0x0000b611   0x164  Code  Gb  ScreenMENU2.o [1]
+Setup_Event             0x0000a6fd    0xdc  Code  Gb  ScreenMENU2.o [1]
+Setup_Paint             0x0000a605    0xf8  Code  Gb  ScreenMENU2.o [1]
+SheetHistory            0x0020ee68    0x14  Data  Gb  ScreenMENU2.o [1]
+SheetHistoryIndex       0x0020ee4f     0x1  Data  Gb  ScreenMENU2.o [1]
+ShortDate               0x0001f758    0x18  Data  Gb  ScreenMENU2.o [1]
+Siec                    0x00021cd0    0xa8  Data  Gb  ScreenMENU2.o [1]
+SlaveMode               0x0020e8ec     0x1  Data  Gb  main.o [1]
+SleepModTime            0x0020ffb9     0x1  Data  Gb  ScreenMENU2.o [1]
+SourRam                 0x0020e924     0x4  Data  Gb  main.o [1]
+Speaker                 0x0020e8e0     0x4  Data  Gb  main.o [1]
+Speech                  0x00017d88  0x1428  Data  Gb  language.o [1]
+SpiMaster_Init          0x0001f111    0xb8  Code  Gb  spi_main.o [1]
+StartAdvance            0x0020e78c     0x1  Data  Gb  ScreenMENU2.o [1]
+StartAnimation_Event    0x00000d15    0x3c  Code  Gb  ScreenMENU2.o [1]
+StartAnimation_Paint    0x00000bb1   0x164  Code  Gb  ScreenMENU2.o [1]
+StrToWord               0x000149b1    0x6e  Code  Gb  WizFiCommand.o [1]
+StrzalkaLewo            0x000232f4     0xc  Data  Gb  ScreenMENU2.o [1]
+StrzalkaPrawo           0x000232e8     0xc  Data  Gb  ScreenMENU2.o [1]
+SymulacjaRejWej         0x0020fee6     0x2  Data  Gb  RF_Exe.o [1]
+SymulacjaRejWyj         0x0020fee4     0x2  Data  Gb  RF_Exe.o [1]
+TS_pPio                 0x0020ffb0     0x4  Data  Gb  lcd.o [1]
+TaskToChange            0x0020eeb4     0x4  Data  Gb  ScreenMENU2.o [1]
+Termostat_Event         0x00001db1   0x350  Code  Gb  ScreenMENU2.o [1]
+Termostat_Paint         0x00001b55   0x224  Code  Gb  ScreenMENU2.o [1]
+Termostat_Refresh       0x00002101   0x1f4  Code  Gb  ScreenMENU2.o [1]
+TextChangeCharNr        0x0020ee63     0x1  Data  Gb  ScreenMENU2.o [1]
+TextChangePoz           0x0020ee64     0x1  Data  Gb  ScreenMENU2.o [1]
+TextChange_Evant        0x000099a1   0x4c0  Code  Gb  ScreenMENU2.o [1]
+TextChange_Paint        0x00009725   0x1e8  Code  Gb  ScreenMENU2.o [1]
+TextChange_Refresh      0x0000990d    0x94  Code  Gb  ScreenMENU2.o [1]
+TextToChange            0x0020ee98     0x4  Data  Gb  ScreenMENU2.o [1]
+TextToChangeLength      0x0020ee48     0x1  Data  Gb  ScreenMENU2.o [1]
+TextToChangeMaxPixSize  0x0020ee49     0x1  Data  Gb  ScreenMENU2.o [1]
+ThermHourModyfi         0x0020e8c6     0x1  Data  Gb  ScreenMENU2.o [1]
+ThermostatAutoSet_Event
+                        0x0000d9a9   0x2bc  Code  Gb  ScreenMENU2.o [1]
+ThermostatAutoSet_Paint
+                        0x0000d559   0x450  Code  Gb  ScreenMENU2.o [1]
+ThermostatChartSet_Event
+                        0x0000de71   0x1d8  Code  Gb  ScreenMENU2.o [1]
+ThermostatChartSet_Paint
+                        0x0000dc65   0x20c  Code  Gb  ScreenMENU2.o [1]
+ThermostatChartSet_Refresh
+                        0x0000e049    0x88  Code  Gb  ScreenMENU2.o [1]
+ThermostatSet_Event     0x00006ee1   0x280  Code  Gb  ScreenMENU2.o [1]
+ThermostatSet_Paint     0x00006b99   0x348  Code  Gb  ScreenMENU2.o [1]
+ThermostatsExecute      0x000159b5   0x164  Code  Gb  main.o [1]
+ThermostatsTimeChartExecute
+                        0x000158e1    0xd4  Code  Gb  main.o [1]
+TimeToStr               0x0001178d    0x86  Code  Gb  lcd.o [1]
+Timer_10ms              0x000160e5   0x134  Code  Gb  main.o [1]
+Timer_10ms_Setup        0x00016219    0x84  Code  Gb  main.o [1]
+Timer_1h                0x00015d15     0xc  Code  Gb  main.o [1]
+Timer_1min              0x00015d21    0x10  Code  Gb  main.o [1]
+Timer_1ms               0x0001629d   0x1d0  Code  Gb  main.o [1]
+Timer_1ms_Setup         0x0001646d    0x84  Code  Gb  main.o [1]
+Timer_1s                0x00015d31   0x3b4  Code  Gb  main.o [1]
+TimetableExecute        0x00015741   0x1a0  Code  Gb  main.o [1]
+TimetableSet_Event      0x00002b09   0x22c  Code  Gb  ScreenMENU2.o [1]
+TimetableSet_Hour       0x0020ee55     0x1  Data  Gb  ScreenMENU2.o [1]
+TimetableSet_Minute     0x0020ee56     0x1  Data  Gb  ScreenMENU2.o [1]
+TimetableSet_Paint      0x000028b5   0x254  Code  Gb  ScreenMENU2.o [1]
+TimetableSet_Week       0x0020ee57     0x1  Data  Gb  ScreenMENU2.o [1]
+Timetable_Event         0x00002559   0x35c  Code  Gb  ScreenMENU2.o [1]
+Timetable_Paint         0x000022f5   0x264  Code  Gb  ScreenMENU2.o [1]
+TmpFlg                  0x0020ee51     0x1  Data  Gb  ScreenMENU2.o [1]
+TouchTestSor            0x000237c8     0x8  Data  Gb  ScreenMENU2.o [1]
+Touch_EventTime         0x0020ee80     0x8  Data  Gb  ScreenMENU2.o [1]
+TransLoopTime           0x0020e934     0x4  Data  Gb  main.o [1]
+TransQuality            0x0020e68c    0xd8  Data  Gb  Application_prog.o [1]
+TransferInfo            0x0020e8d0     0x1  Data  Gb  ScreenMENU2.o [1]
+Trap                    0x0020ff2c     0x8  Data  Gb  Application_prog.o [1]
+TxtSpaceAvable          0x0020eebc     0x4  Data  Gb  ScreenMENU2.o [1]
+UDP_Attach              0x0001bddd    0xec  Code  Gb  udp.o [1]
+UDP_ClearRXFlag         0x0001b4f1    0x4e  Code  Lc  udp.o [1]
+UDP_ConfigureEndpoint   0x0001b905    0xe4  Code  Gb  udp.o [1]
+UDP_Connect             0x0001bf59    0x10  Code  Gb  udp.o [1]
+UDP_DisableEndpoints    0x0001b641    0x2e  Code  Lc  udp.o [1]
+UDP_DisableMCK          0x00023425    0x18  Code  Wk  udp.o [1]
+UDP_DisableTransceiver  0x0002315d    0x20  Code  Wk  udp.o [1]
+UDP_DisableUDPCK        0x00023455    0x18  Code  Wk  udp.o [1]
+UDP_Disconnect          0x0001bf69    0x1c  Code  Gb  udp.o [1]
+UDP_EnableMCK           0x0002340d    0x18  Code  Wk  udp.o [1]
+UDP_EnableTransceiver   0x0002346d    0x18  Code  Wk  udp.o [1]
+UDP_EnableUDPCK         0x0002343d    0x18  Code  Wk  udp.o [1]
+UDP_EndOfTransfer       0x00022e91    0x30  Code  Wk  udp.o [1]
+UDP_EndpointHandler     0x0001b671   0x294  Code  Lc  udp.o [1]
+UDP_GetDriverInterface  0x000238b9     0x6  Code  Wk  udp.o [1]
+UDP_GetPayload          0x0001b58d    0x54  Code  Lc  udp.o [1]
+UDP_GetSetup            0x0001b5e1    0x26  Code  Lc  udp.o [1]
+UDP_Halt                0x0001bc89    0xd2  Code  Gb  udp.o [1]
+UDP_Handler             0x0001b9e9   0x1a4  Code  Gb  udp.o [1]
+UDP_Init                0x0001bf85    0x68  Code  Gb  udp.o [1]
+UDP_Read                0x0001bc3d    0x4a  Code  Gb  udp.o [1]
+UDP_RemoteWakeUp        0x0001bda9    0x32  Code  Gb  udp.o [1]
+UDP_ResetEndpoints      0x0001b609    0x36  Code  Lc  udp.o [1]
+UDP_SetAddress          0x0001bec9    0x48  Code  Gb  udp.o [1]
+UDP_SetConfiguration    0x0001bf11    0x46  Code  Gb  udp.o [1]
+UDP_Stall               0x0001bd5d    0x4a  Code  Gb  udp.o [1]
+UDP_Write               0x0001bb8d    0xb0  Code  Gb  udp.o [1]
+UDP_WritePayload        0x0001b541    0x4a  Code  Lc  udp.o [1]
+UND_STACK$$Base         0x00200f20           --   Gb  - Linker created -
+UND_STACK$$Limit        0x00200f60           --   Gb  - Linker created -
+US1_Buffer              0x0020f998   0x244  Data  Gb  USART.o [1]
+US1_init                0x00020f79    0xb8  Code  Gb  USART.o [1]
+USB_Attach              0x0002353d    0x12  Code  Wk  main.o [1]
+USB_ConfigureEndpoint   0x000235c9    0x12  Code  Wk  standard.o [1]
+USB_Connect             0x00023551    0x12  Code  Wk  main.o [1]
+USB_Disconnect          0x00023565    0x12  Code  Wk  main.o [1]
+USB_GetDriverID         0x000238a9     0x6  Code  Wk  main.o [1]
+USB_GetDriverInterface  0x000238a1     0x6  Code  Wk  main.o [1]
+USB_GetDriverPMC        0x000238b1     0x6  Code  Wk  udp.o [1]
+USB_GetEndpoint         0x000232b5    0x1a  Code  Wk  udp.o [1]
+USB_GetSetup            0x000238fd     0x4  Code  Wk  serial_driver.o [1]
+USB_GetState            0x0002376d     0xa  Code  Wk  main.o [1]
+USB_Halt                0x00023485    0x16  Code  Wk  standard.o [1]
+USB_Handler             0x00023529    0x12  Code  Wk  main.o [1]
+USB_Init                0x00023579    0x12  Code  Wk  serial_driver.o [1]
+USB_InitCallback        0x0001b469    0x18  Code  Lc  udp.o [1]
+USB_NewRequestCallback  0x0001b4c9    0x18  Code  Lc  udp.o [1]
+USB_Read                0x000230b1    0x22  Code  Wk  serial_driver.o [1]
+USB_ResetCallback       0x0001b481    0x18  Code  Lc  udp.o [1]
+USB_ResumeCallback      0x0001b4b1    0x18  Code  Lc  udp.o [1]
+USB_SendZLP0            0x0002317d    0x1e  Code  Wk  serial_driver.o [1]
+USB_SetAddress          0x000235a1    0x12  Code  Wk  standard.o [1]
+USB_SetConfiguration    0x000235b5    0x12  Code  Wk  standard.o [1]
+USB_Stall               0x0002358d    0x12  Code  Wk  standard.o [1]
+USB_StartOfFrameCallback
+                        0x0001b4e1    0x10  Code  Lc  udp.o [1]
+USB_SuspendCallback     0x0001b499    0x18  Code  Lc  udp.o [1]
+USB_Write               0x0002308d    0x22  Code  Wk  serial_driver.o [1]
+Up                      0x0020ff14     0x4  Data  Gb  lcd.o [1]
+Usart1_handler          0x00021041    0x5c  Code  Gb  USART.o [1]
+UstawSiec_Event         0x0000f301    0x74  Code  Gb  ScreenMENU2.o [1]
+UstawSiec_Paint         0x0000f2ad    0x54  Code  Gb  ScreenMENU2.o [1]
+VCTT_ill                0x0020e870     0x1  Data  Gb  ScreenMENU2.o [1]
+VCTT_point_flag         0x0020e871     0x1  Data  Gb  ScreenMENU2.o [1]
+V_line                  0x00013579   0x118  Code  Gb  lcd.o [1]
+ValueChange             0x0020eea0     0x4  Data  Gb  ScreenMENU2.o [1]
+ValueChangeTxtTmp       0x0020e874     0x8  Data  Gb  ScreenMENU2.o [1]
+ValueChange_Evant       0x00006105   0x334  Code  Gb  ScreenMENU2.o [1]
+ValueChange_Paint       0x00005f69   0x19c  Code  Gb  ScreenMENU2.o [1]
+Variables               0x0020e854    0x10  Data  Gb  Application_prog.o [1]
+VariablesAnal           0x0020e764    0x28  Data  Gb  Application_prog.o [1]
+WaitOnCheckNode         0x0020ee88     0x8  Data  Gb  ScreenMENU2.o [1]
+Wait_Paint              0x00002d35    0x38  Code  Gb  ScreenMENU2.o [1]
+WiFi                    0x0001d72d   0x120  Code  Gb  WizFi.o [1]
+WiFiConecting_Paint     0x0000f5fd    0x50  Code  Gb  ScreenMENU2.o [1]
+WiFiConecting_Refresh   0x0000f64d   0x1d8  Code  Gb  ScreenMENU2.o [1]
+WiFiReConnect           0x0020ee67     0x1  Data  Gb  ScreenMENU2.o [1]
+WizFiCommand_AT         0x00013d9d    0x88  Code  Gb  WizFiCommand.o [1]
+WizFiCommand_AT_DNSLOOKUP
+                        0x00014619    0xd8  Code  Gb  WizFiCommand.o [1]
+WizFiCommand_AT_NCLOSEALL
+                        0x00013f15    0x54  Code  Gb  WizFiCommand.o [1]
+WizFiCommand_AT_NCTCP   0x00014781   0x150  Code  Gb  WizFiCommand.o [1]
+WizFiCommand_AT_NDHCP   0x00014051    0x6c  Code  Gb  WizFiCommand.o [1]
+WizFiCommand_AT_NSET    0x0001411d   0x114  Code  Gb  WizFiCommand.o [1]
+WizFiCommand_AT_WA      0x00014481    0xac  Code  Gb  WizFiCommand.o [1]
+WizFiCommand_AT_WD      0x00013fb1    0x50  Code  Gb  WizFiCommand.o [1]
+WizFiCommand_AT_WWEP1   0x00014289    0xa4  Code  Gb  WizFiCommand.o [1]
+WizFiCommand_AT_WWPA    0x00014385    0xa4  Code  Gb  WizFiCommand.o [1]
+WizFiCommand_AT_XDUM0   0x00013e75    0x50  Code  Gb  WizFiCommand.o [1]
+WizFiResponseCommand_AT
+                        0x00013e25    0x50  Code  Gb  WizFiCommand.o [1]
+WizFiResponseCommand_AT_DNSLOOKUP
+                        0x000146f1    0x90  Code  Gb  WizFiCommand.o [1]
+WizFiResponseCommand_AT_NCLOSEALL0
+                        0x00013f69    0x48  Code  Gb  WizFiCommand.o [1]
+WizFiResponseCommand_AT_NCTCP
+                        0x000148d1    0xe0  Code  Gb  WizFiCommand.o [1]
+WizFiResponseCommand_AT_NDHCP
+                        0x000140c5    0x58  Code  Gb  WizFiCommand.o [1]
+WizFiResponseCommand_AT_NSET
+                        0x00014231    0x58  Code  Gb  WizFiCommand.o [1]
+WizFiResponseCommand_AT_WA
+                        0x0001452d    0x58  Code  Gb  WizFiCommand.o [1]
+WizFiResponseCommand_AT_WD
+                        0x00014001    0x50  Code  Gb  WizFiCommand.o [1]
+WizFiResponseCommand_AT_WWEP1
+                        0x0001432d    0x58  Code  Gb  WizFiCommand.o [1]
+WizFiResponseCommand_AT_WWPA
+                        0x00014429    0x58  Code  Gb  WizFiCommand.o [1]
+WizFiResponseCommand_AT_XDUM0
+                        0x00013ec5    0x50  Code  Gb  WizFiCommand.o [1]
+WizFiResponseInterpreter
+                        0x0001d851   0x148  Code  Gb  WizFi.o [1]
+WybProc                 0x000046b5    0x64  Code  Gb  ScreenMENU2.o [1]
+X_down                  0x0020e8f4     0x2  Data  Gb  main.o [1]
+X_up                    0x0020e8f8     0x2  Data  Gb  main.o [1]
+Xo1                     0x0020e7a0     0x4  Data  Gb  ScreenMENU2.o [1]
+Xo2                     0x0020e7a4     0x4  Data  Gb  ScreenMENU2.o [1]
+Y_down                  0x0020e8f2     0x2  Data  Gb  main.o [1]
+Y_up                    0x0020e8f6     0x2  Data  Gb  main.o [1]
+Yo1                     0x0020e7a8     0x4  Data  Gb  ScreenMENU2.o [1]
+Yo2                     0x0020e7ac     0x4  Data  Gb  ScreenMENU2.o [1]
+ZD_MODBUS_0             0x0020dc50   0x188  Data  Gb  Modbus.o [1]
+ZD_MODBUS_1             0x0020ddec   0x188  Data  Gb  Modbus.o [1]
+Zone                    0x0001396d   0x1d0  Code  Gb  lcd.o [1]
+ZoneButon               0x00007b6d    0xda  Code  Gb  ScreenMENU2.o [1]
+ZoneButtonClick         0x0020ee5f     0x1  Data  Gb  ScreenMENU2.o [1]
+ZoneGrapfNrClick        0x0020ee60     0x1  Data  Gb  ScreenMENU2.o [1]
+ZoneGraph               0x00007c49   0x220  Code  Gb  ScreenMENU2.o [1]
+ZoneGraph_Event         0x000092f9   0x42c  Code  Gb  ScreenMENU2.o [1]
+ZoneGraph_Paint         0x00008cf9   0x600  Code  Gb  ScreenMENU2.o [1]
+ZoneLabelClick          0x0020ee62     0x1  Data  Gb  ScreenMENU2.o [1]
+ZoneValueNrClick        0x0020ee61     0x1  Data  Gb  ScreenMENU2.o [1]
+_GenldDefault           0x0001b169   0x2c0  Code  Lc  xprintffull.o [2]
+_LdtobDefault           0x0001acb5   0x4b4  Code  Lc  xprintffull.o [2]
+_LitobDefault           0x0001aba1   0x114  Code  Lc  xprintffull.o [2]
+_Printf                 0x0001a4bd   0x6e2  Code  Gb  xprintffull.o [2]
+_PutcharsDefault        0x0001b429    0x40  Code  Lc  xprintffull.o [2]
+_RF_EnableRX            0x0001cfd1    0x40  Code  Gb  RF.o [1]
+_RF_EnableTX            0x0001cf95    0x38  Code  Gb  RF.o [1]
+_SProut                 0x000236f5     0xc  Code  Gb  xsprout.o [2]
+__FloatingPointEnvironment
+                        0x0020e8d5     0x1  Data  Gb  fenv.o [3]
+__aeabi_cdcmple         0x00022bc0          Code  Gb  DblCmpLe.o [3]
+__aeabi_cdrcmple        0x00022c04          Code  Gb  DblCmpGe.o [3]
+__aeabi_cfcmpeq         0x00022fc0          Code  Gb  FltCmpEq.o [3]
+__aeabi_cfcmple         0x00022e2c          Code  Gb  FltCmpLe.o [3]
+__aeabi_cfrcmple        0x00022e60          Code  Gb  FltCmpGe.o [3]
+__aeabi_d2f             0x000219ec          Code  Gb  DblToFlt.o [3]
+__aeabi_d2iz            0x00021f68          Code  Gb  DblToI32.o [3]
+__aeabi_d2uiz           0x00021fc8          Code  Gb  DblToI32.o [3]
+__aeabi_dadd            0x00020cac          Code  Gb  DblAdd.o [3]
+__aeabi_ddiv            0x0001ed18          Code  Gb  DblDiv.o [3]
+__aeabi_dmul            0x0001f774          Code  Gb  DblMul.o [3]
+__aeabi_dsub            0x00020154          Code  Gb  DblSub.o [3]
+__aeabi_f2d             0x000225a4          Code  Gb  FltToDbl.o [3]
+__aeabi_f2iz            0x00022788          Code  Gb  FltToS32.o [3]
+__aeabi_f2lz            0x00021d7c          Code  Gb  FltToS64.o [3]
+__aeabi_fadd            0x0002150c          Code  Gb  FltAdd.o [3]
+__aeabi_fdiv            0x00020378          Code  Gb  FltDiv.o [3]
+__aeabi_fdiv0           0x000233a8          Code  Gb  FltFlgDivZer.o [3]
+__aeabi_fmul            0x00020968          Code  Gb  FltMul.o [3]
+__aeabi_fsub            0x00020e18          Code  Gb  FltSub.o [3]
+__aeabi_i2d             0x00022450          Code  Gb  I32ToDbl.o [3]
+__aeabi_i2f             0x000223d4          Code  Gb  I32ToFlt.o [3]
+__aeabi_idiv            0x00020790          Code  Gb  I32DivMod.o [3]
+__aeabi_idiv0           0x000238d4          Code  Gb  IntDivZer.o [3]
+__aeabi_idivmod         0x00020790          Code  Gb  I32DivMod.o [3]
+__aeabi_l2f             0x00022534          Code  Gb  I64ToFlt.o [3]
+__aeabi_ldivmod         0x000210e0          Code  Gb  I64DivMod.o [3]
+__aeabi_memclr4         0x0002380c          Code  Gb  memclr4.o [3]
+__aeabi_memcpy          0x00021864          Code  Gb  memcpy.o [3]
+__aeabi_memcpy4         0x00021864          Code  Gb  memcpy.o [3]
+__aeabi_memcpy8         0x00021864          Code  Gb  memcpy.o [3]
+__aeabi_memset4         0x00022a18          Code  Gb  memset48.o [3]
+__aeabi_memset8         0x00022a18          Code  Gb  memset48.o [3]
+__aeabi_ui2d            0x000224ac          Code  Gb  I32ToDbl.o [3]
+__aeabi_ui2f            0x0002243c          Code  Gb  I32ToFlt.o [3]
+__aeabi_uidiv           0x000207a0          Code  Gb  I32DivMod.o [3]
+__aeabi_uidivmod        0x000207a0          Code  Gb  I32DivMod.o [3]
+__aeabi_uldivmod        0x000210f8          Code  Gb  I64DivMod.o [3]
+__aeabi_uread4          0x00023118          Code  Gb  uread4.o [3]
+__aeabi_uwrite4         0x00022f70          Code  Gb  uwrite4.o [3]
+__exit                  0x000231f0    0x1c  Code  Gb  exit.o [4]
+__iar_Dnorm             0x00021b61    0xb8  Code  Gb  xdnorm.o [2]
+__iar_Dscale            0x000213f5   0x114  Code  Gb  xdscale.o [2]
+__iar_Memchr            0x00022008          Code  Gb  memchr.o [3]
+__iar_Memset4_word      0x00022a24          Code  Gb  memset48.o [3]
+__iar_Memset8_word      0x00022a24          Code  Gb  memset48.o [3]
+__iar_Strchr            0x0002313c          Code  Gb  strchr.o [3]
+__iar_Strstr            0x00022d61    0x32  Code  Wk  strstr.o [2]
+__iar_SubNrmlX          0x0002266c          Code  Gb  DblSubNrml.o [3]
+__iar_SubNrmlY          0x0002269c          Code  Gb  DblSubNrml.o [3]
+__iar_call_main         0x000234d9    0x14  Code  Gb  call_main.o [2]
+__iar_dadd              0x00020cbc          Code  Gb  DblAdd.o [3]
+__iar_data_init         0x00022b7c    0x40  Code  Gb  data_init.o [3]
+__iar_disable_interrupt
+                        0x00023654          Code  Wk  RS_WIN.o [1]
+__iar_dsub              0x00020164          Code  Gb  DblSub.o [3]
+__iar_enable_interrupt  0x00023668          Code  Wk  RS_WIN.o [1]
+__iar_fadd              0x00021518          Code  Gb  FltAdd.o [3]
+__iar_finexact          0x00023360          Code  Gb  FltFlgInx.o [3]
+__iar_finvalid          0x00023024          Code  Gb  FltFlgInv.o [3]
+__iar_finvalidClr       0x00023020          Code  Gb  FltFlgInv.o [3]
+__iar_foverflow         0x00023378          Code  Gb  FltFlgOvf.o [3]
+__iar_fsub              0x00020e24          Code  Gb  FltSub.o [3]
+__iar_fsubStart         0x00020e34          Code  Gb  FltSub.o [3]
+__iar_funderflow        0x00023390          Code  Gb  FltFlgUnf.o [3]
+__iar_get_interrupt_state
+                        0x00023820          Code  Wk  RS_WIN.o [1]
+__iar_i2d               0x0002246c          Code  Gb  I32ToDbl.o [3]
+__iar_i2f               0x000223e8          Code  Gb  I32ToFlt.o [3]
+__iar_l2f               0x00022554          Code  Gb  I64ToFlt.o [3]
+__iar_program_start     0x000216c0          Code  Gb  startup.o [1]
+__iar_return_from_swi   0x000238d8          Code  Gb  swi_return.o [4]
+__iar_rle_init          0x00022c44    0x40  Code  Gb  rle_init.o [3]
+__iar_set_interrupt_state
+                        0x000233c4          Code  Wk  RS_WIN.o [1]
+__iar_via_R0            0x00023901          Code  Wk  RF.o [1]
+__iar_via_R1            0x00023905          Code  Wk  main.o [1]
+__iar_via_R2            0x0002390d          Code  Wk  standard.o [1]
+__iar_via_R3            0x00023911          Code  Wk  standard.o [1]
+__iar_via_R4            0x00023909          Code  Wk  serial_driver.o [1]
+__iar_zero_init         0x00023228    0x1c  Code  Gb  zero_init.o [3]
+__low_level_init        0x00022131    0x38  Code  Gb  device.o [1]
+__vector                0x00000000          Code  Gb  startup.o [1]
+_exit                   0x00023640          Code  Gb  cexit.o [3]
+_pRF_Status             0x0001d015    0x14  Code  Gb  RF.o [1]
+abs                     0x00023815     0x8  Code  Wk  abs.o [2]
+at91ChipSelect          0x00010e15    0x3c  Code  Gb  lcd.o [1]
+at91DisplayData         0x000215e9    0xd8  Code  Wk  lcd.o [1]
+at91DisplayOnOff        0x00010c79    0x4c  Code  Gb  lcd.o [1]
+at91DisplayStartLine    0x00010cc5    0x40  Code  Gb  lcd.o [1]
+at91DisplayStartPage    0x00010d05    0x5c  Code  Gb  lcd.o [1]
+at91DisplayYAdress      0x00010d61    0xb4  Code  Gb  lcd.o [1]
+at91flashWrite          0x0020f6dd    0xaa  Code  Gb  flash.o [1]
+bCRC_Hi                 0x0002058c   0x100  Data  Gb  Modbus.o [1]
+bCRC_Lo                 0x0002068c   0x100  Data  Gb  Modbus.o [1]
+chipSelect              0x0020ffba     0x1  Data  Gb  lcd.o [1]
+crc16                   0x00022c85    0x3c  Code  Gb  Modbus.o [1]
+dState                  0x0020e8b4     0x4  Data  Lc  main.o [1]
+div                     0x00023045    0x24  Code  Gb  div.o [2]
+dzienTygodnia           0x0000b7b1    0x84  Code  Gb  ScreenMENU2.o [1]
+ekran_komunikacja       0x0020eedc   0x400  Data  Gb  ScreenMENU2.o [1]
+exit                    0x00023701     0xc  Code  Gb  exit.o [2]
+gProg                   0x00200fa0  0xc670  Data  Gb  Application_prog.o [1]
+g_Ans_ZD_MODBUS_0       0x0020dc4c     0x1  Data  Gb  Modbus.o [1]
+g_Current_ZD_MODBUS_0   0x0020dc4e     0x1  Data  Gb  Modbus.o [1]
+g_Current_ZD_MODBUS_1   0x0020dc4f     0x1  Data  Gb  Modbus.o [1]
+g_LightCouterLCD        0x0020e920     0x4  Data  Gb  main.o [1]
+g_LightLCDEnable        0x0020e8e5     0x1  Data  Gb  main.o [1]
+g_Message               0x0020e8ac     0x4  Data  Gb  main.o [1]
+g_NeedPass              0x0020fd70     0x1  Data  Gb  main.o [1]
+g_NextTimeProgram       0x0020fd80     0x8  Data  Gb  main.o [1]
+g_PC_Connected          0x0020e8e4     0x1  Data  Gb  main.o [1]
+g_PC_Connected_timeout  0x0020e8ee     0x1  Data  Gb  main.o [1]
+g_Password_1            0x0020fd74     0x8  Data  Gb  main.o [1]
+g_Password_2            0x0020ff9c     0x8  Data  Gb  main.o [1]
+g_RF_TimeOutCounter     0x0020fed3     0x1  Data  Gb  RF_Exe.o [1]
+g_Restart_Program       0x0020ffbc     0x1  Data  Gb  main.o [1]
+g_ScreenSever_On        0x0020e8e6     0x1  Data  Gb  main.o [1]
+g_ScreenSever_Time_Off  0x0020e8e8     0x1  Data  Gb  main.o [1]
+g_ScreenSever_Time_On   0x0020e8e7     0x1  Data  Gb  main.o [1]
+g_SlaveConnect          0x0020e8e9     0x1  Data  Gb  main.o [1]
+g_Stop_Program          0x0020e8ea     0x1  Data  Gb  main.o [1]
+g_US0_Connect_OK        0x0020e8d1     0x1  Data  Gb  USART.o [1]
+g_US1_BAUDRATE          0x0020f990     0x4  Data  Gb  USART.o [1]
+g_US1_Connect_OK        0x0020e8d2     0x1  Data  Gb  USART.o [1]
+g_US1_OneByteTxTime     0x0020f994     0x4  Data  Gb  USART.o [1]
+g_counter               0x0020e910     0x8  Data  Gb  main.o [1]
+g_czas_petli            0x0020ffbb     0x1  Data  Gb  main.o [1]
+g_info                  0x0020e8b0     0x4  Data  Gb  main.o [1]
+g_leng                  0x0020e8a8     0x4  Data  Gb  main.o [1]
+g_level                 0x0020e8d4     0x1  Data  Gb  main.o [1]
+g_seconds_counter       0x0020e91c     0x4  Data  Gb  main.o [1]
+identyfikacja           0x000237f0     0x8  Data  Gb  main.o [1]
+komunikcja_RSwin        0x0001c819   0x730  Code  Gb  RS_WIN.o [1]
+korekta_X               0x0020ff24     0x8  Data  Gb  lcd.o [1]
+korekta_Y               0x0020ff1c     0x8  Data  Gb  lcd.o [1]
+lastSetBit              0x000226cd    0x60  Code  Wk  udp.o [1]
+last_time               0x0020ff40     0x4  Data  Gb  Application_prog.o [1]
+licznik_cykli           0x0020fef8     0x4  Data  Gb  RF_Exe.o [1]
+m_pPio                  0x0020ffac     0x4  Data  Gb  lcd.o [1]
+main                    0x000165c5   0x374  Code  Gb  main.o [1]
+memchr                  0x00022008          Code  Gb  memchr.o [3]
+memcpy                  0x00021864          Code  Gb  memcpy.o [3]
+min                     0x00023849     0x8  Code  Wk  standard.o [1]
+nr_tmp                  0x0020dc4d     0x1  Data  Gb  Modbus.o [1]
+odb                     0x0020fef0     0x8  Data  Gb  RF_Exe.o [1]
+odp                     0x0020e8c0     0x2  Data  Gb  lcd.o [1]
+out                     0x0020fda0     0xc  Data  Gb  main.o [1]
+pAT91C_IFLASH_MEM       0x0020fd88     0x4  Data  Gb  main.o [1]
+pDateTime               0x0020ffa8     0x4  Data  Gb  Clock.o [1]
+pEndpoints              0x0020fe30    0xa0  Data  Lc  main.o [1]
+pEndpoints              0x0020ff90     0xc  Data  Gb  serial_driver.o [1]
+pManufacturer           0x000236e8     0xc  Data  Gb  serial_driver.o [1]
+pProduct                0x000231b8    0x1c  Data  Gb  serial_driver.o [1]
+pProg                   0x0020ffa4     0x4  Data  Gb  Application_prog.o [1]
+pRF_Command             0x0020fefc     0x4  Data  Gb  RF_Exe.o [1]
+pSPI                    0x0020ff50     0x4  Data  Gb  spi_main.o [1]
+pSPI_Buff               0x0020ff64     0x4  Data  Gb  spi_main.o [1]
+pSerialNumber           0x000231d4    0x1c  Data  Gb  serial_driver.o [1]
+pStrings                0x0020ff80    0x10  Data  Gb  serial_driver.o [1]
+pUsbBuffer              0x0020e95c   0x100  Data  Lc  main.o [1]
+pass_tmp                0x0020e830     0xc  Data  Gb  ScreenMENU2.o [1]
+poprawnych              0x0020fee8     0x4  Data  Gb  RF_Exe.o [1]
+przestepny              0x0000b775    0x3a  Code  Gb  ScreenMENU2.o [1]
+pt1                     0x0020e888     0x4  Data  Gb  WizFi.o [1]
+pt2                     0x0020e88c     0x4  Data  Gb  WizFi.o [1]
+row_tmp                 0x0020eeb8     0x4  Data  Gb  ScreenMENU2.o [1]
+sCallbacks              0x00023318    0x18  Data  Lc  main.o [1]
+sConfiguration          0x00022b38    0x44  Data  Gb  serial_driver.o [1]
+sDefaultDriver          0x00023348    0x18  Data  Gb  udp.o [1]
+sDescriptors            0x0002362c    0x10  Data  Gb  serial_driver.o [1]
+sDevice                 0x000234c4    0x14  Data  Gb  serial_driver.o [1]
+sIntToStr               0x0001198d   0x13c  Code  Gb  lcd.o [1]
+sLanguageID             0x000238d0     0x4  Data  Gb  serial_driver.o [1]
+sSer                    0x0020e948    0x14  Data  Lc  main.o [1]
+sSetup                  0x0020e890     0x8  Data  Lc  main.o [1]
+sUDPMethods             0x00022cf8    0x34  Data  Gb  udp.o [1]
+sUsb                    0x00023330    0x18  Data  Lc  main.o [1]
+siz                     0x0020e928     0x4  Data  Gb  main.o [1]
+spi_Endrx_Flag          0x0020ff54     0x4  Data  Gb  spi_main.o [1]
+spi_Endtx_Flag          0x0020ff58     0x4  Data  Gb  spi_main.o [1]
+spi_Rxbuff_Flag         0x0020ff5c     0x4  Data  Gb  spi_main.o [1]
+spi_Status              0x0020ff60     0x4  Data  Gb  spi_main.o [1]
+spi_Txempty_Flag        0x0020e8b8     0x4  Data  Gb  spi_main.o [1]
+sprintf                 0x00022df9    0x30  Code  Gb  sprintf.o [2]
+strcat                  0x00023069    0x22  Code  Wk  strcat.o [2]
+strchr                  0x0002313c          Code  Gb  strchr.o [3]
+strlen                  0x000227e4          Code  Gb  strlen.o [3]
+strstr                  0x00023719     0xc  Code  Wk  WizFi.o [1]
+system                  0x000237f8     0x8  Data  Gb  main.o [1]
+
+
+[1] = D:\Zeuron\Projekty\S300\S300-program v0.6 - 18.05.2012\S300X\Obj
+[2] = dl4t_tl_in.a
+[3] = rt4t_al.a
+[4] = shs_l.a
+
+  124 240 bytes of readonly  code memory
+      692 bytes of readwrite code memory
+   23 476 bytes of readonly  data memory
+   64 777 bytes of readwrite data memory

@@ -1,0 +1,123 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+UXMessageText(1, "Working...")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;UXConsoleText(3, "[Insert static ip address into UserData1 and gateway into UserData2. (ex:192.168.3.99, 192.168.3.1)]", 0, 1, 1);
+UXConsoleText(3, "[Insert raw nauto option into UserData3. (ex:0,1,192.168.3.101,5000)]", 0, 0, 1);
+UXConsoleText(3, "   <Type>,<Protocol>,<Destination IP>,<Destination Port>", 0, 0, 1);
+UXConsoleText(3, "   Type(0:Client, 1:Server)  Protocol(0:UDP, 1:TCP) ", 0, 0, 1);
+
+
+;ifTRUE CompareString("@USERDATA1", "")
+;{
+;	UXConsoleText(2, "[Invalid Userdata Error-1]", 0, 1, 1);
+;	goto TEST-ERROR
+;}
+
+;ifTRUE CompareString("@USERDATA2", "")
+;{
+;	UXConsoleText(2, "[Invalid Userdata Error-2]", 0, 1, 1);
+;	goto TEST-ERROR
+;}
+
+ifTRUE CompareString("@USERDATA3", "")
+{
+	UXConsoleText(2, "[Invalid Userdata Error-3]", 0, 1, 1);
+	goto TEST-ERROR
+}
+
+
+ifFALSE SerialPortOpen(@COM, @BAUD, 0)
+{
+	UXConsoleText(2, "[SerialPortOpen Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+SerialStartMonitor(@COM)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+WD")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+WWPA=@KEY")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+NDHCP=1")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+;; Static IP Setting
+;;AT+NSET=<IP>,<NetMask>,<Gateway>
+;SerialClearBuffer(@COM)
+;MakeString(#SParam11, "AT+NSET=@USERDATA1,255.255.255.0,@USERDATA2")
+;SerialSendString(@COM, #SParam11, 2)
+;ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+;{
+;	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+;	goto TEST-ERROR
+;}
+;Sleep(1)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+WAUTO=0,@SSID,,0")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+	IncreaseString(#SParam4, "", "")
+}
+Sleep(1)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "AT+NAUTO=@USERDATA3")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 20)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+SerialClearBuffer(@COM)
+MakeString(#SParam11, "ATA")
+SerialSendString(@COM, #SParam11, 2)
+ifFALSE SerialFindString(@COM, "OK", "", 100, 200)
+{
+	UXConsoleText(2, "[Serial Command Error]", 0, 1, 1);
+	goto TEST-ERROR
+}
+Sleep(1)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+:TEST-OK
+UXMessageText(1, "OK")
+goto TEST-END
+
+:TEST-ERROR
+UXMessageText(2, "Error")
+
+:TEST-END
+Sleep(10)
+SerialPortClose(@COM)
+Sleep(10)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

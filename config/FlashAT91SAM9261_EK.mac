@@ -1,0 +1,11 @@
+execUserReset()
+{
+  __hwReset(1000);
+  __message("Target reset, wait until bootloader finish !!!");
+}
+
+execUserPreload()
+{
+  __hwReset(1000);
+  __message("Target reset, wait until bootloader finish !!!");
+}

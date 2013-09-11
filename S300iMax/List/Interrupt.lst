@@ -1,0 +1,320 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           04/Jun/2013  20:16:42 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\Framework\Interrupt.c                         #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\Framework\Interrupt.c" -D AT91SAM7S256 -D     #
+#                    AT91SAM7SEK -D iH -D __ALARM -D __WIFI_MODULE -D         #
+#                    __MaxRf -D S300iMax -lC "D:\Zeuron\Projekty\S300\S300-pr #
+#                    ogram v1.3 - 04.06.2013\S300iMax\List\" --diag_suppress  #
+#                    Pa082 -o "D:\Zeuron\Projekty\S300\S300-program v1.3 -    #
+#                    04.06.2013\S300iMax\Obj\" --no_unroll --no_inline        #
+#                    --no_tbaa --no_scheduling --debug --endian little --cpu  #
+#                    ARM7TDMI -e --fpu None --dlib_config "C:\Program Files   #
+#                    (x86)\IAR Systems\Embedded Workbench                     #
+#                    5.0\ARM\INC\DLib_Config_Normal.h" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\lib\AT91SAM7S256\" -I                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.3 - 04.06.2013\cdc\" -I "D:\Zeuron\Projekty\S300\S300 #
+#                    -program v1.3 - 04.06.2013\core\" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\startup\" -I "D:\Zeuron\Projekty\S300\S300-pr #
+#                    ogram v1.3 - 04.06.2013\Framework\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.3 -             #
+#                    04.06.2013\Framework\Configuration\" -I "C:\Program      #
+#                    Files (x86)\IAR Systems\Embedded Workbench               #
+#                    5.0\ARM\INC\" --section .text=Debug.txt --interwork      #
+#                    --cpu_mode thumb -Om                                     #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\S300iMax\List\Interrupt.lst                   #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v1.3 -              #
+#                    04.06.2013\S300iMax\Obj\Interrupt.o                      #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v1.3 - 04.06.2013\Framework\Interrupt.c
+      1          //****************************************************************************//
+      2          //*--------------------------------------------------------------------------*//
+      3          //*                                 CEURON                                   *//                     
+      4          //*--------------------------------------------------------------------------*//
+      5          //*--------------------------------------------------------------------------*//
+      6          //*  Nazwa pliku                  : Interrupt.c                              *//
+      7          //*  Opis                         : Plik przerwañ                            *//
+      8          //*  Autor                        : Pawe³ Narwojsz                           *//
+      9          //*  Data utrzorzenia             : 22.02.2012                               *//
+     10          //*  Data ostatniej modyfikacji   : --.--.----                               *//
+     11          //*--------------------------------------------------------------------------*//
+     12          //*                                                                          *//
+     13          //*--------------------------------------------------------------------------*//
+     14          //* Rejestr zmian  (data - opis):                                            *//
+     15          //*                                                                          *//
+     16          //*                               Brak zmian                                 *//
+     17          //*                                                                          *//
+     18          //*__________________________________________________________________________*// 
+     19          //****************************************************************************//
+     20          //****************************************************************************//
+     21          
+     22          
+     23          #include  "Interrupt.h"
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork unsigned int AT91F_AIC_ConfigureIt(AT91PS_AIC, unsigned int, unsigned int, unsigned int, void (*)())
+   \                     AT91F_AIC_ConfigureIt:
+   \   00000000   F5B4               PUSH     {R0,R2,R4-R7}
+   \   00000002   0200               MOVS     R2,R0
+   \   00000004   0C00               MOVS     R4,R1
+   \   00000006   069E               LDR      R6,[SP, #+24]
+   \   00000008   A100               LSLS     R1,R4,#+2
+   \   0000000A   5718               ADDS     R7,R2,R1
+   \   0000000C   8037               ADDS     R7,R7,#+128
+   \   0000000E   3868               LDR      R0,[R7, #+0]
+   \   00000010   0125               MOVS     R5,#+1
+   \   00000012   A540               LSLS     R5,R5,R4
+   \   00000014   2C00               MOVS     R4,R5
+   \   00000016   9225               MOVS     R5,#+146
+   \   00000018   6D00               LSLS     R5,R5,#+1        ;; #+292
+   \   0000001A   5519               ADDS     R5,R2,R5
+   \   0000001C   2C60               STR      R4,[R5, #+0]
+   \   0000001E   3E60               STR      R6,[R7, #+0]
+   \   00000020   019E               LDR      R6,[SP, #+4]
+   \   00000022   1E43               ORRS     R6,R6,R3
+   \   00000024   5650               STR      R6,[R2, R1]
+   \   00000026   6C60               STR      R4,[R5, #+4]
+   \   00000028   FCBC               POP      {R2-R7}
+   \   0000002A   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_AIC_EnableIt(AT91PS_AIC, unsigned int)
+   \                     AT91F_AIC_EnableIt:
+   \   00000000   9022               MOVS     R2,#+144
+   \   00000002   5200               LSLS     R2,R2,#+1        ;; #+288
+   \   00000004   0123               MOVS     R3,#+1
+   \   00000006   8B40               LSLS     R3,R3,R1
+   \   00000008   8350               STR      R3,[R0, R2]
+   \   0000000A   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PIO_InterruptEnable(AT91PS_PIO, unsigned int)
+   \                     AT91F_PIO_InterruptEnable:
+   \   00000000   0164               STR      R1,[R0, #+64]
+   \   00000002   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork unsigned int AT91F_PIO_GetInterruptStatus(AT91PS_PIO)
+   \                     AT91F_PIO_GetInterruptStatus:
+   \   00000000   C06C               LDR      R0,[R0, #+76]
+   \   00000002   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PMC_EnablePeriphClock(AT91PS_PMC, unsigned int)
+   \                     AT91F_PMC_EnablePeriphClock:
+   \   00000000   0161               STR      R1,[R0, #+16]
+   \   00000002   7047               BX       LR               ;; return
+
+                                          
+                                          ^
+"D:\Zeuron\Projekty\S300\S300-program v1.3 - 04.06.2013\Framework\Configuration\InterruptPriority.h",59  Warning[Pe001]: 
+          last line of file ends without a newline
+     24              #include <intrinsics.h>
+     25          
+     26          
+
+   \                                 In section .bss, align 1
+     27          char VBUS_old;    
+   \                     VBUS_old:
+   \   00000000                      DS8 1
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     28          void PioInterrupt(void)
+     29          {
+   \                     PioInterrupt:
+   \   00000000   10B5               PUSH     {R4,LR}
+     30          
+     31              unsigned int status = AT91F_PIO_GetInterruptStatus(PIO_RfIntBUS);
+   \   00000002   ....               LDR      R0,??DataTable1  ;; 0xfffff400
+   \   00000004   ........           BL       AT91F_PIO_GetInterruptStatus
+   \   00000008   0400               MOVS     R4,R0
+     32          
+     33             // static char VBUS_old; 
+     34              //static char RfIntBUS_old; 
+     35          
+     36              
+     37          
+     38          
+     39          
+     40              if (status & AT91C_VBUS) 
+   \   0000000A   0220               MOVS     R0,#+2
+   \   0000000C   2100               MOVS     R1,R4
+   \   0000000E   0142               TST      R1,R0
+   \   00000010   0BD0               BEQ      ??PioInterrupt_0
+     41              {
+     42                 /*
+     43                if ((!((AT91C_BASE_PIOA->PIO_PDSR) & AT91C_VBUS)) && (VBUS_old==1))
+     44                 {
+     45                   VBUS_old=0;
+     46                   ISR_VBus();
+     47                 }
+     48                  */
+     49                 if (((AT91C_BASE_PIOA->PIO_PDSR) & AT91C_VBUS) && (VBUS_old==0))
+   \   00000012   0C49               LDR      R1,??PioInterrupt_1  ;; 0xfffff43c
+   \   00000014   0968               LDR      R1,[R1, #+0]
+   \   00000016   0142               TST      R1,R0
+   \   00000018   07D0               BEQ      ??PioInterrupt_0
+   \   0000001A   0B48               LDR      R0,??PioInterrupt_1+0x4  ;; VBUS_old
+   \   0000001C   0178               LDRB     R1,[R0, #+0]
+   \   0000001E   0029               CMP      R1,#+0
+   \   00000020   03D1               BNE      ??PioInterrupt_0
+     50                 {
+     51                   VBUS_old=1;
+   \   00000022   0121               MOVS     R1,#+1
+   \   00000024   0170               STRB     R1,[R0, #+0]
+     52                   ISR_VBus();
+   \   00000026   ........           BL       ISR_VBus
+     53                 }
+     54                
+     55              }
+     56              
+     57              
+     58              if (status & RfIntBUS)
+   \                     ??PioInterrupt_0:
+   \   0000002A   8020               MOVS     R0,#+128
+   \   0000002C   C000               LSLS     R0,R0,#+3        ;; #+1024
+   \   0000002E   0442               TST      R4,R0
+   \   00000030   05D0               BEQ      ??PioInterrupt_2
+     59              {  
+     60                if ((( AT91C_BASE_PIOA->PIO_PDSR) & RfIntBUS)==0)  
+   \   00000032   0449               LDR      R1,??PioInterrupt_1  ;; 0xfffff43c
+   \   00000034   0968               LDR      R1,[R1, #+0]
+   \   00000036   0142               TST      R1,R0
+   \   00000038   01D1               BNE      ??PioInterrupt_2
+     61                {
+     62          
+     63                   RF_Int();
+                          ^
+Warning[Pe223]: function "RF_Int" declared implicitly
+   \   0000003A   ........           BL       RF_Int
+     64          
+     65                }
+     66              }
+     67          
+     68          
+     69          
+     70          }
+   \                     ??PioInterrupt_2:
+   \   0000003E   10BC               POP      {R4}
+   \   00000040   01BC               POP      {R0}
+   \   00000042   0047               BX       R0               ;; return
+   \                     ??PioInterrupt_1:
+   \   00000044   3CF4FFFF           DC32     0xfffff43c
+   \   00000048   ........           DC32     VBUS_old
+     71          
+     72          
+     73          
+     74          
+     75          
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+     76          void InitPioInterrupt(void)
+     77          {
+   \                     InitPioInterrupt:
+   \   00000000   10B5               PUSH     {R4,LR}
+     78                   //ConfigureRFBus();
+     79                  AT91F_PMC_EnablePeriphClock(AT91C_BASE_PMC, 1 << ID_RfIntBUS);
+   \   00000002   0421               MOVS     R1,#+4
+   \   00000004   0C48               LDR      R0,??InitPioInterrupt_0  ;; 0xfffffc00
+   \   00000006   ........           BL       AT91F_PMC_EnablePeriphClock
+     80                   
+     81                 // Configure and enable the Vbus detection interrupt
+     82                  AT91F_AIC_ConfigureIt(AT91C_BASE_AIC,
+     83                                    AT91C_ID_PIOA,
+     84                                    PIO_INT_PRIOR, //AT91C_AIC_PRIOR_LOWEST, AT91C_AIC_PRIOR_HIGHEST
+     85                                    0,//AT91C_AIC_SRCTYPE_INT_HIGH_LEVEL,
+     86                                    PioInterrupt);  
+   \   0000000A   0C4C               LDR      R4,??InitPioInterrupt_0+0x4  ;; 0xfffff000
+   \   0000000C   82B0               SUB      SP,SP,#+8
+   \   0000000E   0C48               LDR      R0,??InitPioInterrupt_0+0x8  ;; PioInterrupt
+   \   00000010   0090               STR      R0,[SP, #+0]
+   \   00000012   0023               MOVS     R3,#+0
+   \   00000014   0722               MOVS     R2,#+7
+   \   00000016   0221               MOVS     R1,#+2
+   \   00000018   2000               MOVS     R0,R4
+   \   0000001A   ........           BL       AT91F_AIC_ConfigureIt
+   \   0000001E   02B0               ADD      SP,SP,#+8
+     87                  
+     88                  
+     89                  AT91F_PIO_InterruptEnable(AT91C_PIO_VBUS, AT91C_VBUS);
+   \   00000020   0221               MOVS     R1,#+2
+   \   00000022   ....               LDR      R0,??DataTable1  ;; 0xfffff400
+   \   00000024   ........           BL       AT91F_PIO_InterruptEnable
+     90              AT91F_AIC_EnableIt(AT91C_BASE_AIC, AT91C_ID_VBUS);
+   \   00000028   0221               MOVS     R1,#+2
+   \   0000002A   2000               MOVS     R0,R4
+   \   0000002C   ........           BL       AT91F_AIC_EnableIt
+     91                
+     92          }
+   \   00000030   10BC               POP      {R4}
+   \   00000032   01BC               POP      {R0}
+   \   00000034   0047               BX       R0               ;; return
+   \   00000036   C046               Nop      
+   \                     ??InitPioInterrupt_0:
+   \   00000038   00FCFFFF           DC32     0xfffffc00
+   \   0000003C   00F0FFFF           DC32     0xfffff000
+   \   00000040   ........           DC32     PioInterrupt
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable1:
+   \   00000000   00F4FFFF           DC32     0xfffff400
+     93          
+     94          
+     95          
+     96          
+     97          
+     98          
+     99          
+
+   Maximum stack usage in bytes:
+
+     Function                     .cstack
+     --------                     -------
+     AT91F_AIC_ConfigureIt            24
+     AT91F_AIC_EnableIt                0
+     AT91F_PIO_GetInterruptStatus      0
+     AT91F_PIO_InterruptEnable         0
+     AT91F_PMC_EnablePeriphClock       0
+     InitPioInterrupt                 16
+     PioInterrupt                      8
+
+
+   Section sizes:
+
+     Function/Label               Bytes
+     --------------               -----
+     AT91F_AIC_ConfigureIt          44
+     AT91F_AIC_EnableIt             12
+     AT91F_PIO_InterruptEnable       4
+     AT91F_PIO_GetInterruptStatus    4
+     AT91F_PMC_EnablePeriphClock     4
+     VBUS_old                        1
+     PioInterrupt                   76
+     InitPioInterrupt               68
+     ??DataTable1                    4
+
+ 
+   1 byte  in section .bss
+ 216 bytes in section Debug.txt
+ 
+ 148 bytes of CODE memory (+ 68 bytes shared)
+   1 byte  of DATA memory
+
+Errors: none
+Warnings: 2

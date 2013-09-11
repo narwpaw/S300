@@ -1,0 +1,2920 @@
+###############################################################################
+#                                                                             #
+# IAR ARM ANSI C/C++ Compiler V5.10.5.372/W32           12/Jun/2013  19:50:36 #
+# Copyright 1999-2007 IAR Systems. All rights reserved.                       #
+#                                                                             #
+#    Cpu mode     =  thumb                                                    #
+#    Endian       =  little                                                   #
+#    Source file  =  D:\Zeuron\Projekty\S300\S300-program v1.4 -              #
+#                    12.06.2013\Framework\Modbus.c                            #
+#    Command line =  "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\Framework\Modbus.c" -D AT91SAM7S256 -D        #
+#                    AT91SAM7SEK -D iH -D _LCD_NEGATIV_OLD_ -D __ALARM -D     #
+#                    __WIFI_MODULE -D _DEBUG_ -D S300iOld -D _TESTER_ -lC     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\TESTER S300X (Old)\List\" --diag_suppress     #
+#                    Pa082 -o "D:\Zeuron\Projekty\S300\S300-program v1.4 -    #
+#                    12.06.2013\TESTER S300X (Old)\Obj\" --no_unroll          #
+#                    --no_inline --no_tbaa --no_scheduling --debug --endian   #
+#                    little --cpu ARM7TDMI -e --fpu None --dlib_config        #
+#                    "C:\Program Files (x86)\IAR Systems\Embedded Workbench   #
+#                    5.0\ARM\INC\DLib_Config_Normal.h" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\lib\AT91SAM7S256\" -I                         #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\lib\AT91SAM7S64\" -I                          #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\" -I "D:\Zeuron\Projekty\S300\S300-program    #
+#                    v1.4 - 12.06.2013\cdc\" -I "D:\Zeuron\Projekty\S300\S300 #
+#                    -program v1.4 - 12.06.2013\core\" -I                     #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\startup\" -I "D:\Zeuron\Projekty\S300\S300-pr #
+#                    ogram v1.4 - 12.06.2013\Framework\" -I                   #
+#                    "D:\Zeuron\Projekty\S300\S300-program v1.4 -             #
+#                    12.06.2013\Framework\Configuration\" -I "C:\Program      #
+#                    Files (x86)\IAR Systems\Embedded Workbench               #
+#                    5.0\ARM\INC\" --section .text=Debug.txt --interwork      #
+#                    --cpu_mode thumb -Om                                     #
+#    List file    =  D:\Zeuron\Projekty\S300\S300-program v1.4 -              #
+#                    12.06.2013\TESTER S300X (Old)\List\Modbus.lst            #
+#    Object file  =  D:\Zeuron\Projekty\S300\S300-program v1.4 -              #
+#                    12.06.2013\TESTER S300X (Old)\Obj\Modbus.o               #
+#                                                                             #
+#                                                                             #
+###############################################################################
+
+D:\Zeuron\Projekty\S300\S300-program v1.4 - 12.06.2013\Framework\Modbus.c
+      1          //****************************************************************************//
+      2          //*--------------------------------------------------------------------------*//
+      3          //*                                 CEURON                                   *//
+      4          //*--------------------------------------------------------------------------*//
+      5          //*--------------------------------------------------------------------------*//
+      6          //*  Nazwa pliku                  : Modbus.c                                 *//
+      7          //*  Opis                         : G³ówny plik programu                     *//
+      8          //*  Autor                        : Pawe³ Narwojsz                           *//
+      9          //*  Data utrzorzenia             : 16.01.2008                               *//
+     10          //*  Data ostatniej modyfikacji   : --.--.----                               *//
+     11          //*--------------------------------------------------------------------------*//
+     12          //*                                                                          *//
+     13          //*--------------------------------------------------------------------------*//
+     14          //* Rejestr zmian  (data - opis):                                            *//
+     15          //*                                                                          *//
+     16          //*                               Brak zmian                                 *//
+     17          //*                                                                          *//
+     18          //*__________________________________________________________________________*//
+     19          //****************************************************************************//
+     20          //
+     21          // Typowe funkcje zdefiniowane w protokole Modbus:
+     22          //    1  - Read Coil Status           - odczyt biezacego stanu grupy wyjsc cyfrowych,
+     23          //    2  - Read Input Status          - odczyt stanu grupy wejsc cyfrowych,
+     24          //    3  - Read Holding Register      - odczyt zawartosci grupy rejestrów/analogów wyjsciowych,
+     25          //    4  - Read Input Register        - odczyt zawartosci grupy rejestrów/analogów wejsciowych,
+     26          //    5  - Force Single Coil          - ustawienie stanu jednego wyjscia cyfrowego,
+     27          //    6  - Preset Single Register     - zapis do pojedynczego rejestru/analogu wyjsciowego,
+     28          //    7  - Read Exception Status      - odczyt statusu urzadzenia Slave,
+     29          //    8  - Diagnostics                - test diagnostyczny,
+     30          //    9  - Force Multiple Coils       - ustawienie stanu grupy wyjsc cyfrowych,
+     31          //    10 - Preset Multiple Register   - zapis do grupy rejestrów/analogów wyjsciowych,
+     32          //    11 - Report Slave ID            - odczyt ID jednostki Slave,
+     33          //    12 - Reset Communication Link   - resetowanie polaczenia,
+     34          //    13 - Read General Reference     - odczyt rejestrów w pamieci rozszerzonej,
+     35          //    14 - Write General Reference    - zapis do rejestrów w pamieci rozszerzonej,
+     36          //    15 - Write Multiple Coils       - grupowy zapis wyjœæ cyfrowych / bitów w rejestrach,
+     37          //    16 - Write Register             - odczyt/zapis grupy rejestrów,
+     38          //    17 - Read FIFO Queue            - odczyt kolejki FIFO.
+     39          //****************************************************************************//
+     40          //****************************************************************************//
+     41          
+     42          
+     43          
+     44          
+     45          
+     46          #include "Modbus.h"
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PDC_SetNextTx(AT91PS_PDC, char *, unsigned int)
+   \                     AT91F_PDC_SetNextTx:
+   \   00000000   8161               STR      R1,[R0, #+24]
+   \   00000002   C261               STR      R2,[R0, #+28]
+   \   00000004   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork void AT91F_PDC_SetTx(AT91PS_PDC, char *, unsigned int)
+   \                     AT91F_PDC_SetTx:
+   \   00000000   8160               STR      R1,[R0, #+8]
+   \   00000002   C260               STR      R2,[R0, #+12]
+   \   00000004   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork int AT91F_PDC_IsTxEmpty(AT91PS_PDC)
+   \                     AT91F_PDC_IsTxEmpty:
+   \   00000000   C068               LDR      R0,[R0, #+12]
+   \   00000002   401E               SUBS     R0,R0,#+1
+   \   00000004   8041               SBCS     R0,R0,R0
+   \   00000006   C00F               LSRS     R0,R0,#+31
+   \   00000008   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork int AT91F_PDC_IsNextTxEmpty(AT91PS_PDC)
+   \                     AT91F_PDC_IsNextTxEmpty:
+   \   00000000   C069               LDR      R0,[R0, #+28]
+   \   00000002   401E               SUBS     R0,R0,#+1
+   \   00000004   8041               SBCS     R0,R0,R0
+   \   00000006   C00F               LSRS     R0,R0,#+31
+   \   00000008   7047               BX       LR               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork unsigned int AT91F_PDC_SendFrame(AT91PS_PDC, char *, unsigned int, char *, unsigned int)
+   \                     AT91F_PDC_SendFrame:
+   \   00000000   F8B5               PUSH     {R3-R7,LR}
+   \   00000002   0400               MOVS     R4,R0
+   \   00000004   0D00               MOVS     R5,R1
+   \   00000006   1600               MOVS     R6,R2
+   \   00000008   069F               LDR      R7,[SP, #+24]
+   \   0000000A   ........           BL       AT91F_PDC_IsTxEmpty
+   \   0000000E   0028               CMP      R0,#+0
+   \   00000010   0BD0               BEQ      ??AT91F_PDC_SendFrame_0
+   \   00000012   3200               MOVS     R2,R6
+   \   00000014   2900               MOVS     R1,R5
+   \   00000016   2000               MOVS     R0,R4
+   \   00000018   ........           BL       AT91F_PDC_SetTx
+   \   0000001C   3A00               MOVS     R2,R7
+   \   0000001E   0099               LDR      R1,[SP, #+0]
+   \   00000020   2000               MOVS     R0,R4
+   \   00000022   ........           BL       AT91F_PDC_SetNextTx
+   \   00000026   0220               MOVS     R0,#+2
+   \   00000028   0AE0               B        ??AT91F_PDC_SendFrame_1
+   \                     ??AT91F_PDC_SendFrame_0:
+   \   0000002A   2000               MOVS     R0,R4
+   \   0000002C   ........           BL       AT91F_PDC_IsNextTxEmpty
+   \   00000030   0028               CMP      R0,#+0
+   \   00000032   05D0               BEQ      ??AT91F_PDC_SendFrame_1
+   \   00000034   3200               MOVS     R2,R6
+   \   00000036   2900               MOVS     R1,R5
+   \   00000038   2000               MOVS     R0,R4
+   \   0000003A   ........           BL       AT91F_PDC_SetNextTx
+   \   0000003E   0120               MOVS     R0,#+1
+   \                     ??AT91F_PDC_SendFrame_1:
+   \   00000040   F8BC               POP      {R3-R7}
+   \   00000042   02BC               POP      {R1}
+   \   00000044   0847               BX       R1               ;; return
+
+   \                                 In section Debug.txt, align 4
+   \   __??Code16?? __code __interwork unsigned int AT91F_US_SendFrame(AT91PS_USART, unsigned char *, unsigned int, unsigned char *, unsigned int)
+   \                     AT91F_US_SendFrame:
+   \   00000000   10B5               PUSH     {R4,LR}
+   \   00000002   029C               LDR      R4,[SP, #+8]
+   \   00000004   82B0               SUB      SP,SP,#+8
+   \   00000006   0094               STR      R4,[SP, #+0]
+   \   00000008   8024               MOVS     R4,#+128
+   \   0000000A   6400               LSLS     R4,R4,#+1        ;; #+256
+   \   0000000C   0019               ADDS     R0,R0,R4
+   \   0000000E   ........           BL       AT91F_PDC_SendFrame
+   \   00000012   02B0               ADD      SP,SP,#+8
+   \   00000014   10BC               POP      {R4}
+   \   00000016   02BC               POP      {R1}
+   \   00000018   0847               BX       R1               ;; return
+
+                                          
+                                          ^
+"D:\Zeuron\Projekty\S300\S300-program v1.4 - 12.06.2013\Framework\Configuration\InterruptPriority.h",59  Warning[Pe001]: 
+          last line of file ends without a newline
+     47          
+     48          
+     49          
+     50          /*
+     51          _ModTaskTab ModTaskTab;
+     52          
+     53          
+     54          
+     55          ModTaskTab.Scene[1].Order=1;
+     56          ModTaskTab.Scene[1].Q=0;
+     57          ModTaskTab.Scene[1].Port=1;
+     58          */
+     59          
+     60          
+     61          //Zmienne konfiguracyjne -------------------------------------------------------     
+     62          
+     63              //MODBUS_0----------------------
+
+   \                                 In section .data, align 1
+     64               char US0_MasterMODBUS_ENABLE    = 1;                                      //1 -US0 jako MASTER (komunikacja MODBUS)
+   \                     US0_MasterMODBUS_ENABLE:
+   \   00000000   01                 DC8 1
+
+   \                                 In section .bss, align 1
+     65               char US1_MasterMODBUS_ENABLE    = 0;                                      //1 -US0 jako MASTER (komunikacja MODBUS) 
+   \                     US1_MasterMODBUS_ENABLE:
+   \   00000000                      DS8 1
+     66          //______________________________________________________________________________
+     67          
+     68          
+     69               
+     70          
+     71          
+     72          //Zmienne  ---------------------------------------------------------------------     
+     73              _ZD_MODBUS ZD_MODBUS_0[ZD_MODBUS_Tab_Max];                                  //tablica zadañ modbus 0
+     74              char g_Current_ZD_MODBUS_0=0;                                               //bierz¹ce zadanie modbus wed³ug tablicy ZD_MODBUS_0
+     75              char g_ERR_ZD_MODBUS_0=0;                                                   //b³¹d zadañ MODBUS 0 
+     76              char g_Ans_ZD_MODBUS_0=0;                                                   //1- odebrano odpowiedz na pytanie 
+     77              BYTE Buff_TX_0[US0_BUFFER_Tx_SIZE];                                                        //bufor nadawczy USART 0 
+     78              
+     79              _ZD_MODBUS ZD_MODBUS_1[ZD_MODBUS_Tab_Max];                                  //tablica zadañ modbus 0
+     80              char g_Current_ZD_MODBUS_1=0;                                               //bierz¹ce zadanie modbus wed³ug tablicy ZD_MODBUS_0
+     81              char g_ERR_ZD_MODBUS_1=0;                                                   //b³¹d zadañ MODBUS 0 
+     82              char g_Ans_ZD_MODBUS_1=0;                                                   //1- odebrano odpowiedz na pytanie 
+     83              char Buff_TX_1[US1_BUFFER_Tx_SIZE];                                         //bufor nadawczy USART 0 
+     84          //______________________________________________________________________________
+     85          
+     86          
+     87              
+     88              
+     89              
+     90          //Zmienne zewnêtrzne -----------------------------------------------------------    
+     91              extern RAM ram;
+     92              extern char AdressModbus;
+     93              extern int SendModbusEnable;
+     94              extern int g_US0_Comm_TIMEOUT;
+     95              extern float g_US0_OneByteTxTime;
+     96              extern int g_US0_Comm_MinCykle;
+     97              extern _MainStage  MainStage; 
+     98          //___________________________Koniec zmiennych zewnêtrznych______________________    
+     99              
+    100              
+    101          //void GetBinVarComm(int adr, unsigned int Length, char *Tab );
+    102              
+    103              
+    104          //Sta³e ------------------------------------------------------------------------   
+    105          
+
+   \                                 In section .rodata, align 4
+    106          const BYTE   bCRC_Hi[] = {0x0,0xC1,0x81,0x40,0x1,0xC0,0x80,0x41,0x1,0xC0,
+   \                     bCRC_Hi:
+   \   00000000   00C1814001C0       DC8 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64
+   \              804101C08041
+   \              00C18140    
+   \   00000010   01C0804100C1       DC8 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65
+   \              814000C18140
+   \              01C08041    
+   \   00000020   01C0804100C1       DC8 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65
+   \              814000C18140
+   \              01C08041    
+   \   00000030   00C1814001C0       DC8 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64
+   \              804101C08041
+   \              00C18140    
+   \   00000040   01C0804100C1       DC8 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65
+   \              814000C18140
+   \              01C08041    
+   \   00000050   00C1814001C0       DC8 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64
+   \              804101C08041
+   \              00C18140    
+   \   00000060   00C1814001C0       DC8 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64
+   \              804101C08041
+   \              00C18140    
+   \   00000070   01C0804100C1       DC8 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65
+   \              814000C18140
+   \              01C08041    
+   \   00000080   01C0804100C1       DC8 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65
+   \              814000C18140
+   \              01C08041    
+   \   00000090   00C1814001C0       DC8 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64
+   \              804101C08041
+   \              00C18140    
+   \   000000A0   00C1814001C0       DC8 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64
+   \              804101C08041
+   \              00C18140    
+   \   000000B0   01C0804100C1       DC8 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65
+   \              814000C18140
+   \              01C08041    
+   \   000000C0   00C1814001C0       DC8 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64
+   \              804101C08041
+   \              00C18140    
+   \   000000D0   01C0804100C1       DC8 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65
+   \              814000C18140
+   \              01C08041    
+   \   000000E0   01C0804100C1       DC8 1, 192, 128, 65, 0, 193, 129, 64, 0, 193, 129, 64, 1, 192, 128, 65
+   \              814000C18140
+   \              01C08041    
+   \   000000F0   00C1814001C0       DC8 0, 193, 129, 64, 1, 192, 128, 65, 1, 192, 128, 65, 0, 193, 129, 64
+   \              804101C08041
+   \              00C18140    
+    107                                   0x80,0x41,0x0,0xC1,0x81,0x40,0x1,0xC0,0x80,0x41,
+    108                                    0x0,0xC1,0x81,0x40,0x0,0xC1,0x81,0x40,0x1,0xC0,
+    109                                   0x80,0x41,0x1,0xC0,0x80,0x41,0x0,0xC1,0x81,0x40,
+    110                                    0x0,0xC1,0x81,0x40,0x1,0xC0,0x80,0x41,0x0,0xC1,
+    111                                   0x81,0x40,0x1,0xC0,0x80,0x41,0x1,0xC0,0x80,0x41,
+    112                                    0x0,0xC1,0x81,0x40,0x1,0xC0,0x80,0x41,0x0,0xC1,
+    113                                   0x81,0x40,0x0,0xC1,0x81,0x40,0x1,0xC0,0x80,0x41,
+    114                                    0x0,0xC1,0x81,0x40,0x1,0xC0,0x80,0x41,0x1,0xC0,
+    115                                   0x80,0x41,0x0,0xC1,0x81,0x40,0x0,0xC1,0x81,0x40,
+    116                                    0x1,0xC0,0x80,0x41,0x1,0xC0,0x80,0x41,0x0,0xC1,
+    117                                   0x81,0x40,0x1,0xC0,0x80,0x41,0x0,0xC1,0x81,0x40,
+    118                                    0x0,0xC1,0x81,0x40,0x1,0xC0,0x80,0x41,0x1,0xC0,
+    119                                   0x80,0x41,0x0,0xC1,0x81,0x40,0x0,0xC1,0x81,0x40,
+    120                                    0x1,0xC0,0x80,0x41,0x0,0xC1,0x81,0x40,0x1,0xC0,
+    121                                   0x80,0x41,0x1,0xC0,0x80,0x41,0x0,0xC1,0x81,0x40,
+    122                                    0x0,0xC1,0x81,0x40,0x1,0xC0,0x80,0x41,0x1,0xC0,
+    123                                   0x80,0x41,0x0,0xC1,0x81,0x40,0x1,0xC0,0x80,0x41,
+    124                                    0x0,0xC1,0x81,0x40,0x0,0xC1,0x81,0x40,0x1,0xC0,
+    125                                   0x80,0x41,0x0,0xC1,0x81,0x40,0x1,0xC0,0x80,0x41,
+    126                                    0x1,0xC0,0x80,0x41,0x0,0xC1,0x81,0x40,0x1,0xC0,
+    127                                   0x80,0x41,0x0,0xC1,0x81,0x40,0x0,0xC1,0x81,0x40,
+    128                                    0x1,0xC0,0x80,0x41,0x1,0xC0,0x80,0x41,0x0,0xC1,
+    129                                   0x81,0x40,0x0,0xC1,0x81,0x40,0x1,0xC0,0x80,0x41,
+    130                                    0x0,0xC1,0x81,0x40,0x1,0xC0,0x80,0x41,0x1,0xC0,
+    131                                   0x80,0x41,0x0,0xC1,0x81,0x40};
+    132          
+    133          const BYTE  bCRC_Lo[] = { 0x0,0xC0,0xC1,0x1,0xC3,0x3,0x2,0xC2,0xC6,0x6,
+   \                     bCRC_Lo:
+   \   00000100   00C0C101C303       DC8 0, 192, 193, 1, 195, 3, 2, 194, 198, 6, 7, 199, 5, 197, 196, 4, 204
+   \              02C2C60607C7
+   \              05C5C404CC  
+   \   00000111   0C0DCD0FCFCE       DC8 12, 13, 205, 15, 207, 206, 14, 10, 202, 203, 11, 201, 9, 8, 200
+   \              0E0ACACB0BC9
+   \              0908C8      
+   \   00000120   D81819D91BDB       DC8 216, 24, 25, 217, 27, 219, 218, 26, 30, 222, 223, 31, 221, 29, 28
+   \              DA1A1EDEDF1F
+   \              DD1D1C      
+   \   0000012F   DC14D4D515D7       DC8 220, 20, 212, 213, 21, 215, 23, 22, 214, 210, 18, 19, 211, 17, 209
+   \              1716D6D21213
+   \              D311D1      
+   \   0000013E   D010F03031F1       DC8 208, 16, 240, 48, 49, 241, 51, 243, 242, 50, 54, 246, 247, 55, 245
+   \              33F3F23236F6
+   \              F737F5      
+   \   0000014D   3534F43CFCFD       DC8 53, 52, 244, 60, 252, 253, 61, 255, 63, 62, 254, 250, 58, 59, 251
+   \              3DFF3F3EFEFA
+   \              3A3BFB      
+   \   0000015C   39F9F83828E8       DC8 57, 249, 248, 56, 40, 232, 233, 41, 235, 43, 42, 234, 238, 46, 47
+   \              E929EB2B2AEA
+   \              EE2E2F      
+   \   0000016B   EF2DEDEC2CE4       DC8 239, 45, 237, 236, 44, 228, 36, 37, 229, 39, 231, 230, 38, 34, 226
+   \              2425E527E7E6
+   \              2622E2      
+   \   0000017A   E323E12120E0       DC8 227, 35, 225, 33, 32, 224, 160, 96, 97, 161, 99, 163, 162, 98, 102
+   \              A06061A163A3
+   \              A26266      
+   \   00000189   A6A767A56564       DC8 166, 167, 103, 165, 101, 100, 164, 108, 172, 173, 109, 175, 111
+   \              A46CACAD6DAF
+   \              6F          
+   \   00000196   6EAEAA6A6BAB       DC8 110, 174, 170, 106, 107, 171, 105, 169, 168, 104, 120, 184, 185
+   \              69A9A86878B8
+   \              B9          
+   \   000001A3   79BB7B7ABABE       DC8 121, 187, 123, 122, 186, 190, 126, 127, 191, 125, 189, 188, 124
+   \              7E7FBF7DBDBC
+   \              7C          
+   \   000001B0   B47475B577B7       DC8 180, 116, 117, 181, 119, 183, 182, 118, 114, 178, 179, 115, 177
+   \              B67672B2B373
+   \              B1          
+   \   000001BD   7170B0509091       DC8 113, 112, 176, 80, 144, 145, 81, 147, 83, 82, 146, 150, 86, 87, 151
+   \              519353529296
+   \              565797      
+   \   000001CC   559594549C5C       DC8 85, 149, 148, 84, 156, 92, 93, 157, 95, 159, 158, 94, 90, 154, 155
+   \              5D9D5F9F9E5E
+   \              5A9A9B      
+   \   000001DB   5B9959589888       DC8 91, 153, 89, 88, 152, 136, 72, 73, 137, 75, 139, 138, 74, 78, 142
+   \              4849894B8B8A
+   \              4A4E8E      
+   \   000001EA   8F4F8D4D4C8C       DC8 143, 79, 141, 77, 76, 140, 68, 132, 133, 69, 135, 71, 70, 134, 130
+   \              448485458747
+   \              468682      
+   \   000001F9   424383418180       DC8 66, 67, 131, 65, 129, 128, 64
+   \              40          
+    134                                    0x7,0xC7,0x5,0xC5,0xC4,0x4,0xCC,0xC,0xD,0xCD,
+    135                                    0xF,0xCF,0xCE,0xE,0xA,0xCA,0xCB,0xB,0xC9,0x9,
+    136                                    0x8,0xC8,0xD8,0x18,0x19,0xD9,0x1B,0xDB,0xDA,0x1A,
+    137                                   0x1E,0xDE,0xDF,0x1F,0xDD,0x1D,0x1C,0xDC,0x14,0xD4,
+    138                                   0xD5,0x15,0xD7,0x17,0x16,0xD6,0xD2,0x12,0x13,0xD3,
+    139                                   0x11,0xD1,0xD0,0x10,0xF0,0x30,0x31,0xF1,0x33,0xF3,
+    140                                   0xF2,0x32,0x36,0xF6,0xF7,0x37,0xF5,0x35,0x34,0xF4,
+    141                                   0x3C,0xFC,0xFD,0x3D,0xFF,0x3F,0x3E,0xFE,0xFA,0x3A,
+    142                                   0x3B,0xFB,0x39,0xF9,0xF8,0x38,0x28,0xE8,0xE9,0x29,
+    143                                   0xEB,0x2B,0x2A,0xEA,0xEE,0x2E,0x2F,0xEF,0x2D,0xED,
+    144                                   0xEC,0x2C,0xE4,0x24,0x25,0xE5,0x27,0xE7,0xE6,0x26,
+    145                                   0x22,0xE2,0xE3,0x23,0xE1,0x21,0x20,0xE0,0xA0,0x60,
+    146                                   0x61,0xA1,0x63,0xA3,0xA2,0x62,0x66,0xA6,0xA7,0x67,
+    147                                   0xA5,0x65,0x64,0xA4,0x6C,0xAC,0xAD,0x6D,0xAF,0x6F,
+    148                                   0x6E,0xAE,0xAA,0x6A,0x6B,0xAB,0x69,0xA9,0xA8,0x68,
+    149                                   0x78,0xB8,0xB9,0x79,0xBB,0x7B,0x7A,0xBA,0xBE,0x7E,
+    150                                   0x7F,0xBF,0x7D,0xBD,0xBC,0x7C,0xB4,0x74,0x75,0xB5,
+    151                                   0x77,0xB7,0xB6,0x76,0x72,0xB2,0xB3,0x73,0xB1,0x71,
+    152                                   0x70,0xB0,0x50,0x90,0x91,0x51,0x93,0x53,0x52,0x92,
+    153                                   0x96,0x56,0x57,0x97,0x55,0x95,0x94,0x54,0x9C,0x5C,
+    154                                   0x5D,0x9D,0x5F,0x9F,0x9E,0x5E,0x5A,0x9A,0x9B,0x5B,
+    155                                   0x99,0x59,0x58,0x98,0x88,0x48,0x49,0x89,0x4B,0x8B,
+    156                                   0x8A,0x4A,0x4E,0x8E,0x8F,0x4F,0x8D,0x4D,0x4C,0x8C,
+    157                                   0x44,0x84,0x85,0x45,0x87,0x47,0x46,0x86,0x82,0x42,
+    158                                   0x43,0x83,0x41,0x81,0x80,0x40};
+    159                                   
+    160          //___________________________Koniec sta³ych ____________________________________    
+    161              
+    162          
+    163          
+    164          
+    165          
+    166          
+    167          //!-----------------------------------------------------------------------------
+    168          //!  Nazwa funkcji :    crc16
+    169          //!  Opis:              Oblicza sumê kontroln¹ CRC 16
+    170          //!-----------------------------------------------------------------------------
+    171          //!  modbusframe  - adres pierwszej cyfry
+    172          //!  Length       - zakres liczb do wyliczenia CRC
+    173          //!----------------------------------------------------------------------------- 
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    174          WORD crc16(BYTE* modbusframe,int Length)
+    175          {
+   \                     crc16:
+   \   00000000   70B5               PUSH     {R4-R6,LR}
+   \   00000002   0200               MOVS     R2,R0
+    176              int index;
+    177              BYTE crc_Low = 0xFF;
+   \   00000004   FF20               MOVS     R0,#+255
+    178              BYTE crc_High = 0xFF;
+   \   00000006   0400               MOVS     R4,R0
+    179          
+    180              for (int i_tmp = 0; i_tmp<Length; i_tmp++)
+   \   00000008   0023               MOVS     R3,#+0
+   \   0000000A   0B4E               LDR      R6,??crc16_0     ;; bCRC_Hi
+   \   0000000C   0AE0               B        ??crc16_1
+    181              {
+    182              index = crc_High ^ modbusframe[i_tmp];
+   \                     ??crc16_2:
+   \   0000000E   D55C               LDRB     R5,[R2, R3]
+   \   00000010   6540               EORS     R5,R5,R4
+    183              crc_High = crc_Low ^ bCRC_Hi[index] ;
+   \   00000012   745D               LDRB     R4,[R6, R5]
+   \   00000014   4440               EORS     R4,R4,R0
+   \   00000016   2406               LSLS     R4,R4,#+24
+   \   00000018   240E               LSRS     R4,R4,#+24
+    184              crc_Low = bCRC_Lo[index];
+   \   0000001A   8020               MOVS     R0,#+128
+   \   0000001C   4000               LSLS     R0,R0,#+1        ;; #+256
+   \   0000001E   7519               ADDS     R5,R6,R5
+   \   00000020   285C               LDRB     R0,[R5, R0]
+    185              }
+   \   00000022   5B1C               ADDS     R3,R3,#+1
+   \                     ??crc16_1:
+   \   00000024   8B42               CMP      R3,R1
+   \   00000026   F2DB               BLT      ??crc16_2
+    186              
+    187              return (crc_High << 8 | crc_Low);  
+   \   00000028   2102               LSLS     R1,R4,#+8
+   \   0000002A   0843               ORRS     R0,R0,R1
+   \   0000002C   0004               LSLS     R0,R0,#+16
+   \   0000002E   000C               LSRS     R0,R0,#+16
+   \   00000030   70BC               POP      {R4-R6}
+   \   00000032   02BC               POP      {R1}
+   \   00000034   0847               BX       R1               ;; return
+   \   00000036   C046               Nop      
+   \                     ??crc16_0:
+   \   00000038   ........           DC32     bCRC_Hi
+    188          }//_______________________ Koniec funkcji crc16 ________________________________
+    189                
+    190          
+    191          
+    192          
+    193          
+    194          
+    195          
+    196          
+    197          //!-----------------------------------------------------------------------------
+    198          //!  Nazwa funkcji :    SetWordToBytes
+    199          //!  Opis:              Funkcja konwertuje wartoœæ w WORD na 2 kolejne bajty
+    200          //!-----------------------------------------------------------------------------
+    201          //!  tmp          - liczba w formacie WORD
+    202          //!  *ptr         - wskaŸnik do pierwszego bajtu
+    203          //!----------------------------------------------------------------------------- 
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    204          void SetWordToBytes(WORD tmp, BYTE *ptr){ 
+    205              *(ptr+1) = 0x00ff & tmp;
+   \                     SetWordToBytes:
+   \   00000000   0200               MOVS     R2,R0
+   \   00000002   4A70               STRB     R2,[R1, #+1]
+    206              *ptr = (0x00ff & tmp>>8);
+   \   00000004   000A               LSRS     R0,R0,#+8
+   \   00000006   0870               STRB     R0,[R1, #+0]
+    207          }//_______________________ Koniec funkcji SetWordToBytes _______________________
+   \   00000008   7047               BX       LR               ;; return
+    208          
+    209          
+    210          
+    211          
+    212          //!-----------------------------------------------------------------------------
+    213          //!  Nazwa funkcji :    ModBus_CommS
+    214          //!  Opis:              funkcja komunikacji MODBUS (slave). Interpretuje otrzymane dane i wysy³a odpowiedŸ
+    215          //!-----------------------------------------------------------------------------
+    216          //!  modbusframe  - otrzymana ramka danych
+    217          //!----------------------------------------------------------------------------- 
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    218          BYTE ModBus_CommS(BYTE* modbusframe, char US_Nr)
+    219          {
+   \                     ModBus_CommS:
+   \   00000000   F0B5               PUSH     {R4-R7,LR}
+   \   00000002   89B0               SUB      SP,SP,#+36
+   \   00000004   0400               MOVS     R4,R0
+    220            
+    221                AT91PS_USART AT91C_BASE_US;
+    222                BYTE* Buff_TX;
+    223                
+    224                
+    225                //wybór USARTa
+    226                if (US_Nr) 
+   \   00000006   0029               CMP      R1,#+0
+   \   00000008   03D0               BEQ      ??ModBus_CommS_0
+    227                {
+    228                    AT91C_BASE_US     =   AT91C_BASE_US1;
+   \   0000000A   9E48               LDR      R0,??ModBus_CommS_1  ;; 0xfffc4000
+   \   0000000C   0490               STR      R0,[SP, #+16]
+    229                    Buff_TX           =   Buff_TX_1; 
+                                             ^
+Warning[Pe513]: a value of type "char *" cannot be assigned to an entity of
+          type "BYTE *"
+   \   0000000E   9E4D               LDR      R5,??ModBus_CommS_1+0x4  ;; g_Ans_ZD_MODBUS_0 + 544
+   \   00000010   02E0               B        ??ModBus_CommS_2
+    230          
+    231                } 
+    232                else 
+    233                {
+    234                    AT91C_BASE_US     =   AT91C_BASE_US0;
+   \                     ??ModBus_CommS_0:
+   \   00000012   9E48               LDR      R0,??ModBus_CommS_1+0x8  ;; 0xfffc0000
+   \   00000014   0490               STR      R0,[SP, #+16]
+    235                    Buff_TX           =   Buff_TX_0; 
+   \   00000016   9E4D               LDR      R5,??ModBus_CommS_1+0xC  ;; g_Ans_ZD_MODBUS_0 + 264
+   \                     ??ModBus_CommS_2:
+   \   00000018   0020               MOVS     R0,#+0
+   \   0000001A   0100               MOVS     R1,R0
+   \   0000001C   01E0               B        ??ModBus_CommS_3
+    236          
+    237                }
+    238                
+    239                
+    240            
+    241            
+    242            
+    243            
+    244            for (int i=0; i<256; i++) {Buff_TX[i]=0x0;}                                 //czyœci bufor nadawczy
+   \                     ??ModBus_CommS_4:
+   \   0000001E   2954               STRB     R1,[R5, R0]
+   \   00000020   401C               ADDS     R0,R0,#+1
+   \                     ??ModBus_CommS_3:
+   \   00000022   FF28               CMP      R0,#+255
+   \   00000024   FBDD               BLE      ??ModBus_CommS_4
+   \   00000026   2078               LDRB     R0,[R4, #+0]
+   \   00000028   9A49               LDR      R1,??ModBus_CommS_1+0x10  ;; AdressModbus
+   \   0000002A   0978               LDRB     R1,[R1, #+0]
+   \   0000002C   8842               CMP      R0,R1
+   \   0000002E   01D0               BEQ      ??ModBus_CommS_5
+    245            
+    246          
+    247            
+    248            if ((modbusframe[0]) != AdressModbus) return 0;                               //wyjdz jezeli zly adres
+   \                     ??ModBus_CommS_6:
+   \   00000030   0020               MOVS     R0,#+0
+   \   00000032   83E2               B        ??ModBus_CommS_7
+    249            
+    250          //  g_transmit_ok=1;
+    251            
+    252            
+    253            WORD  RamByte=(((((WORD)modbusframe[2])<<8 | ((WORD)modbusframe[3])))/8);
+   \                     ??ModBus_CommS_5:
+   \   00000034   A078               LDRB     R0,[R4, #+2]
+   \   00000036   0102               LSLS     R1,R0,#+8
+   \   00000038   E078               LDRB     R0,[R4, #+3]
+   \   0000003A   0843               ORRS     R0,R0,R1
+   \   0000003C   0100               MOVS     R1,R0
+   \   0000003E   8910               ASRS     R1,R1,#+2
+   \   00000040   490F               LSRS     R1,R1,#+29
+   \   00000042   0818               ADDS     R0,R1,R0
+   \   00000044   0700               MOVS     R7,R0
+   \   00000046   FF10               ASRS     R7,R7,#+3
+   \   00000048   3F04               LSLS     R7,R7,#+16
+   \   0000004A   3F0C               LSRS     R7,R7,#+16
+    254            WORD  RamCall=((((WORD)modbusframe[2])<<8 | ((WORD)modbusframe[3])));
+   \   0000004C   A078               LDRB     R0,[R4, #+2]
+   \   0000004E   0002               LSLS     R0,R0,#+8
+   \   00000050   E178               LDRB     R1,[R4, #+3]
+   \   00000052   0143               ORRS     R1,R1,R0
+   \   00000054   0391               STR      R1,[SP, #+12]
+    255            BYTE  RamBit= ((((WORD)modbusframe[2])<<8 | ((WORD)modbusframe[3]))+0) % 8;
+   \   00000056   A078               LDRB     R0,[R4, #+2]
+   \   00000058   0102               LSLS     R1,R0,#+8
+   \   0000005A   E078               LDRB     R0,[R4, #+3]
+   \   0000005C   0843               ORRS     R0,R0,R1
+   \   0000005E   E178               LDRB     R1,[R4, #+3]
+   \   00000060   0200               MOVS     R2,R0
+   \   00000062   9210               ASRS     R2,R2,#+2
+   \   00000064   520F               LSRS     R2,R2,#+29
+   \   00000066   1018               ADDS     R0,R2,R0
+   \   00000068   C010               ASRS     R0,R0,#+3
+   \   0000006A   C000               LSLS     R0,R0,#+3
+   \   0000006C   081A               SUBS     R0,R1,R0
+   \   0000006E   0006               LSLS     R0,R0,#+24
+   \   00000070   000E               LSRS     R0,R0,#+24
+   \   00000072   0190               STR      R0,[SP, #+4]
+    256            BYTE  ByteCount=(((((WORD)modbusframe[4])<<8 | ((WORD)modbusframe[5]))-1)/8)+1;
+   \   00000074   2079               LDRB     R0,[R4, #+4]
+   \   00000076   0102               LSLS     R1,R0,#+8
+   \   00000078   6079               LDRB     R0,[R4, #+5]
+   \   0000007A   0843               ORRS     R0,R0,R1
+   \   0000007C   401E               SUBS     R0,R0,#+1
+   \   0000007E   0100               MOVS     R1,R0
+   \   00000080   8910               ASRS     R1,R1,#+2
+   \   00000082   490F               LSRS     R1,R1,#+29
+   \   00000084   0818               ADDS     R0,R1,R0
+   \   00000086   C010               ASRS     R0,R0,#+3
+   \   00000088   401C               ADDS     R0,R0,#+1
+   \   0000008A   0006               LSLS     R0,R0,#+24
+   \   0000008C   000E               LSRS     R0,R0,#+24
+   \   0000008E   0690               STR      R0,[SP, #+24]
+    257            BYTE  WordCount=(((WORD)modbusframe[4])<<8 | ((WORD)modbusframe[5]));
+   \   00000090   6079               LDRB     R0,[R4, #+5]
+   \   00000092   0590               STR      R0,[SP, #+20]
+    258            WORD  BitCount=(((WORD)modbusframe[4])<<8) | (((WORD)modbusframe[5]));
+   \   00000094   2079               LDRB     R0,[R4, #+4]
+   \   00000096   0002               LSLS     R0,R0,#+8
+   \   00000098   6179               LDRB     R1,[R4, #+5]
+   \   0000009A   0143               ORRS     R1,R1,R0
+   \   0000009C   0791               STR      R1,[SP, #+28]
+    259            char  CurentByteBufTX;
+    260            char  CurentBitBufTX;
+    261            
+    262            if (modbusframe[1]==1)
+   \   0000009E   6078               LDRB     R0,[R4, #+1]
+   \   000000A0   0128               CMP      R0,#+1
+   \   000000A2   6CD1               BNE      ??ModBus_CommS_8
+    263                    {
+    264                      //Read Coil Status  (odczyt zmiennych dwustanowych DA00-DDFF)
+    265               
+    266                                if ((((WORD)modbusframe[6])<<8 | ((WORD)modbusframe[7])) != crc16(modbusframe,6)) return 0;   //sprawdzenie CRC
+   \   000000A4   A079               LDRB     R0,[R4, #+6]
+   \   000000A6   0002               LSLS     R0,R0,#+8
+   \   000000A8   E679               LDRB     R6,[R4, #+7]
+   \   000000AA   0643               ORRS     R6,R6,R0
+   \   000000AC   0621               MOVS     R1,#+6
+   \   000000AE   2000               MOVS     R0,R4
+   \   000000B0   ........           BL       crc16
+   \   000000B4   8642               CMP      R6,R0
+   \   000000B6   BBD1               BNE      ??ModBus_CommS_6
+    267                               
+    268                                //OdpowiedŸ ----------------------------------------------
+    269                                
+    270                                Buff_TX[0]=AdressModbus;                              //adres                                           
+   \   000000B8   7648               LDR      R0,??ModBus_CommS_1+0x10  ;; AdressModbus
+   \   000000BA   0078               LDRB     R0,[R0, #+0]
+   \   000000BC   2870               STRB     R0,[R5, #+0]
+   \   000000BE   0120               MOVS     R0,#+1
+   \   000000C0   6870               STRB     R0,[R5, #+1]
+    271                                Buff_TX[1]=0x1;
+    272                                Buff_TX[2]=ByteCount;    
+   \   000000C2   0698               LDR      R0,[SP, #+24]
+   \   000000C4   A870               STRB     R0,[R5, #+2]
+    273                                
+    274                                CurentByteBufTX=3;
+   \   000000C6   0326               MOVS     R6,#+3
+    275                                CurentBitBufTX=0;
+   \   000000C8   0020               MOVS     R0,#+0
+   \   000000CA   0090               STR      R0,[SP, #+0]
+    276                                
+    277                                for (int i=0; i<BitCount; i++)
+   \   000000CC   0100               MOVS     R1,R0
+   \   000000CE   05E0               B        ??ModBus_CommS_9
+    278                                {
+    279                                   Buff_TX[CurentByteBufTX] &= ~(1<<CurentBitBufTX);
+    280                                   Buff_TX[CurentByteBufTX] |=  (((ram.VarCom_Byte[RamByte]>>RamBit) & 0x1)<< CurentBitBufTX);
+    281                                   
+    282                                   if (CurentBitBufTX<7) {CurentBitBufTX++;} else {CurentBitBufTX=0; CurentByteBufTX++;}
+    283                                   if (RamBit<7) {RamBit++;} else {RamBit=0; RamByte++;}
+   \                     ??ModBus_CommS_10:
+   \   000000D0   0020               MOVS     R0,#+0
+   \   000000D2   0190               STR      R0,[SP, #+4]
+   \   000000D4   7F1C               ADDS     R7,R7,#+1
+   \   000000D6   3F04               LSLS     R7,R7,#+16
+   \   000000D8   3F0C               LSRS     R7,R7,#+16
+   \                     ??ModBus_CommS_11:
+   \   000000DA   491C               ADDS     R1,R1,#+1
+   \                     ??ModBus_CommS_9:
+   \   000000DC   0798               LDR      R0,[SP, #+28]
+   \   000000DE   0004               LSLS     R0,R0,#+16
+   \   000000E0   000C               LSRS     R0,R0,#+16
+   \   000000E2   8142               CMP      R1,R0
+   \   000000E4   32DA               BGE      ??ModBus_CommS_12
+   \   000000E6   3000               MOVS     R0,R6
+   \   000000E8   2A18               ADDS     R2,R5,R0
+   \   000000EA   1078               LDRB     R0,[R2, #+0]
+   \   000000EC   8446               MOV      R12,R0
+   \   000000EE   0123               MOVS     R3,#+1
+   \   000000F0   0098               LDR      R0,[SP, #+0]
+   \   000000F2   8340               LSLS     R3,R3,R0
+   \   000000F4   6046               MOV      R0,R12
+   \   000000F6   9843               BICS     R0,R0,R3
+   \   000000F8   1070               STRB     R0,[R2, #+0]
+   \   000000FA   1078               LDRB     R0,[R2, #+0]
+   \   000000FC   8446               MOV      R12,R0
+   \   000000FE   3B00               MOVS     R3,R7
+   \   00000100   6548               LDR      R0,??ModBus_CommS_1+0x14  ;; ram
+   \   00000102   C05C               LDRB     R0,[R0, R3]
+   \   00000104   019B               LDR      R3,[SP, #+4]
+   \   00000106   1841               ASRS     R0,R0,R3
+   \   00000108   0123               MOVS     R3,#+1
+   \   0000010A   0340               ANDS     R3,R3,R0
+   \   0000010C   0098               LDR      R0,[SP, #+0]
+   \   0000010E   8340               LSLS     R3,R3,R0
+   \   00000110   6046               MOV      R0,R12
+   \   00000112   0343               ORRS     R3,R3,R0
+   \   00000114   1370               STRB     R3,[R2, #+0]
+   \   00000116   0098               LDR      R0,[SP, #+0]
+   \   00000118   0006               LSLS     R0,R0,#+24
+   \   0000011A   000E               LSRS     R0,R0,#+24
+   \   0000011C   0728               CMP      R0,#+7
+   \   0000011E   05D2               BCS      ??ModBus_CommS_13
+   \   00000120   0098               LDR      R0,[SP, #+0]
+   \   00000122   401C               ADDS     R0,R0,#+1
+   \   00000124   0006               LSLS     R0,R0,#+24
+   \   00000126   000E               LSRS     R0,R0,#+24
+   \   00000128   0090               STR      R0,[SP, #+0]
+   \   0000012A   04E0               B        ??ModBus_CommS_14
+   \                     ??ModBus_CommS_13:
+   \   0000012C   0020               MOVS     R0,#+0
+   \   0000012E   0090               STR      R0,[SP, #+0]
+   \   00000130   761C               ADDS     R6,R6,#+1
+   \   00000132   3606               LSLS     R6,R6,#+24
+   \   00000134   360E               LSRS     R6,R6,#+24
+   \                     ??ModBus_CommS_14:
+   \   00000136   0198               LDR      R0,[SP, #+4]
+   \   00000138   0006               LSLS     R0,R0,#+24
+   \   0000013A   000E               LSRS     R0,R0,#+24
+   \   0000013C   0728               CMP      R0,#+7
+   \   0000013E   C7D2               BCS      ??ModBus_CommS_10
+   \   00000140   0198               LDR      R0,[SP, #+4]
+   \   00000142   401C               ADDS     R0,R0,#+1
+   \   00000144   0006               LSLS     R0,R0,#+24
+   \   00000146   000E               LSRS     R0,R0,#+24
+   \   00000148   0190               STR      R0,[SP, #+4]
+   \   0000014A   C6E7               B        ??ModBus_CommS_11
+    284                                }
+    285          
+    286                                SetWordToBytes(crc16(Buff_TX,ByteCount+3),&Buff_TX[ByteCount+3] );  //wstawia sumê kontroln¹
+   \                     ??ModBus_CommS_12:
+   \   0000014C   0698               LDR      R0,[SP, #+24]
+   \   0000014E   0006               LSLS     R0,R0,#+24
+   \   00000150   000E               LSRS     R0,R0,#+24
+   \   00000152   0290               STR      R0,[SP, #+8]
+   \   00000154   0100               MOVS     R1,R0
+   \   00000156   C91C               ADDS     R1,R1,#+3
+   \   00000158   2800               MOVS     R0,R5
+   \   0000015A   ........           BL       crc16
+   \   0000015E   0299               LDR      R1,[SP, #+8]
+   \   00000160   6918               ADDS     R1,R5,R1
+   \   00000162   C91C               ADDS     R1,R1,#+3
+   \   00000164   ........           BL       SetWordToBytes
+    287                                
+    288                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX, ByteCount+5,0, 0);  //Wysyla ramke
+   \   00000168   82B0               SUB      SP,SP,#+8
+   \   0000016A   0020               MOVS     R0,#+0
+   \   0000016C   0090               STR      R0,[SP, #+0]
+   \   0000016E   0300               MOVS     R3,R0
+   \   00000170   049A               LDR      R2,[SP, #+16]
+   \   00000172   521D               ADDS     R2,R2,#+5
+   \   00000174   2900               MOVS     R1,R5
+   \   00000176   0698               LDR      R0,[SP, #+24]
+   \   00000178   ........           BL       AT91F_US_SendFrame
+   \   0000017C   02B0               ADD      SP,SP,#+8
+    289                                                        
+    290                    }
+    291             if (modbusframe[1]==2)
+   \                     ??ModBus_CommS_8:
+   \   0000017E   6078               LDRB     R0,[R4, #+1]
+   \   00000180   0228               CMP      R0,#+2
+   \   00000182   0DD1               BNE      ??ModBus_CommS_15
+    292             {
+    293                                
+    294                    
+    295                      ////Read discrete input  (odczyt zmiennych dwustanowych B000-B5FF)
+    296                
+    297                                if ((((WORD)modbusframe[6])<<8 | ((WORD)modbusframe[7])) != crc16(modbusframe,6)) return 0;   //sprawdzenie CRC
+   \   00000184   A079               LDRB     R0,[R4, #+6]
+   \   00000186   0002               LSLS     R0,R0,#+8
+   \   00000188   E179               LDRB     R1,[R4, #+7]
+   \   0000018A   0143               ORRS     R1,R1,R0
+   \   0000018C   02B5               PUSH     {R1,LR}
+   \   0000018E   0621               MOVS     R1,#+6
+   \   00000190   2000               MOVS     R0,R4
+   \   00000192   ........           BL       crc16
+   \   00000196   0099               LDR      R1,[SP, #0]
+   \   00000198   02B0               ADD      SP,SP,#+8
+   \   0000019A   8142               CMP      R1,R0
+   \   0000019C   00D0               BEQ      .+4
+   \   0000019E   47E7               B        ??ModBus_CommS_6
+    298                               /*
+    299                                //OdpowiedŸ ----------------------------------------------                      
+    300                                Buff_TX[0]=AdressModbus;                              //adres                                           
+    301                                Buff_TX[1]=0x2;
+    302                                Buff_TX[2]=ByteCount;    
+    303                                
+    304                                CurentByteBufTX=3;
+    305                                CurentBitBufTX=0;
+    306                                
+    307                                for (int i=0; i<BitCount; i++)
+    308                                {
+    309                                   Buff_TX[CurentByteBufTX] &= ~(1<<CurentBitBufTX);
+    310                                   Buff_TX[CurentByteBufTX] |=  (((ram.BinVarRAM[RamByte]>>RamBit) & 0x1)<< CurentBitBufTX);
+    311                                   
+    312                                   if (CurentBitBufTX<7) {CurentBitBufTX++;} else {CurentBitBufTX=0; CurentByteBufTX++;}
+    313                                   if (RamBit<7) {RamBit++;} else {RamBit=0; RamByte++;}
+    314                                }
+    315          
+    316                                SetWordToBytes(crc16(Buff_TX,ByteCount+3),&Buff_TX[ByteCount+3] );  //wstawia sumê kontroln¹
+    317                                
+    318                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX, ByteCount+5,0, 0);  //Wysyla ramke
+    319                                                         
+    320                   
+    321                                
+    322                      //Holding Register (odczyt zmiennych analogowych DA00-DDFF)
+    323                                */
+    324                    }
+    325             if (modbusframe[1]==3)
+   \                     ??ModBus_CommS_15:
+   \   000001A0   6078               LDRB     R0,[R4, #+1]
+   \   000001A2   0328               CMP      R0,#+3
+   \   000001A4   47D1               BNE      ??ModBus_CommS_16
+    326             {
+    327                                if ((((WORD)modbusframe[6])<<8 | ((WORD)modbusframe[7])) != crc16(modbusframe,6)) return 0;   //sprawdzenie CRC
+   \   000001A6   A079               LDRB     R0,[R4, #+6]
+   \   000001A8   0002               LSLS     R0,R0,#+8
+   \   000001AA   E679               LDRB     R6,[R4, #+7]
+   \   000001AC   0643               ORRS     R6,R6,R0
+   \   000001AE   0621               MOVS     R1,#+6
+   \   000001B0   2000               MOVS     R0,R4
+   \   000001B2   ........           BL       crc16
+   \   000001B6   8642               CMP      R6,R0
+   \   000001B8   00D0               BEQ      .+4
+   \   000001BA   39E7               B        ??ModBus_CommS_6
+    328                               
+    329                                //OdpowiedŸ ----------------------------------------------                      
+    330                                Buff_TX[0]=AdressModbus;                              //adres                                           
+   \   000001BC   3548               LDR      R0,??ModBus_CommS_1+0x10  ;; AdressModbus
+   \   000001BE   0078               LDRB     R0,[R0, #+0]
+   \   000001C0   2870               STRB     R0,[R5, #+0]
+    331                                Buff_TX[1]=0x3;
+   \   000001C2   0326               MOVS     R6,#+3
+   \   000001C4   3000               MOVS     R0,R6
+   \   000001C6   6870               STRB     R0,[R5, #+1]
+    332                                Buff_TX[2]=(WordCount*2);    
+   \   000001C8   0598               LDR      R0,[SP, #+20]
+   \   000001CA   4000               LSLS     R0,R0,#+1
+   \   000001CC   A870               STRB     R0,[R5, #+2]
+    333                                
+    334                                CurentByteBufTX=3;
+    335                                CurentBitBufTX=0;
+   \   000001CE   0020               MOVS     R0,#+0
+   \   000001D0   0090               STR      R0,[SP, #+0]
+    336                                
+    337                                for (int i=0; i<WordCount; i++)
+   \   000001D2   14E0               B        ??ModBus_CommS_17
+    338                                {
+    339          
+    340                                   Buff_TX[CurentByteBufTX] = ram.VarCom_Byte[(RamCall*2)];
+   \                     ??ModBus_CommS_18:
+   \   000001D4   3049               LDR      R1,??ModBus_CommS_1+0x14  ;; ram
+   \   000001D6   039A               LDR      R2,[SP, #+12]
+   \   000001D8   1204               LSLS     R2,R2,#+16
+   \   000001DA   120C               LSRS     R2,R2,#+16
+   \   000001DC   5200               LSLS     R2,R2,#+1
+   \   000001DE   8918               ADDS     R1,R1,R2
+   \   000001E0   3200               MOVS     R2,R6
+   \   000001E2   AA18               ADDS     R2,R5,R2
+   \   000001E4   0B78               LDRB     R3,[R1, #+0]
+   \   000001E6   1370               STRB     R3,[R2, #+0]
+    341                                   Buff_TX[CurentByteBufTX+1] = ram.VarCom_Byte[(RamCall*2)+1];
+   \   000001E8   4978               LDRB     R1,[R1, #+1]
+   \   000001EA   5170               STRB     R1,[R2, #+1]
+    342                                   
+    343                                   CurentByteBufTX=CurentByteBufTX+2;
+   \   000001EC   B61C               ADDS     R6,R6,#+2
+   \   000001EE   3606               LSLS     R6,R6,#+24
+   \   000001F0   360E               LSRS     R6,R6,#+24
+    344                                   RamCall++;
+   \   000001F2   0399               LDR      R1,[SP, #+12]
+   \   000001F4   491C               ADDS     R1,R1,#+1
+   \   000001F6   0904               LSLS     R1,R1,#+16
+   \   000001F8   090C               LSRS     R1,R1,#+16
+   \   000001FA   0391               STR      R1,[SP, #+12]
+    345          
+    346                                }
+   \   000001FC   401C               ADDS     R0,R0,#+1
+   \                     ??ModBus_CommS_17:
+   \   000001FE   0599               LDR      R1,[SP, #+20]
+   \   00000200   0906               LSLS     R1,R1,#+24
+   \   00000202   090E               LSRS     R1,R1,#+24
+   \   00000204   8842               CMP      R0,R1
+   \   00000206   E5DB               BLT      ??ModBus_CommS_18
+    347          
+    348                                SetWordToBytes(crc16(Buff_TX,(WordCount*2)+3),&Buff_TX[(WordCount*2)+3] );  //wstawia sumê kontroln¹
+   \   00000208   4800               LSLS     R0,R1,#+1
+   \   0000020A   0290               STR      R0,[SP, #+8]
+   \   0000020C   0100               MOVS     R1,R0
+   \   0000020E   C91C               ADDS     R1,R1,#+3
+   \   00000210   2800               MOVS     R0,R5
+   \   00000212   ........           BL       crc16
+   \   00000216   0299               LDR      R1,[SP, #+8]
+   \   00000218   6918               ADDS     R1,R5,R1
+   \   0000021A   C91C               ADDS     R1,R1,#+3
+   \   0000021C   ........           BL       SetWordToBytes
+    349                                
+    350                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX, (WordCount*2)+5, 0, 0);  //Wysyla ramke
+   \   00000220   82B0               SUB      SP,SP,#+8
+   \   00000222   0020               MOVS     R0,#+0
+   \   00000224   0090               STR      R0,[SP, #+0]
+   \   00000226   0300               MOVS     R3,R0
+   \   00000228   049A               LDR      R2,[SP, #+16]
+   \   0000022A   521D               ADDS     R2,R2,#+5
+   \   0000022C   2900               MOVS     R1,R5
+   \   0000022E   0698               LDR      R0,[SP, #+24]
+   \   00000230   ........           BL       AT91F_US_SendFrame
+   \   00000234   02B0               ADD      SP,SP,#+8
+    351                                                         
+    352                    
+    353                            
+    354                        //Input Register (odczyt zmiennych analogowych A000-A5FF)      
+    355                    }
+    356             if (modbusframe[1]==4)
+    357             {
+    358                /*
+    359                                if ((((WORD)modbusframe[6])<<8 | ((WORD)modbusframe[7])) != crc16(modbusframe,6)) return 0;   //sprawdzenie CRC
+    360                               
+    361                                //OdpowiedŸ ----------------------------------------------                      
+    362                                Buff_TX[0]=AdressModbus;                              //adres                                           
+    363                                Buff_TX[1]=0x4;
+    364                                Buff_TX[2]=(WordCount*2);    
+    365                                
+    366                                CurentByteBufTX=3;
+    367                                CurentBitBufTX=0;
+    368                                
+    369                                for (int i=0; i<WordCount; i++)
+    370                                {
+    371          
+    372                                   Buff_TX[CurentByteBufTX]   = (((WORD)(ram.AnaVarRAM[RamCall]))>>8) & 0xFF;
+    373                                   Buff_TX[CurentByteBufTX+1] = ((WORD)(ram.AnaVarRAM[RamCall])) & 0xFF;
+    374                                   
+    375                                   CurentByteBufTX=CurentByteBufTX+2;
+    376                                   RamCall++;
+    377                                }
+    378          
+    379                                SetWordToBytes(crc16(Buff_TX,(WordCount*2)+3),&Buff_TX[(WordCount*2)+3] );  //wstawia sumê kontroln¹
+    380                                
+    381                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX, (WordCount*2)+5, 0, 0);  //Wysyla ramke
+    382                                                         
+    383                          
+    384                      //Write Coil Status  (zapis zmiennych dwustanowych - pojedynczo DA00-DDFF)
+    385                 */
+    386                    }
+    387             if (modbusframe[1]==5)
+   \                     ??ModBus_CommS_16:
+   \   00000236   6078               LDRB     R0,[R4, #+1]
+   \   00000238   0528               CMP      R0,#+5
+   \   0000023A   55D1               BNE      ??ModBus_CommS_19
+    388             {
+    389                                if ((((WORD)modbusframe[6])<<8 | ((WORD)modbusframe[7])) != crc16(modbusframe,6)) return 0;   //sprawdzenie CRC
+   \   0000023C   A079               LDRB     R0,[R4, #+6]
+   \   0000023E   0002               LSLS     R0,R0,#+8
+   \   00000240   E179               LDRB     R1,[R4, #+7]
+   \   00000242   0143               ORRS     R1,R1,R0
+   \   00000244   02B5               PUSH     {R1,LR}
+   \   00000246   0621               MOVS     R1,#+6
+   \   00000248   2000               MOVS     R0,R4
+   \   0000024A   ........           BL       crc16
+   \   0000024E   0099               LDR      R1,[SP, #0]
+   \   00000250   02B0               ADD      SP,SP,#+8
+   \   00000252   8142               CMP      R1,R0
+   \   00000254   00D0               BEQ      .+4
+   \   00000256   EBE6               B        ??ModBus_CommS_6
+    390                                
+    391                                //if ((modbusframe[4]!=0xFF) && (modbusframe[4]!=0x00)) return 0;
+    392                                
+    393                                Buff_TX[CurentByteBufTX] &= ~(1<<CurentBitBufTX);
+   \   00000258   3000               MOVS     R0,R6
+   \   0000025A   0006               LSLS     R0,R0,#+24
+   \   0000025C   000E               LSRS     R0,R0,#+24
+   \   0000025E   2818               ADDS     R0,R5,R0
+   \   00000260   0178               LDRB     R1,[R0, #+0]
+   \   00000262   0122               MOVS     R2,#+1
+   \   00000264   009B               LDR      R3,[SP, #+0]
+   \   00000266   9A40               LSLS     R2,R2,R3
+   \   00000268   9143               BICS     R1,R1,R2
+   \   0000026A   0170               STRB     R1,[R0, #+0]
+    394                                if (modbusframe[4])
+   \   0000026C   2079               LDRB     R0,[R4, #+4]
+   \   0000026E   0028               CMP      R0,#+0
+   \   00000270   0949               LDR      R1,??ModBus_CommS_1+0x14  ;; ram
+   \   00000272   13D0               BEQ      ??ModBus_CommS_20
+    395                                {
+    396                                   ram.VarCom_Byte[RamByte] |= 0x1 << RamBit;
+   \   00000274   C819               ADDS     R0,R1,R7
+   \   00000276   0178               LDRB     R1,[R0, #+0]
+   \   00000278   0122               MOVS     R2,#+1
+   \   0000027A   019B               LDR      R3,[SP, #+4]
+   \   0000027C   9A40               LSLS     R2,R2,R3
+   \   0000027E   0A43               ORRS     R2,R2,R1
+   \   00000280   0270               STRB     R2,[R0, #+0]
+   \   00000282   12E0               B        ??ModBus_CommS_21
+   \                     ??ModBus_CommS_1:
+   \   00000284   0040FCFF           DC32     0xfffc4000
+   \   00000288   ........           DC32     g_Ans_ZD_MODBUS_0 + 544
+   \   0000028C   0000FCFF           DC32     0xfffc0000
+   \   00000290   ........           DC32     g_Ans_ZD_MODBUS_0 + 264
+   \   00000294   ........           DC32     AdressModbus
+   \   00000298   ........           DC32     ram
+    397                                }
+    398                                else
+    399                                {
+    400                                   ram.VarCom_Byte[RamByte] &= ~(0x1 << RamBit);
+   \                     ??ModBus_CommS_20:
+   \   0000029C   C819               ADDS     R0,R1,R7
+   \   0000029E   0178               LDRB     R1,[R0, #+0]
+   \   000002A0   0122               MOVS     R2,#+1
+   \   000002A2   019B               LDR      R3,[SP, #+4]
+   \   000002A4   9A40               LSLS     R2,R2,R3
+   \   000002A6   9143               BICS     R1,R1,R2
+   \   000002A8   0170               STRB     R1,[R0, #+0]
+    401                                }               
+    402                                
+    403                                //odpowiedz ----------------------------------------------
+    404                                Buff_TX[0]=AdressModbus;                              //adres                                           
+   \                     ??ModBus_CommS_21:
+   \   000002AA   A648               LDR      R0,??ModBus_CommS_22  ;; AdressModbus
+   \   000002AC   0078               LDRB     R0,[R0, #+0]
+   \   000002AE   2870               STRB     R0,[R5, #+0]
+    405                                Buff_TX[1]=0x5;   
+   \   000002B0   0520               MOVS     R0,#+5
+   \   000002B2   6870               STRB     R0,[R5, #+1]
+    406                                Buff_TX[2]=modbusframe[2];
+   \   000002B4   A078               LDRB     R0,[R4, #+2]
+   \   000002B6   A870               STRB     R0,[R5, #+2]
+    407                                Buff_TX[3]=modbusframe[3];
+   \   000002B8   E078               LDRB     R0,[R4, #+3]
+   \   000002BA   E870               STRB     R0,[R5, #+3]
+    408                                Buff_TX[4]=modbusframe[4];
+   \   000002BC   2079               LDRB     R0,[R4, #+4]
+   \   000002BE   2871               STRB     R0,[R5, #+4]
+    409                                Buff_TX[5]=modbusframe[5];
+   \   000002C0   6079               LDRB     R0,[R4, #+5]
+   \   000002C2   6871               STRB     R0,[R5, #+5]
+    410                                                      
+    411                                SetWordToBytes(crc16(Buff_TX,6),&Buff_TX[6] );  //wstawia sumê kontroln¹
+   \   000002C4   0621               MOVS     R1,#+6
+   \   000002C6   2800               MOVS     R0,R5
+   \   000002C8   ........           BL       crc16
+   \   000002CC   2900               MOVS     R1,R5
+   \   000002CE   891D               ADDS     R1,R1,#+6
+   \   000002D0   ........           BL       SetWordToBytes
+    412                                
+    413                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX,8,0, 0);  //Wysyla ramke
+   \   000002D4   82B0               SUB      SP,SP,#+8
+   \   000002D6   0020               MOVS     R0,#+0
+   \   000002D8   0090               STR      R0,[SP, #+0]
+   \   000002DA   0300               MOVS     R3,R0
+   \   000002DC   0822               MOVS     R2,#+8
+   \   000002DE   2900               MOVS     R1,R5
+   \   000002E0   0698               LDR      R0,[SP, #+24]
+   \   000002E2   ........           BL       AT91F_US_SendFrame
+   \   000002E6   02B0               ADD      SP,SP,#+8
+    414                                                         
+    415                   
+    416          
+    417                      //Write Single Register  (zapis zmiennych analogowych - pojedynczo DA00-DDFF)
+    418                    }
+    419             if (modbusframe[1]==6)
+   \                     ??ModBus_CommS_19:
+   \   000002E8   6078               LDRB     R0,[R4, #+1]
+   \   000002EA   0628               CMP      R0,#+6
+   \   000002EC   3CD1               BNE      ??ModBus_CommS_23
+    420             {
+    421                                if ((((WORD)modbusframe[6])<<8 | ((WORD)modbusframe[7])) != crc16(modbusframe,6)) return 0;   //sprawdzenie CRC
+   \   000002EE   A079               LDRB     R0,[R4, #+6]
+   \   000002F0   0002               LSLS     R0,R0,#+8
+   \   000002F2   E779               LDRB     R7,[R4, #+7]
+   \   000002F4   0743               ORRS     R7,R7,R0
+   \   000002F6   0621               MOVS     R1,#+6
+   \   000002F8   2000               MOVS     R0,R4
+   \   000002FA   ........           BL       crc16
+   \   000002FE   8742               CMP      R7,R0
+   \   00000300   00D0               BEQ      .+4
+   \   00000302   95E6               B        ??ModBus_CommS_6
+    422                                
+    423                                Buff_TX[CurentByteBufTX] &= ~(1<<CurentBitBufTX);
+   \   00000304   3606               LSLS     R6,R6,#+24
+   \   00000306   360E               LSRS     R6,R6,#+24
+   \   00000308   A819               ADDS     R0,R5,R6
+   \   0000030A   0178               LDRB     R1,[R0, #+0]
+   \   0000030C   0122               MOVS     R2,#+1
+   \   0000030E   009B               LDR      R3,[SP, #+0]
+   \   00000310   9A40               LSLS     R2,R2,R3
+   \   00000312   9143               BICS     R1,R1,R2
+   \   00000314   0170               STRB     R1,[R0, #+0]
+    424                                
+    425                                ram.VarCom_Byte[(RamCall*2)]   = modbusframe[4] ;
+   \   00000316   ....               LDR      R1,??DataTable2  ;; ram
+   \   00000318   0398               LDR      R0,[SP, #+12]
+   \   0000031A   0004               LSLS     R0,R0,#+16
+   \   0000031C   000C               LSRS     R0,R0,#+16
+   \   0000031E   4000               LSLS     R0,R0,#+1
+   \   00000320   0818               ADDS     R0,R1,R0
+   \   00000322   2179               LDRB     R1,[R4, #+4]
+   \   00000324   0170               STRB     R1,[R0, #+0]
+    426                                ram.VarCom_Byte[(RamCall*2)+1] = modbusframe[5] ;
+   \   00000326   6179               LDRB     R1,[R4, #+5]
+   \   00000328   4170               STRB     R1,[R0, #+1]
+    427                                                                        
+    428                                //odpowiedz ----------------------------------------------
+    429                                Buff_TX[0]=AdressModbus;                              //adres                                           
+   \   0000032A   8648               LDR      R0,??ModBus_CommS_22  ;; AdressModbus
+   \   0000032C   0078               LDRB     R0,[R0, #+0]
+   \   0000032E   2870               STRB     R0,[R5, #+0]
+    430                                Buff_TX[1]=0x6;   
+   \   00000330   0620               MOVS     R0,#+6
+   \   00000332   6870               STRB     R0,[R5, #+1]
+    431                                Buff_TX[2]=modbusframe[2];
+   \   00000334   A078               LDRB     R0,[R4, #+2]
+   \   00000336   A870               STRB     R0,[R5, #+2]
+    432                                Buff_TX[3]=modbusframe[3];
+   \   00000338   E078               LDRB     R0,[R4, #+3]
+   \   0000033A   E870               STRB     R0,[R5, #+3]
+    433                                Buff_TX[4]=modbusframe[4];
+   \   0000033C   2079               LDRB     R0,[R4, #+4]
+   \   0000033E   2871               STRB     R0,[R5, #+4]
+    434                                Buff_TX[5]=modbusframe[5];
+   \   00000340   6079               LDRB     R0,[R4, #+5]
+   \   00000342   6871               STRB     R0,[R5, #+5]
+    435                                                      
+    436                                SetWordToBytes(crc16(Buff_TX,6),&Buff_TX[6] );  //wstawia sumê kontroln¹
+   \   00000344   0621               MOVS     R1,#+6
+   \   00000346   2800               MOVS     R0,R5
+   \   00000348   ........           BL       crc16
+   \   0000034C   2900               MOVS     R1,R5
+   \   0000034E   891D               ADDS     R1,R1,#+6
+   \   00000350   ........           BL       SetWordToBytes
+    437                                
+    438                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX,8,0, 0);  //Wysyla ramke
+   \   00000354   82B0               SUB      SP,SP,#+8
+   \   00000356   0020               MOVS     R0,#+0
+   \   00000358   0090               STR      R0,[SP, #+0]
+   \   0000035A   0300               MOVS     R3,R0
+   \   0000035C   0822               MOVS     R2,#+8
+   \   0000035E   2900               MOVS     R1,R5
+   \   00000360   0698               LDR      R0,[SP, #+24]
+   \   00000362   ........           BL       AT91F_US_SendFrame
+   \   00000366   02B0               ADD      SP,SP,#+8
+    439                                                         
+    440                         
+    441                                
+    442                      //Write Multiple Status  (zapis zmiennych dwustanowych - grupowo DA00-DDFF)
+    443                    }
+    444             if (modbusframe[1]==15)
+   \                     ??ModBus_CommS_23:
+   \   00000368   6078               LDRB     R0,[R4, #+1]
+   \   0000036A   0F28               CMP      R0,#+15
+   \   0000036C   00D0               BEQ      .+4
+   \   0000036E   94E0               B        ??ModBus_CommS_24
+    445             {
+    446                                if ((((WORD)modbusframe[modbusframe[6]+7])<<8 | ((WORD)modbusframe[modbusframe[6]+8])) != crc16(modbusframe,modbusframe[6]+7)) return 0;   //sprawdzenie CRC
+   \   00000370   A079               LDRB     R0,[R4, #+6]
+   \   00000372   2018               ADDS     R0,R4,R0
+   \   00000374   C079               LDRB     R0,[R0, #+7]
+   \   00000376   0002               LSLS     R0,R0,#+8
+   \   00000378   A179               LDRB     R1,[R4, #+6]
+   \   0000037A   6118               ADDS     R1,R4,R1
+   \   0000037C   0E7A               LDRB     R6,[R1, #+8]
+   \   0000037E   0643               ORRS     R6,R6,R0
+   \   00000380   A179               LDRB     R1,[R4, #+6]
+   \   00000382   C91D               ADDS     R1,R1,#+7
+   \   00000384   2000               MOVS     R0,R4
+   \   00000386   ........           BL       crc16
+   \   0000038A   8642               CMP      R6,R0
+   \   0000038C   00D0               BEQ      .+4
+   \   0000038E   4FE6               B        ??ModBus_CommS_6
+    447                 
+    448                                
+    449          
+    450                                CurentByteBufTX=7;
+   \   00000390   0726               MOVS     R6,#+7
+    451                                CurentBitBufTX=0;
+   \   00000392   0020               MOVS     R0,#+0
+   \   00000394   0090               STR      R0,[SP, #+0]
+    452                                   
+    453                                RamByte=(((((WORD)modbusframe[2])<<8 | ((WORD)modbusframe[3]))+1)/8);
+   \   00000396   A078               LDRB     R0,[R4, #+2]
+   \   00000398   0102               LSLS     R1,R0,#+8
+   \   0000039A   E078               LDRB     R0,[R4, #+3]
+   \   0000039C   0843               ORRS     R0,R0,R1
+   \   0000039E   401C               ADDS     R0,R0,#+1
+   \   000003A0   0100               MOVS     R1,R0
+   \   000003A2   8910               ASRS     R1,R1,#+2
+   \   000003A4   490F               LSRS     R1,R1,#+29
+   \   000003A6   0818               ADDS     R0,R1,R0
+   \   000003A8   0700               MOVS     R7,R0
+   \   000003AA   FF10               ASRS     R7,R7,#+3
+   \   000003AC   3F04               LSLS     R7,R7,#+16
+   \   000003AE   3F0C               LSRS     R7,R7,#+16
+    454                                RamBit= ((((WORD)modbusframe[2])<<8 | ((WORD)modbusframe[3]))+1) % 8;
+   \   000003B0   A078               LDRB     R0,[R4, #+2]
+   \   000003B2   0102               LSLS     R1,R0,#+8
+   \   000003B4   E078               LDRB     R0,[R4, #+3]
+   \   000003B6   0843               ORRS     R0,R0,R1
+   \   000003B8   401C               ADDS     R0,R0,#+1
+   \   000003BA   E178               LDRB     R1,[R4, #+3]
+   \   000003BC   491C               ADDS     R1,R1,#+1
+   \   000003BE   0200               MOVS     R2,R0
+   \   000003C0   9210               ASRS     R2,R2,#+2
+   \   000003C2   520F               LSRS     R2,R2,#+29
+   \   000003C4   1018               ADDS     R0,R2,R0
+   \   000003C6   C010               ASRS     R0,R0,#+3
+   \   000003C8   C000               LSLS     R0,R0,#+3
+   \   000003CA   081A               SUBS     R0,R1,R0
+   \   000003CC   0006               LSLS     R0,R0,#+24
+   \   000003CE   000E               LSRS     R0,R0,#+24
+   \   000003D0   0190               STR      R0,[SP, #+4]
+    455                                
+    456                                for (int i=0; i<BitCount; i++)
+   \   000003D2   0020               MOVS     R0,#+0
+   \   000003D4   05E0               B        ??ModBus_CommS_25
+    457                                { 
+    458                                  if ((modbusframe[CurentByteBufTX]>>CurentBitBufTX)&0x1)
+    459                                  {
+    460                                    ram.VarCom_Byte[RamByte] |= 0x1 << RamBit;
+    461                                  }
+    462                                  else
+    463                                  {
+    464                                    ram.VarCom_Byte[RamByte] &= ~(0x1 << RamBit);
+    465                                  }   
+    466                                 
+    467                                  if (RamBit<=6) {RamBit++;} else {RamBit=0; RamByte++;}
+    468                                  if (CurentBitBufTX<7) {CurentBitBufTX++;} else {CurentBitBufTX=0; CurentByteBufTX++;}
+   \                     ??ModBus_CommS_26:
+   \   000003D6   0021               MOVS     R1,#+0
+   \   000003D8   0091               STR      R1,[SP, #+0]
+   \   000003DA   761C               ADDS     R6,R6,#+1
+   \   000003DC   3606               LSLS     R6,R6,#+24
+   \   000003DE   360E               LSRS     R6,R6,#+24
+   \                     ??ModBus_CommS_27:
+   \   000003E0   401C               ADDS     R0,R0,#+1
+   \                     ??ModBus_CommS_25:
+   \   000003E2   0799               LDR      R1,[SP, #+28]
+   \   000003E4   0904               LSLS     R1,R1,#+16
+   \   000003E6   090C               LSRS     R1,R1,#+16
+   \   000003E8   8842               CMP      R0,R1
+   \   000003EA   36DA               BGE      ??ModBus_CommS_28
+   \   000003EC   3100               MOVS     R1,R6
+   \   000003EE   615C               LDRB     R1,[R4, R1]
+   \   000003F0   009A               LDR      R2,[SP, #+0]
+   \   000003F2   1141               ASRS     R1,R1,R2
+   \   000003F4   C907               LSLS     R1,R1,#+31
+   \   000003F6   ....               LDR      R1,??DataTable2  ;; ram
+   \   000003F8   0AD5               BPL      ??ModBus_CommS_29
+   \   000003FA   3A00               MOVS     R2,R7
+   \   000003FC   8918               ADDS     R1,R1,R2
+   \   000003FE   0A78               LDRB     R2,[R1, #+0]
+   \   00000400   9446               MOV      R12,R2
+   \   00000402   0123               MOVS     R3,#+1
+   \   00000404   019A               LDR      R2,[SP, #+4]
+   \   00000406   9340               LSLS     R3,R3,R2
+   \   00000408   6246               MOV      R2,R12
+   \   0000040A   1343               ORRS     R3,R3,R2
+   \   0000040C   0B70               STRB     R3,[R1, #+0]
+   \   0000040E   09E0               B        ??ModBus_CommS_30
+   \                     ??ModBus_CommS_29:
+   \   00000410   3A00               MOVS     R2,R7
+   \   00000412   8918               ADDS     R1,R1,R2
+   \   00000414   0A78               LDRB     R2,[R1, #+0]
+   \   00000416   9446               MOV      R12,R2
+   \   00000418   0123               MOVS     R3,#+1
+   \   0000041A   019A               LDR      R2,[SP, #+4]
+   \   0000041C   9340               LSLS     R3,R3,R2
+   \   0000041E   6246               MOV      R2,R12
+   \   00000420   9A43               BICS     R2,R2,R3
+   \   00000422   0A70               STRB     R2,[R1, #+0]
+   \                     ??ModBus_CommS_30:
+   \   00000424   0199               LDR      R1,[SP, #+4]
+   \   00000426   0906               LSLS     R1,R1,#+24
+   \   00000428   090E               LSRS     R1,R1,#+24
+   \   0000042A   0729               CMP      R1,#+7
+   \   0000042C   05D2               BCS      ??ModBus_CommS_31
+   \   0000042E   0199               LDR      R1,[SP, #+4]
+   \   00000430   491C               ADDS     R1,R1,#+1
+   \   00000432   0906               LSLS     R1,R1,#+24
+   \   00000434   090E               LSRS     R1,R1,#+24
+   \   00000436   0191               STR      R1,[SP, #+4]
+   \   00000438   04E0               B        ??ModBus_CommS_32
+   \                     ??ModBus_CommS_31:
+   \   0000043A   0021               MOVS     R1,#+0
+   \   0000043C   0191               STR      R1,[SP, #+4]
+   \   0000043E   7F1C               ADDS     R7,R7,#+1
+   \   00000440   3F04               LSLS     R7,R7,#+16
+   \   00000442   3F0C               LSRS     R7,R7,#+16
+   \                     ??ModBus_CommS_32:
+   \   00000444   0099               LDR      R1,[SP, #+0]
+   \   00000446   0906               LSLS     R1,R1,#+24
+   \   00000448   090E               LSRS     R1,R1,#+24
+   \   0000044A   0729               CMP      R1,#+7
+   \   0000044C   C3D2               BCS      ??ModBus_CommS_26
+   \   0000044E   0099               LDR      R1,[SP, #+0]
+   \   00000450   491C               ADDS     R1,R1,#+1
+   \   00000452   0906               LSLS     R1,R1,#+24
+   \   00000454   090E               LSRS     R1,R1,#+24
+   \   00000456   0091               STR      R1,[SP, #+0]
+   \   00000458   C2E7               B        ??ModBus_CommS_27
+    469                                  
+    470                                }
+    471                               
+    472                                
+    473                                //odpowiedz ----------------------------------------------
+    474                                Buff_TX[0]=AdressModbus;                              //adres                                           
+   \                     ??ModBus_CommS_28:
+   \   0000045A   3A48               LDR      R0,??ModBus_CommS_22  ;; AdressModbus
+   \   0000045C   0078               LDRB     R0,[R0, #+0]
+   \   0000045E   2870               STRB     R0,[R5, #+0]
+    475                                Buff_TX[1]=0xF;   
+   \   00000460   0F20               MOVS     R0,#+15
+   \   00000462   6870               STRB     R0,[R5, #+1]
+    476                                Buff_TX[2]=modbusframe[2];
+   \   00000464   A078               LDRB     R0,[R4, #+2]
+   \   00000466   A870               STRB     R0,[R5, #+2]
+    477                                Buff_TX[3]=modbusframe[3];
+   \   00000468   E078               LDRB     R0,[R4, #+3]
+   \   0000046A   E870               STRB     R0,[R5, #+3]
+    478                                Buff_TX[4]=modbusframe[4];
+   \   0000046C   2079               LDRB     R0,[R4, #+4]
+   \   0000046E   2871               STRB     R0,[R5, #+4]
+    479                                Buff_TX[5]=modbusframe[5];
+   \   00000470   6079               LDRB     R0,[R4, #+5]
+   \   00000472   6871               STRB     R0,[R5, #+5]
+    480                                                      
+    481                                SetWordToBytes(crc16(Buff_TX,6),&Buff_TX[6] );  //wstawia sumê kontroln¹
+   \   00000474   0621               MOVS     R1,#+6
+   \   00000476   2800               MOVS     R0,R5
+   \   00000478   ........           BL       crc16
+   \   0000047C   2900               MOVS     R1,R5
+   \   0000047E   891D               ADDS     R1,R1,#+6
+   \   00000480   ........           BL       SetWordToBytes
+    482                                
+    483                                Buff_TX[8]=0;
+   \   00000484   0020               MOVS     R0,#+0
+   \   00000486   2872               STRB     R0,[R5, #+8]
+    484                                
+    485                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX,8,0, 0);  //Wysyla ramke
+   \   00000488   82B0               SUB      SP,SP,#+8
+   \   0000048A   0090               STR      R0,[SP, #+0]
+   \   0000048C   0300               MOVS     R3,R0
+   \   0000048E   0822               MOVS     R2,#+8
+   \   00000490   2900               MOVS     R1,R5
+   \   00000492   0698               LDR      R0,[SP, #+24]
+   \   00000494   ........           BL       AT91F_US_SendFrame
+   \   00000498   02B0               ADD      SP,SP,#+8
+    486                                                         
+    487                            
+    488                                          
+    489                                
+    490                        //Write Single Register  (zapis zmiennych analogowych - pojedynczo DA00-DDFF)
+    491                    }
+    492             if (modbusframe[1]==16)
+   \                     ??ModBus_CommS_24:
+   \   0000049A   6078               LDRB     R0,[R4, #+1]
+   \   0000049C   1028               CMP      R0,#+16
+   \   0000049E   4CD1               BNE      ??ModBus_CommS_33
+    493             {
+    494                                if ((((WORD)modbusframe[modbusframe[6]+7])<<8 | ((WORD)modbusframe[modbusframe[6]+8])) != crc16(modbusframe,modbusframe[6]+7)) return 0;   //sprawdzenie CRC
+   \   000004A0   A079               LDRB     R0,[R4, #+6]
+   \   000004A2   2018               ADDS     R0,R4,R0
+   \   000004A4   C079               LDRB     R0,[R0, #+7]
+   \   000004A6   0002               LSLS     R0,R0,#+8
+   \   000004A8   A179               LDRB     R1,[R4, #+6]
+   \   000004AA   6118               ADDS     R1,R4,R1
+   \   000004AC   0E7A               LDRB     R6,[R1, #+8]
+   \   000004AE   0643               ORRS     R6,R6,R0
+   \   000004B0   A179               LDRB     R1,[R4, #+6]
+   \   000004B2   C91D               ADDS     R1,R1,#+7
+   \   000004B4   2000               MOVS     R0,R4
+   \   000004B6   ........           BL       crc16
+   \   000004BA   8642               CMP      R6,R0
+   \   000004BC   00D0               BEQ      .+4
+   \   000004BE   B7E5               B        ??ModBus_CommS_6
+    495          
+    496                                CurentByteBufTX=7;
+   \   000004C0   0726               MOVS     R6,#+7
+    497                                
+    498                                for (int i=0; i<WordCount; i++)
+   \   000004C2   0020               MOVS     R0,#+0
+   \   000004C4   14E0               B        ??ModBus_CommS_34
+    499                                { 
+    500                                  
+    501                                  ram.VarCom_Byte[(RamCall*2)]   = modbusframe[CurentByteBufTX] ;
+   \                     ??ModBus_CommS_35:
+   \   000004C6   ....               LDR      R1,??DataTable2  ;; ram
+   \   000004C8   039A               LDR      R2,[SP, #+12]
+   \   000004CA   1204               LSLS     R2,R2,#+16
+   \   000004CC   120C               LSRS     R2,R2,#+16
+   \   000004CE   5200               LSLS     R2,R2,#+1
+   \   000004D0   8918               ADDS     R1,R1,R2
+   \   000004D2   3200               MOVS     R2,R6
+   \   000004D4   A218               ADDS     R2,R4,R2
+   \   000004D6   1378               LDRB     R3,[R2, #+0]
+   \   000004D8   0B70               STRB     R3,[R1, #+0]
+    502                                  ram.VarCom_Byte[(RamCall*2)+1] = modbusframe[CurentByteBufTX+1] ;
+   \   000004DA   5278               LDRB     R2,[R2, #+1]
+   \   000004DC   4A70               STRB     R2,[R1, #+1]
+    503            
+    504                                 
+    505                                  CurentByteBufTX=CurentByteBufTX+2;
+   \   000004DE   B61C               ADDS     R6,R6,#+2
+   \   000004E0   3606               LSLS     R6,R6,#+24
+   \   000004E2   360E               LSRS     R6,R6,#+24
+    506                                  RamCall++;
+   \   000004E4   0399               LDR      R1,[SP, #+12]
+   \   000004E6   491C               ADDS     R1,R1,#+1
+   \   000004E8   0904               LSLS     R1,R1,#+16
+   \   000004EA   090C               LSRS     R1,R1,#+16
+   \   000004EC   0391               STR      R1,[SP, #+12]
+    507                                  
+    508                                }
+   \   000004EE   401C               ADDS     R0,R0,#+1
+   \                     ??ModBus_CommS_34:
+   \   000004F0   0599               LDR      R1,[SP, #+20]
+   \   000004F2   0906               LSLS     R1,R1,#+24
+   \   000004F4   090E               LSRS     R1,R1,#+24
+   \   000004F6   8842               CMP      R0,R1
+   \   000004F8   E5DB               BLT      ??ModBus_CommS_35
+    509          
+    510                                //odpowiedz ----------------------------------------------
+    511                                Buff_TX[0]=AdressModbus;                              //adres                                           
+   \   000004FA   1248               LDR      R0,??ModBus_CommS_22  ;; AdressModbus
+   \   000004FC   0078               LDRB     R0,[R0, #+0]
+   \   000004FE   2870               STRB     R0,[R5, #+0]
+    512                                Buff_TX[1]=0x10;   
+   \   00000500   1020               MOVS     R0,#+16
+   \   00000502   6870               STRB     R0,[R5, #+1]
+    513                                Buff_TX[2]=modbusframe[2];
+   \   00000504   A078               LDRB     R0,[R4, #+2]
+   \   00000506   A870               STRB     R0,[R5, #+2]
+    514                                Buff_TX[3]=modbusframe[3];
+   \   00000508   E078               LDRB     R0,[R4, #+3]
+   \   0000050A   E870               STRB     R0,[R5, #+3]
+    515                                Buff_TX[4]=modbusframe[4];
+   \   0000050C   2079               LDRB     R0,[R4, #+4]
+   \   0000050E   2871               STRB     R0,[R5, #+4]
+    516                                Buff_TX[5]=modbusframe[5];
+   \   00000510   6079               LDRB     R0,[R4, #+5]
+   \   00000512   6871               STRB     R0,[R5, #+5]
+    517                                                      
+    518                                SetWordToBytes(crc16(Buff_TX,6),&Buff_TX[6] );  //wstawia sumê kontroln¹
+   \   00000514   0621               MOVS     R1,#+6
+   \   00000516   2800               MOVS     R0,R5
+   \   00000518   ........           BL       crc16
+   \   0000051C   2900               MOVS     R1,R5
+   \   0000051E   891D               ADDS     R1,R1,#+6
+   \   00000520   ........           BL       SetWordToBytes
+    519                                
+    520                                Buff_TX[8]=0;
+   \   00000524   0020               MOVS     R0,#+0
+   \   00000526   2872               STRB     R0,[R5, #+8]
+    521                                
+    522                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX,8,0, 0);  //Wysyla ramke
+   \   00000528   82B0               SUB      SP,SP,#+8
+   \   0000052A   0090               STR      R0,[SP, #+0]
+   \   0000052C   0300               MOVS     R3,R0
+   \   0000052E   0822               MOVS     R2,#+8
+   \   00000530   2900               MOVS     R1,R5
+   \   00000532   0698               LDR      R0,[SP, #+24]
+   \   00000534   ........           BL       AT91F_US_SendFrame
+   \   00000538   02B0               ADD      SP,SP,#+8
+    523                                                         
+    524                        
+    525                          
+    526                    }
+    527            
+    528            return 1;
+   \                     ??ModBus_CommS_33:
+   \   0000053A   0120               MOVS     R0,#+1
+   \                     ??ModBus_CommS_7:
+   \   0000053C   09B0               ADD      SP,SP,#+36
+   \   0000053E   F0BC               POP      {R4-R7}
+   \   00000540   02BC               POP      {R1}
+   \   00000542   0847               BX       R1               ;; return
+   \                     ??ModBus_CommS_22:
+   \   00000544   ........           DC32     AdressModbus
+    529          }//_______________________ Koniec funkcji ModBus_CommS ________________________________
+
+   \                                 In section .bss, align 4
+   \                     g_Ans_ZD_MODBUS_0:
+   \   00000000                      DS8 1
+    530          
+    531          
+    532          
+    533          
+    534          
+    535          
+    536          
+    537          
+    538          //!-----------------------------------------------------------------------------
+    539          //!  Nazwa funkcji :    ModBus_MASTER_TX_US0
+    540          //!  Opis:              Funkcja realizacji zadañ MODBUS wed³ug zadañ z tabeli ZD_MODBUS_0
+    541          //!-----------------------------------------------------------------------------
+    542          //!  
+    543          //!----------------------------------------------------------------------------- 
+    544          char nr_tmp=0;
+   \                     nr_tmp:
+   \   00000001                      DS8 1
+   \                     g_Current_ZD_MODBUS_0:
+   \   00000002                      DS8 1
+   \                     g_Current_ZD_MODBUS_1:
+   \   00000003                      DS8 1
+   \                     ZD_MODBUS_0:
+   \   00000004                      DS8 260
+   \                     Buff_TX_0:
+   \   00000108                      DS8 20
+   \                     ZD_MODBUS_1:
+   \   0000011C                      DS8 260
+   \                     Buff_TX_1:
+   \   00000220                      DS8 580
+
+   \                                 In section .bss, align 1
+   \                     g_ERR_ZD_MODBUS_0:
+   \   00000000                      DS8 1
+
+   \                                 In section .bss, align 1
+   \                     g_ERR_ZD_MODBUS_1:
+   \   00000000                      DS8 1
+
+   \                                 In section .bss, align 1
+   \                     g_Ans_ZD_MODBUS_1:
+   \   00000000                      DS8 1
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    545          char ModBus_MASTER_TX(char US_Nr)
+    546          {
+   \                     ModBus_MASTER_TX:
+   \   00000000   F1B5               PUSH     {R0,R4-R7,LR}
+    547                char il_ptl=0;
+    548                AT91PS_USART AT91C_BASE_US;
+    549                ptr_ZD_MODBUS ZD_MODBUS;
+    550                char* Current_ZD_MODBUS;
+    551                BYTE* Buff_TX;
+    552          
+    553                //wybór USARTa
+    554                if (US_Nr) 
+   \   00000002   0028               CMP      R0,#+0
+   \   00000004   0BD0               BEQ      ??ModBus_MASTER_TX_0
+    555                {
+    556                    AT91C_BASE_US     =   AT91C_BASE_US1;
+   \   00000006   6C49               LDR      R1,??ModBus_MASTER_TX_1  ;; 0xfffc4000
+   \   00000008   0091               STR      R1,[SP, #+0]
+    557                    ZD_MODBUS         =   ZD_MODBUS_1;
+   \   0000000A   6C49               LDR      R1,??ModBus_MASTER_TX_1+0x4  ;; g_Ans_ZD_MODBUS_0
+   \   0000000C   8E22               MOVS     R2,#+142
+   \   0000000E   5200               LSLS     R2,R2,#+1        ;; #+284
+   \   00000010   8C18               ADDS     R4,R1,R2
+    558                    Current_ZD_MODBUS =   &g_Current_ZD_MODBUS_1;
+   \   00000012   0D00               MOVS     R5,R1
+   \   00000014   ED1C               ADDS     R5,R5,#+3
+    559                    Buff_TX           =   Buff_TX_1; 
+                                             ^
+Warning[Pe513]: a value of type "char *" cannot be assigned to an entity of
+          type "BYTE *"
+   \   00000016   8822               MOVS     R2,#+136
+   \   00000018   9200               LSLS     R2,R2,#+2        ;; #+544
+   \   0000001A   8E18               ADDS     R6,R1,R2
+   \   0000001C   09E0               B        ??ModBus_MASTER_TX_2
+    560                }   
+    561                else 
+    562                {
+    563                    AT91C_BASE_US     =   AT91C_BASE_US0;
+   \                     ??ModBus_MASTER_TX_0:
+   \   0000001E   6849               LDR      R1,??ModBus_MASTER_TX_1+0x8  ;; 0xfffc0000
+   \   00000020   0091               STR      R1,[SP, #+0]
+    564                    ZD_MODBUS         =   ZD_MODBUS_0;
+   \   00000022   6649               LDR      R1,??ModBus_MASTER_TX_1+0x4  ;; g_Ans_ZD_MODBUS_0
+   \   00000024   0C00               MOVS     R4,R1
+   \   00000026   241D               ADDS     R4,R4,#+4
+    565                    Current_ZD_MODBUS =   &g_Current_ZD_MODBUS_0;
+   \   00000028   0D00               MOVS     R5,R1
+   \   0000002A   AD1C               ADDS     R5,R5,#+2
+    566                    Buff_TX           =   Buff_TX_0; 
+   \   0000002C   8422               MOVS     R2,#+132
+   \   0000002E   5200               LSLS     R2,R2,#+1        ;; #+264
+   \   00000030   8E18               ADDS     R6,R1,R2
+    567                }
+    568               
+    569          
+    570          
+    571          
+    572          
+    573          
+    574          
+    575                nr_tmp=US_Nr;
+   \                     ??ModBus_MASTER_TX_2:
+   \   00000032   6449               LDR      R1,??ModBus_MASTER_TX_1+0xC  ;; g_Ans_ZD_MODBUS_0 + 1
+   \   00000034   0870               STRB     R0,[R1, #+0]
+    576                
+    577                Skok:
+                       ^
+Warning[Pe177]: label "Skok" was declared but never referenced
+    578                    
+    579                  
+    580                      if (il_ptl < ZD_MODBUS_Tab_Max) {il_ptl++;} else {return 0;}
+    581                      
+    582                      if ((ZD_MODBUS[(*Current_ZD_MODBUS)+1].Adress > 0) && ((*Current_ZD_MODBUS)+1 < ZD_MODBUS_Tab_Max) )
+   \   00000036   2878               LDRB     R0,[R5, #+0]
+   \   00000038   0D21               MOVS     R1,#+13
+   \   0000003A   4843               MULS     R0,R1,R0
+   \   0000003C   2018               ADDS     R0,R4,R0
+   \   0000003E   407B               LDRB     R0,[R0, #+13]
+   \   00000040   0028               CMP      R0,#+0
+   \   00000042   17D0               BEQ      ??ModBus_MASTER_TX_3
+   \   00000044   2878               LDRB     R0,[R5, #+0]
+   \   00000046   401C               ADDS     R0,R0,#+1
+   \   00000048   0004               LSLS     R0,R0,#+16
+   \   0000004A   000C               LSRS     R0,R0,#+16
+   \   0000004C   1428               CMP      R0,#+20
+   \   0000004E   11D2               BCS      ??ModBus_MASTER_TX_3
+    583                      {
+    584                        *Current_ZD_MODBUS=(*Current_ZD_MODBUS)+1;
+   \   00000050   2878               LDRB     R0,[R5, #+0]
+   \   00000052   401C               ADDS     R0,R0,#+1
+   \   00000054   2870               STRB     R0,[R5, #+0]
+    585                        
+    586                            ZD_MODBUS[0].Error=0x0;
+   \   00000056   0020               MOVS     R0,#+0
+   \   00000058   E072               STRB     R0,[R4, #+11]
+   \   0000005A   2073               STRB     R0,[R4, #+12]
+    587                            ZD_MODBUS[1].Error=0x0;
+   \   0000005C   2076               STRB     R0,[R4, #+24]
+   \   0000005E   6076               STRB     R0,[R4, #+25]
+    588                            ZD_MODBUS[2].Error=0x0;
+   \   00000060   2000               MOVS     R0,R4
+   \   00000062   2530               ADDS     R0,R0,#+37
+   \   00000064   0021               MOVS     R1,#+0
+   \   00000066   0170               STRB     R1,[R0, #+0]
+   \   00000068   4170               STRB     R1,[R0, #+1]
+    589                            ZD_MODBUS[3].Error=0x0;
+   \   0000006A   2000               MOVS     R0,R4
+   \   0000006C   3230               ADDS     R0,R0,#+50
+   \   0000006E   0170               STRB     R1,[R0, #+0]
+   \   00000070   4170               STRB     R1,[R0, #+1]
+   \   00000072   01E0               B        ??ModBus_MASTER_TX_4
+    590                        
+    591                      }
+    592                      else
+    593                      {
+    594                        *Current_ZD_MODBUS=0;
+   \                     ??ModBus_MASTER_TX_3:
+   \   00000074   0020               MOVS     R0,#+0
+   \   00000076   2870               STRB     R0,[R5, #+0]
+    595                      } 
+    596                      
+    597                      /*
+    598                      if (ZD_MODBUS[*Current_ZD_MODBUS].Adress == 0) 
+    599                      {
+    600                        *ERR_ZD_MODBUS=1;
+    601                        goto Skok;
+    602                      }
+    603                        
+    604          
+    605                      
+    606                      if  (ZD_MODBUS[*Current_ZD_MODBUS].Error > 50)
+    607                       {
+    608                         ZD_MODBUS[*Current_ZD_MODBUS].Error++;
+    609                         if  (ZD_MODBUS[*Current_ZD_MODBUS].Error > 5000+(*Current_ZD_MODBUS)*10)
+    610                         {
+    611                            ZD_MODBUS[*Current_ZD_MODBUS].Error=0;
+    612                  
+    613                         }
+    614                         else
+    615                         {
+    616                           goto Skok;
+    617                           
+    618                         }
+    619                       }
+    620                       Delay(1);
+    621                      
+    622                      */
+    623                      
+    624                   char liB15 = (((ZD_MODBUS[*Current_ZD_MODBUS].Coil)-1) / 8)+1;  
+   \                     ??ModBus_MASTER_TX_4:
+   \   00000078   2878               LDRB     R0,[R5, #+0]
+   \   0000007A   0D21               MOVS     R1,#+13
+   \   0000007C   4843               MULS     R0,R1,R0
+   \   0000007E   2118               ADDS     R1,R4,R0
+   \   00000080   8879               LDRB     R0,[R1, #+6]
+   \   00000082   CA79               LDRB     R2,[R1, #+7]
+   \   00000084   1206               LSLS     R2,R2,#+24
+   \   00000086   120C               LSRS     R2,R2,#+16
+   \   00000088   1043               ORRS     R0,R0,R2
+   \   0000008A   401E               SUBS     R0,R0,#+1
+   \   0000008C   0100               MOVS     R1,R0
+   \   0000008E   8910               ASRS     R1,R1,#+2
+   \   00000090   490F               LSRS     R1,R1,#+29
+   \   00000092   0818               ADDS     R0,R1,R0
+   \   00000094   0700               MOVS     R7,R0
+   \   00000096   FF10               ASRS     R7,R7,#+3
+   \   00000098   7F1C               ADDS     R7,R7,#+1
+   \   0000009A   3F06               LSLS     R7,R7,#+24
+   \   0000009C   3F0E               LSRS     R7,R7,#+24
+    625                      
+    626           //*** Funkcje uproszczone dostosowane do systemu. Nie zawieraj¹ wszystkich mo¿liwoœci modbus
+    627                      
+    628                      
+    629          
+    630                   
+    631                   
+    632                      
+    633                      
+    634                       //Write Multiple Status  (zapis rejestru)
+    635                       if ((ZD_MODBUS[*Current_ZD_MODBUS].Function)==0xf)
+   \   0000009E   2878               LDRB     R0,[R5, #+0]
+   \   000000A0   0D21               MOVS     R1,#+13
+   \   000000A2   4843               MULS     R0,R1,R0
+   \   000000A4   2018               ADDS     R0,R4,R0
+   \   000000A6   4078               LDRB     R0,[R0, #+1]
+   \   000000A8   0F28               CMP      R0,#+15
+   \   000000AA   00D0               BEQ      .+4
+   \   000000AC   7FE0               B        ??ModBus_MASTER_TX_5
+    636                      {
+    637                                    
+    638                        
+    639                                Buff_TX[0]  = ZD_MODBUS[*Current_ZD_MODBUS].Adress;                        //Adres
+   \   000000AE   2878               LDRB     R0,[R5, #+0]
+   \   000000B0   4843               MULS     R0,R1,R0
+   \   000000B2   205C               LDRB     R0,[R4, R0]
+   \   000000B4   3070               STRB     R0,[R6, #+0]
+    640                                Buff_TX[1]  = ZD_MODBUS[*Current_ZD_MODBUS].Function;                      //Funkcja                                                      
+   \   000000B6   2878               LDRB     R0,[R5, #+0]
+   \   000000B8   4843               MULS     R0,R1,R0
+   \   000000BA   2018               ADDS     R0,R4,R0
+   \   000000BC   4078               LDRB     R0,[R0, #+1]
+   \   000000BE   7070               STRB     R0,[R6, #+1]
+    641                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].Target,&Buff_TX[2] );         //Adres zmiennej (w urz¹dzeniu)   
+   \   000000C0   2878               LDRB     R0,[R5, #+0]
+   \   000000C2   4843               MULS     R0,R1,R0
+   \   000000C4   2118               ADDS     R1,R4,R0
+   \   000000C6   8878               LDRB     R0,[R1, #+2]
+   \   000000C8   CA78               LDRB     R2,[R1, #+3]
+   \   000000CA   1206               LSLS     R2,R2,#+24
+   \   000000CC   120C               LSRS     R2,R2,#+16
+   \   000000CE   1043               ORRS     R0,R0,R2
+   \   000000D0   3100               MOVS     R1,R6
+   \   000000D2   891C               ADDS     R1,R1,#+2
+   \   000000D4   ........           BL       SetWordToBytes
+    642                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].Coil,&Buff_TX[4] );                                             //il przesy³anych bajtów
+   \   000000D8   2878               LDRB     R0,[R5, #+0]
+   \   000000DA   0D21               MOVS     R1,#+13
+   \   000000DC   4843               MULS     R0,R1,R0
+   \   000000DE   2118               ADDS     R1,R4,R0
+   \   000000E0   8879               LDRB     R0,[R1, #+6]
+   \   000000E2   CA79               LDRB     R2,[R1, #+7]
+   \   000000E4   1206               LSLS     R2,R2,#+24
+   \   000000E6   120C               LSRS     R2,R2,#+16
+   \   000000E8   1043               ORRS     R0,R0,R2
+   \   000000EA   3100               MOVS     R1,R6
+   \   000000EC   091D               ADDS     R1,R1,#+4
+   \   000000EE   ........           BL       SetWordToBytes
+    643                                Buff_TX[6]=liB15; 
+   \   000000F2   3800               MOVS     R0,R7
+   \   000000F4   B071               STRB     R0,[R6, #+6]
+    644                                Buff_TX[7]=(MainStage.StageQ[ZD_MODBUS[*Current_ZD_MODBUS].StartAdr].Value[ZD_MODBUS[*Current_ZD_MODBUS].Target]) & 0xFF; 
+   \   000000F6   2878               LDRB     R0,[R5, #+0]
+   \   000000F8   0D21               MOVS     R1,#+13
+   \   000000FA   4843               MULS     R0,R1,R0
+   \   000000FC   2018               ADDS     R0,R4,R0
+   \   000000FE   0279               LDRB     R2,[R0, #+4]
+   \   00000100   4179               LDRB     R1,[R0, #+5]
+   \   00000102   0906               LSLS     R1,R1,#+24
+   \   00000104   090C               LSRS     R1,R1,#+16
+   \   00000106   0A43               ORRS     R2,R2,R1
+   \   00000108   2878               LDRB     R0,[R5, #+0]
+   \   0000010A   0D21               MOVS     R1,#+13
+   \   0000010C   4843               MULS     R0,R1,R0
+   \   0000010E   2018               ADDS     R0,R4,R0
+   \   00000110   8178               LDRB     R1,[R0, #+2]
+   \   00000112   C378               LDRB     R3,[R0, #+3]
+   \   00000114   1B06               LSLS     R3,R3,#+24
+   \   00000116   1B0C               LSRS     R3,R3,#+16
+   \   00000118   1943               ORRS     R1,R1,R3
+   \   0000011A   2B48               LDR      R0,??ModBus_MASTER_TX_1+0x10  ;; MainStage
+   \   0000011C   2B4B               LDR      R3,??ModBus_MASTER_TX_1+0x14  ;; 0x3a2
+   \   0000011E   4900               LSLS     R1,R1,#+1
+   \   00000120   8C46               MOV      R12,R1
+   \   00000122   1621               MOVS     R1,#+22
+   \   00000124   4A43               MULS     R2,R1,R2
+   \   00000126   8118               ADDS     R1,R0,R2
+   \   00000128   6246               MOV      R2,R12
+   \   0000012A   8918               ADDS     R1,R1,R2
+   \   0000012C   C95A               LDRH     R1,[R1, R3]
+   \   0000012E   F171               STRB     R1,[R6, #+7]
+    645                                Buff_TX[8]=((MainStage.StageQ[ZD_MODBUS[*Current_ZD_MODBUS].StartAdr].Value[ZD_MODBUS[*Current_ZD_MODBUS].Target])>>8) & 0xFF; 
+   \   00000130   2978               LDRB     R1,[R5, #+0]
+   \   00000132   0D22               MOVS     R2,#+13
+   \   00000134   5143               MULS     R1,R2,R1
+   \   00000136   6218               ADDS     R2,R4,R1
+   \   00000138   1179               LDRB     R1,[R2, #+4]
+   \   0000013A   5379               LDRB     R3,[R2, #+5]
+   \   0000013C   1B06               LSLS     R3,R3,#+24
+   \   0000013E   1B0C               LSRS     R3,R3,#+16
+   \   00000140   1943               ORRS     R1,R1,R3
+   \   00000142   2A78               LDRB     R2,[R5, #+0]
+   \   00000144   0D23               MOVS     R3,#+13
+   \   00000146   5A43               MULS     R2,R3,R2
+   \   00000148   A218               ADDS     R2,R4,R2
+   \   0000014A   9378               LDRB     R3,[R2, #+2]
+   \   0000014C   D478               LDRB     R4,[R2, #+3]
+   \   0000014E   2406               LSLS     R4,R4,#+24
+   \   00000150   240C               LSRS     R4,R4,#+16
+   \   00000152   2343               ORRS     R3,R3,R4
+   \   00000154   1D4A               LDR      R2,??ModBus_MASTER_TX_1+0x14  ;; 0x3a2
+   \   00000156   5B00               LSLS     R3,R3,#+1
+   \   00000158   1624               MOVS     R4,#+22
+   \   0000015A   6143               MULS     R1,R4,R1
+   \   0000015C   4018               ADDS     R0,R0,R1
+   \   0000015E   C018               ADDS     R0,R0,R3
+   \   00000160   805A               LDRH     R0,[R0, R2]
+   \   00000162   0012               ASRS     R0,R0,#+8
+   \   00000164   3072               STRB     R0,[R6, #+8]
+    646                                
+    647                                SetWordToBytes(crc16(Buff_TX,liB15+7),&Buff_TX[7+liB15] );                    //wstawia sumê kontroln¹                     
+   \   00000166   3900               MOVS     R1,R7
+   \   00000168   C91D               ADDS     R1,R1,#+7
+   \   0000016A   3000               MOVS     R0,R6
+   \   0000016C   ........           BL       crc16
+   \   00000170   F419               ADDS     R4,R6,R7
+   \   00000172   2100               MOVS     R1,R4
+   \   00000174   C91D               ADDS     R1,R1,#+7
+   \   00000176   ........           BL       SetWordToBytes
+    648                                Buff_TX[9+liB15]=0;
+   \   0000017A   0020               MOVS     R0,#+0
+   \   0000017C   6072               STRB     R0,[R4, #+9]
+    649                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX,9+liB15,0, 0);                        //Wysyla ramke        
+   \   0000017E   0937               ADDS     R7,R7,#+9
+   \   00000180   82B0               SUB      SP,SP,#+8
+   \   00000182   0090               STR      R0,[SP, #+0]
+   \   00000184   0300               MOVS     R3,R0
+   \   00000186   3A00               MOVS     R2,R7
+   \   00000188   3100               MOVS     R1,R6
+   \   0000018A   0298               LDR      R0,[SP, #+8]
+   \   0000018C   ........           BL       AT91F_US_SendFrame
+   \   00000190   02B0               ADD      SP,SP,#+8
+    650                                g_US0_Comm_MinCykle =  (int)((g_US0_OneByteTxTime * (9+liB15)) +100);   
+   \   00000192   3800               MOVS     R0,R7
+   \   00000194   ........           BL       __aeabi_i2f
+   \   00000198   0D49               LDR      R1,??ModBus_MASTER_TX_1+0x18  ;; g_US0_OneByteTxTime
+   \   0000019A   0968               LDR      R1,[R1, #+0]
+   \   0000019C   ........           BL       __aeabi_fmul
+   \   000001A0   0C49               LDR      R1,??ModBus_MASTER_TX_1+0x1C  ;; 0x42c80000
+   \   000001A2   ........           BL       __aeabi_fadd
+   \   000001A6   ........           BL       __aeabi_f2iz
+   \   000001AA   0B49               LDR      R1,??ModBus_MASTER_TX_1+0x20  ;; g_US0_Comm_MinCykle
+   \   000001AC   0860               STR      R0,[R1, #+0]
+    651                      }
+    652                    
+    653                      
+    654                      
+    655                      
+    656                      
+    657                      
+    658                      
+    659           //*** Funkcje pe³ne MODBUS         
+    660                      
+    661                     
+    662             /*         
+    663                      
+    664                      
+    665                     
+    666                      //Read Coil Status  (odczyt biezacego stanu grupy wyjsc cyfrowych)
+    667                       if ((ZD_MODBUS[*Current_ZD_MODBUS].Function)==1)
+    668                       {
+    669                                Buff_TX[0]  = ZD_MODBUS[*Current_ZD_MODBUS].Adress;                        //Adres
+    670                                Buff_TX[1]  = ZD_MODBUS[*Current_ZD_MODBUS].Function;                      //Funkcja                                                      
+    671                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].StartAdr,&Buff_TX[2] );       //Pocz¹tkowy adres danych (w urz¹dzeniu)
+    672                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].Coil,&Buff_TX[4] );           //Iloœæ danych do pobrania
+    673                                SetWordToBytes(crc16(Buff_TX,6),&Buff_TX[6] );                             //wstawia sumê kontroln¹
+    674                                
+    675                                Buff_TX[8]=0;
+    676                                Buff_TX[9]=0;
+    677                                Buff_TX[10]=0;
+    678                                
+    679                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX,8,0, 0);        //Wysyla ramke
+    680                                
+    681                                g_US0_Comm_MinCykle =  (int)((g_US0_OneByteTxTime * 8) +1);    
+    682                       }
+    683                                
+    684                            
+    685                      //Read discrete input  (odczyt stanu grupy wejsc cyfrowych)
+    686                       if ((ZD_MODBUS[*Current_ZD_MODBUS].Function)==2)
+    687                      {
+    688                                Buff_TX[0]  = ZD_MODBUS[*Current_ZD_MODBUS].Adress;                        //Adres
+    689                                Buff_TX[1]  = ZD_MODBUS[*Current_ZD_MODBUS].Function;                      //Funkcja                                                      
+    690                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].StartAdr,&Buff_TX[2] );       //Pocz¹tkowy adres danych (w urz¹dzeniu)
+    691                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].Coil,&Buff_TX[4] );           //Iloœæ danych do pobrania
+    692                                SetWordToBytes(crc16(Buff_TX,6),&Buff_TX[6] );                                //wstawia sumê kontroln¹
+    693                                
+    694                                Buff_TX[8]=0;
+    695                                
+    696                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX,8,0, 0);        //Wysyla ramke
+    697                                g_US0_Comm_MinCykle =  (int)((g_US0_OneByteTxTime * 8) +10);   
+    698                      }   
+    699                                
+    700                      //Holding Register (odczyt zawartosci grupy rejestrów/analogów wyjsciowych)
+    701                       if ((ZD_MODBUS[*Current_ZD_MODBUS].Function)==3)
+    702                      {
+    703                                Buff_TX[0]  = ZD_MODBUS[*Current_ZD_MODBUS].Adress;                        //Adres
+    704                                Buff_TX[1]  = ZD_MODBUS[*Current_ZD_MODBUS].Function;                      //Funkcja                                                      
+    705                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].StartAdr,&Buff_TX[2] );       //Pocz¹tkowy adres danych (w urz¹dzeniu)
+    706                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].Coil,&Buff_TX[4] );           //Iloœæ danych do pobrania
+    707                                SetWordToBytes(crc16(Buff_TX,6),&Buff_TX[6] );                                //wstawia sumê kontroln¹
+    708                                
+    709                                Buff_TX[8]=0;
+    710                                
+    711                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX,8,0, 0);        //Wysyla ramke
+    712                                g_US0_Comm_MinCykle =  (int)((g_US0_OneByteTxTime * 8) +1);   
+    713                      } 
+    714                                
+    715                        //Input Register (odczyt zawartosci grupy rejestrów/analogów wejsciowych)      
+    716                       if ((ZD_MODBUS[*Current_ZD_MODBUS].Function)==4)
+    717                      {
+    718                                Buff_TX[0]  = ZD_MODBUS[*Current_ZD_MODBUS].Adress;                        //Adres
+    719                                Buff_TX[1]  = ZD_MODBUS[*Current_ZD_MODBUS].Function;                      //Funkcja                                                      
+    720                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].StartAdr,&Buff_TX[2] );       //Pocz¹tkowy adres danych (w urz¹dzeniu)
+    721                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].Coil,&Buff_TX[4] );           //Iloœæ danych do pobrania
+    722                                SetWordToBytes(crc16(Buff_TX,6),&Buff_TX[6] );                                //wstawia sumê kontroln¹
+    723                                
+    724                                Buff_TX[8]=0;
+    725                                
+    726                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX,8,0, 0);        //Wysyla ramke
+    727                                g_US0_Comm_MinCykle =  (int)((g_US0_OneByteTxTime * 8) +1);   
+    728                      }            
+    729                                
+    730                      //Write Coil Status  (ustawienie stanu jednego wyjscia cyfrowego)
+    731                       if ((ZD_MODBUS[*Current_ZD_MODBUS].Function)==5)
+    732                      {
+    733                                TmpWalue = (ram.VarCom_Word[ZD_MODBUS[*Current_ZD_MODBUS].StartAdr]) & 0x1;
+    734                                                      
+    735                                if ((TmpWalue==ZD_MODBUS[*Current_ZD_MODBUS].LastSend) && (ZD_MODBUS[*Current_ZD_MODBUS].Confirm==1) )     return 0;
+    736                                ZD_MODBUS[*Current_ZD_MODBUS].Confirm=0;
+    737                                ZD_MODBUS[*Current_ZD_MODBUS].LastSend=TmpWalue;
+    738                                  
+    739                                GetBinVarPackComm(ZD_MODBUS[*Current_ZD_MODBUS].StartAdr, 1, &Buff_TX[4]);
+    740                               
+    741                                Buff_TX[0]  = ZD_MODBUS[*Current_ZD_MODBUS].Adress;                        //Adres
+    742                                Buff_TX[1]  = ZD_MODBUS[*Current_ZD_MODBUS].Function;                      //Funkcja                                                      
+    743                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].Target,&Buff_TX[2] );         //Adres zmiennej (w urz¹dzeniu)                          
+    744                                
+    745                                
+    746                                SetWordToBytes(crc16(Buff_TX,6),&Buff_TX[6] );                              //wstawia sumê kontroln¹                     
+    747                                Buff_TX[8]=0;
+    748                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX,8,0, 0);                           //Wysyla ramke        
+    749                                g_US0_Comm_MinCykle =  (int)((g_US0_OneByteTxTime * 8) +1)+100;   
+    750                      }
+    751          
+    752                      //Write Single Register  (zapis do pojedynczego rejestru/analogu wyjsciowego)
+    753                      if ((ZD_MODBUS[*Current_ZD_MODBUS].Function)==6)
+    754                      { 
+    755                               
+    756                        
+    757                        
+    758                        
+    759                                Buff_TX[0]  = ZD_MODBUS[*Current_ZD_MODBUS].Adress;                        //Adres
+    760                                Buff_TX[1]  = ZD_MODBUS[*Current_ZD_MODBUS].Function;                      //Funkcja                                                      
+    761                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].Target,&Buff_TX[2] );         //Adres zmiennej (w urz¹dzeniu)                         
+    762                                
+    763                                SetWordToBytes(ram.VarCom_Byte[(ZD_MODBUS[*Current_ZD_MODBUS].StartAdr*2)],&Buff_TX[4] ); 
+    764                                
+    765                                SetWordToBytes(crc16(Buff_TX,6),&Buff_TX[6] );                                //wstawia sumê kontroln¹                     
+    766                                
+    767                                Buff_TX[8]=0;
+    768                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX,8,0, 0);        //Wysyla ramke        
+    769                                g_US0_Comm_MinCykle =  (int)((g_US0_OneByteTxTime * 8) +1);   
+    770                      }
+    771                                
+    772                      //Write Multiple Status  (zapis zmiennych dwustanowych - grupowo DA00-DDFF)
+    773                       if ((ZD_MODBUS[*Current_ZD_MODBUS].Function)==0xf)
+    774                      {
+    775                                    
+    776                        
+    777                                Buff_TX[0]  = ZD_MODBUS[*Current_ZD_MODBUS].Adress;                        //Adres
+    778                                Buff_TX[1]  = ZD_MODBUS[*Current_ZD_MODBUS].Function;                      //Funkcja                                                      
+    779                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].Target,&Buff_TX[2] );         //Adres zmiennej (w urz¹dzeniu)   
+    780                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].Coil,&Buff_TX[4] );                                             //il przesy³anych bajtów
+    781                                Buff_TX[6]=liB15;
+    782                                //GetBinVarPackComm(ZD_MODBUS[*Current_ZD_MODBUS].StartAdr, (ZD_MODBUS[*Current_ZD_MODBUS].Coil), &Buff_TX[7]);  //void GetBinVarPackComm(WORD adr, WORD Length, char *Tab )
+    783                                GetRegPackComm(ZD_MODBUS[*Current_ZD_MODBUS].StartAdr, ZD_MODBUS[*Current_ZD_MODBUS].Target,  (ZD_MODBUS[*Current_ZD_MODBUS].Coil), &Buff_TX[7]);//(WORD Adr, char Reg, char LengthBit, unsigned char* Tab )
+    784                                
+    785                                //Buff_TX[7]  =0x01;
+    786                                
+    787                                SetWordToBytes(crc16(Buff_TX,liB15+7),&Buff_TX[7+liB15] );                    //wstawia sumê kontroln¹                     
+    788                                Buff_TX[9+liB15]=0;
+    789                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX,9+liB15,0, 0);                        //Wysyla ramke        
+    790                                g_US0_Comm_MinCykle =  (int)((g_US0_OneByteTxTime * (9+liB15)) +100);   
+    791                      }
+    792                                          
+    793                                
+    794                        //Write Single Register  (zapis zmiennych analogowych - grupowo DA00-DDFF)
+    795                       if ((ZD_MODBUS[*Current_ZD_MODBUS].Function)==0x10)
+    796                      {
+    797                        
+    798                                Buff_TX[0]  = ZD_MODBUS[*Current_ZD_MODBUS].Adress;                        //Adres
+    799                                Buff_TX[1]  = ZD_MODBUS[*Current_ZD_MODBUS].Function;                      //Funkcja                                                      
+    800                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].Target,&Buff_TX[2] );         //Adres zmiennej (w urz¹dzeniu)   
+    801                                SetWordToBytes(ZD_MODBUS[*Current_ZD_MODBUS].Coil,&Buff_TX[4] );           //il przesy³anych komórek
+    802                                Buff_TX[6]  =(ZD_MODBUS[*Current_ZD_MODBUS].Coil) *2;                      //il przesy³anych bajtów     
+    803                                for(int i = 0; i < ZD_MODBUS[*Current_ZD_MODBUS].Coil; ++i)
+    804                                {
+    805                                  Buff_TX[7+(i*2)]=ram.VarCom_Byte[((ZD_MODBUS[*Current_ZD_MODBUS].StartAdr)*2)+(i*2)];
+    806                                  Buff_TX[8+(i*2)]=ram.VarCom_Byte[((ZD_MODBUS[*Current_ZD_MODBUS].StartAdr)*2)+(i*2)+1];
+    807                                }
+    808                                
+    809                                SetWordToBytes(crc16(Buff_TX,(ZD_MODBUS[*Current_ZD_MODBUS].Coil *2 )+7),&Buff_TX[7+(ZD_MODBUS[*Current_ZD_MODBUS].Coil *2 )] );                    //wstawia sumê kontroln¹                     
+    810                                Buff_TX[9+(ZD_MODBUS[*Current_ZD_MODBUS].Coil *2 )]=0;
+    811                                AT91F_US_SendFrame(AT91C_BASE_US,Buff_TX,9+(ZD_MODBUS[*Current_ZD_MODBUS].Coil *2 ),0, 0);                        //Wysyla ramke        
+    812                                g_US0_Comm_MinCykle =  (int)((g_US0_OneByteTxTime * (9+(ZD_MODBUS[*Current_ZD_MODBUS].Coil *2 ))) +10);   
+    813                                                         
+    814                      }    
+    815                          
+    816                    
+    817                         
+    818          */
+    819          
+    820                 return 1;
+   \                     ??ModBus_MASTER_TX_5:
+   \   000001AE   0120               MOVS     R0,#+1
+   \   000001B0   F8BC               POP      {R3-R7}
+   \   000001B2   02BC               POP      {R1}
+   \   000001B4   0847               BX       R1               ;; return
+   \   000001B6   C046               Nop      
+   \                     ??ModBus_MASTER_TX_1:
+   \   000001B8   0040FCFF           DC32     0xfffc4000
+   \   000001BC   ........           DC32     g_Ans_ZD_MODBUS_0
+   \   000001C0   0000FCFF           DC32     0xfffc0000
+   \   000001C4   ........           DC32     g_Ans_ZD_MODBUS_0 + 1
+   \   000001C8   ........           DC32     MainStage
+   \   000001CC   A2030000           DC32     0x3a2
+   \   000001D0   ........           DC32     g_US0_OneByteTxTime
+   \   000001D4   0000C842           DC32     0x42c80000
+   \   000001D8   ........           DC32     g_US0_Comm_MinCykle
+    821          }//_______________________ Koniec funkcji ModBus_MASTER_TX_US0 _______________________
+    822          
+    823          
+    824          
+    825                                          
+    826          
+    827          
+    828          
+    829          //!-----------------------------------------------------------------------------
+    830          //!  Nazwa funkcji :    ModBus_MASTER_Return
+    831          //!  Opis:              Funkcja konwertuje wartoœæ w WORD na 2 kolejne bajty
+    832          //!-----------------------------------------------------------------------------
+    833          //!  modbusframe  - otrzymana ramka danych
+    834          //!----------------------------------------------------------------------------- 
+    835          
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+    836          BYTE ModBus_MASTER_Return(BYTE* modbusframe, char US_Nr)
+    837          {
+   \                     ModBus_MASTER_Return:
+   \   00000000   F1B5               PUSH     {R0,R4-R7,LR}
+   \   00000002   84B0               SUB      SP,SP,#+16
+    838            //WORD  RamByte=(((((WORD)modbusframe[2])<<8 | ((WORD)modbusframe[3])))/8);
+    839            //WORD  RamCall=((((WORD)modbusframe[2])<<8 | ((WORD)modbusframe[3])));
+    840            //BYTE  RamBit= ((((WORD)modbusframe[2])<<8 | ((WORD)modbusframe[3]))+0) % 8;
+    841            //BYTE  ByteCount=(((((WORD)modbusframe[4])<<8 | ((WORD)modbusframe[5]))-1)/8)+1;
+    842            //BYTE  WordCount=(((WORD)modbusframe[4])<<8 | ((WORD)modbusframe[5]));
+    843            //WORD  BitCount = 0;
+    844            
+    845          
+    846            char  CurentByteBufTX = 0;
+    847            char  CurentBitBufTX = 0;
+    848            WORD ByteCount =0;
+    849            WORD WordCount =0;
+    850            WORD BitCount = 0;
+    851            unsigned short RamByteTMP;
+    852          
+    853            WORD RamBit = 0;
+    854            
+    855                ptr_ZD_MODBUS ZD_MODBUS;
+    856                char* Current_ZD_MODBUS;
+    857                //char* ERR_ZD_MODBUS;
+    858                //BYTE* Buff_TX;
+    859                
+    860              
+    861                //wybór USARTa
+    862                if (US_Nr) 
+   \   00000004   0029               CMP      R1,#+0
+   \   00000006   BE48               LDR      R0,??ModBus_MASTER_Return_0  ;; g_Ans_ZD_MODBUS_0
+   \   00000008   06D0               BEQ      ??ModBus_MASTER_Return_1
+    863                {
+    864                    ZD_MODBUS         =   ZD_MODBUS_1;
+   \   0000000A   8E21               MOVS     R1,#+142
+   \   0000000C   4900               LSLS     R1,R1,#+1        ;; #+284
+   \   0000000E   4118               ADDS     R1,R0,R1
+   \   00000010   0091               STR      R1,[SP, #+0]
+    865                    Current_ZD_MODBUS =   &g_Current_ZD_MODBUS_1;
+   \   00000012   C01C               ADDS     R0,R0,#+3
+   \   00000014   0190               STR      R0,[SP, #+4]
+   \   00000016   04E0               B        ??ModBus_MASTER_Return_2
+    866                   // ERR_ZD_MODBUS     =   &g_ERR_ZD_MODBUS_1;
+    867                   // Buff_TX           =   Buff_TX_1; 
+    868                }   
+    869                else 
+    870                {
+    871                    ZD_MODBUS         =   ZD_MODBUS_0;
+   \                     ??ModBus_MASTER_Return_1:
+   \   00000018   0100               MOVS     R1,R0
+   \   0000001A   091D               ADDS     R1,R1,#+4
+   \   0000001C   0091               STR      R1,[SP, #+0]
+    872                    Current_ZD_MODBUS =   &g_Current_ZD_MODBUS_0;
+   \   0000001E   801C               ADDS     R0,R0,#+2
+   \   00000020   0190               STR      R0,[SP, #+4]
+    873                    //ERR_ZD_MODBUS     =   &g_ERR_ZD_MODBUS_0;
+    874                    //Buff_TX           =   Buff_TX_0; 
+    875                }
+    876                  
+    877            
+    878              g_Ans_ZD_MODBUS_0 = g_US0_Comm_TIMEOUT+1; 
+   \                     ??ModBus_MASTER_Return_2:
+   \   00000022   B748               LDR      R0,??ModBus_MASTER_Return_0  ;; g_Ans_ZD_MODBUS_0
+   \   00000024   B749               LDR      R1,??ModBus_MASTER_Return_0+0x4  ;; g_US0_Comm_TIMEOUT
+   \   00000026   0968               LDR      R1,[R1, #+0]
+   \   00000028   491C               ADDS     R1,R1,#+1
+   \   0000002A   0170               STRB     R1,[R0, #+0]
+    879               
+    880              
+    881              if ((modbusframe[0]) != ZD_MODBUS[*Current_ZD_MODBUS].Adress) 
+   \   0000002C   0498               LDR      R0,[SP, #+16]
+   \   0000002E   0078               LDRB     R0,[R0, #+0]
+   \   00000030   0199               LDR      R1,[SP, #+4]
+   \   00000032   0978               LDRB     R1,[R1, #+0]
+   \   00000034   0D22               MOVS     R2,#+13
+   \   00000036   5143               MULS     R1,R2,R1
+   \   00000038   009A               LDR      R2,[SP, #+0]
+   \   0000003A   515C               LDRB     R1,[R2, R1]
+   \   0000003C   8842               CMP      R0,R1
+   \   0000003E   16D0               BEQ      ??ModBus_MASTER_Return_3
+    882                {
+    883                    ZD_MODBUS[*Current_ZD_MODBUS].Error++;
+   \   00000040   0198               LDR      R0,[SP, #+4]
+   \   00000042   0078               LDRB     R0,[R0, #+0]
+   \   00000044   0D21               MOVS     R1,#+13
+   \   00000046   4843               MULS     R0,R1,R0
+   \   00000048   0099               LDR      R1,[SP, #+0]
+   \   0000004A   0918               ADDS     R1,R1,R0
+   \   0000004C   C87A               LDRB     R0,[R1, #+11]
+   \   0000004E   0A7B               LDRB     R2,[R1, #+12]
+   \   00000050   1206               LSLS     R2,R2,#+24
+   \   00000052   120C               LSRS     R2,R2,#+16
+   \   00000054   1043               ORRS     R0,R0,R2
+   \   00000056   0199               LDR      R1,[SP, #+4]
+   \   00000058   0978               LDRB     R1,[R1, #+0]
+   \   0000005A   0D22               MOVS     R2,#+13
+   \   0000005C   5143               MULS     R1,R2,R1
+   \   0000005E   009A               LDR      R2,[SP, #+0]
+   \   00000060   5118               ADDS     R1,R2,R1
+   \   00000062   401C               ADDS     R0,R0,#+1
+   \   00000064   C872               STRB     R0,[R1, #+11]
+   \   00000066   000A               LSRS     R0,R0,#+8
+   \   00000068   0873               STRB     R0,[R1, #+12]
+    884                    //TRACE_INFO("\n\r ODP : Blad adresu \n\r");
+    885                    return 0;                                                                   //wyjdz jezeli zly adres 
+   \   0000006A   0020               MOVS     R0,#+0
+   \   0000006C   CBE1               B        ??ModBus_MASTER_Return_4
+    886                }
+    887          
+    888          
+    889            
+    890          
+    891                
+    892                      
+    893                      //Response to question: Read Coil Status  (odczyt zmiennych dwustanowych do DA00-DDFF)
+    894              
+    895                      if(modbusframe[1]==1)
+   \                     ??ModBus_MASTER_Return_3:
+   \   0000006E   0498               LDR      R0,[SP, #+16]
+   \   00000070   4078               LDRB     R0,[R0, #+1]
+   \   00000072   0128               CMP      R0,#+1
+   \   00000074   66D1               BNE      ??ModBus_MASTER_Return_5
+    896                      {
+    897                                ByteCount = ((WORD)modbusframe[2]);
+   \   00000076   0498               LDR      R0,[SP, #+16]
+   \   00000078   8478               LDRB     R4,[R0, #+2]
+    898                                BitCount =  ((WORD)modbusframe[2]) * 8;
+   \   0000007A   6846               MOV      R0,SP
+   \   0000007C   2100               MOVS     R1,R4
+   \   0000007E   C900               LSLS     R1,R1,#+3
+   \   00000080   0181               STRH     R1,[R0, #+8]
+    899                                if ((((WORD)modbusframe[ByteCount+3])<<8 | ((WORD)modbusframe[ByteCount+4])) != crc16(modbusframe,ByteCount+3)) return 0;   //sprawdzenie CRC
+   \   00000082   0498               LDR      R0,[SP, #+16]
+   \   00000084   0019               ADDS     R0,R0,R4
+   \   00000086   C178               LDRB     R1,[R0, #+3]
+   \   00000088   0902               LSLS     R1,R1,#+8
+   \   0000008A   0579               LDRB     R5,[R0, #+4]
+   \   0000008C   0D43               ORRS     R5,R5,R1
+   \   0000008E   E41C               ADDS     R4,R4,#+3
+   \   00000090   2100               MOVS     R1,R4
+   \   00000092   0498               LDR      R0,[SP, #+16]
+   \   00000094   ........           BL       crc16
+   \   00000098   8542               CMP      R5,R0
+   \   0000009A   01D0               BEQ      ??ModBus_MASTER_Return_6
+   \                     ??ModBus_MASTER_Return_7:
+   \   0000009C   0020               MOVS     R0,#+0
+   \   0000009E   B2E1               B        ??ModBus_MASTER_Return_4
+    900          
+    901                                CurentByteBufTX=3;
+   \                     ??ModBus_MASTER_Return_6:
+   \   000000A0   0320               MOVS     R0,#+3
+   \   000000A2   0023               MOVS     R3,#+0
+    902                                CurentBitBufTX=0;
+    903          
+    904                                RamByteTMP = ZD_MODBUS[*Current_ZD_MODBUS].Target;
+   \   000000A4   0199               LDR      R1,[SP, #+4]
+   \   000000A6   0978               LDRB     R1,[R1, #+0]
+   \   000000A8   0D22               MOVS     R2,#+13
+   \   000000AA   5143               MULS     R1,R2,R1
+   \   000000AC   009A               LDR      R2,[SP, #+0]
+   \   000000AE   5218               ADDS     R2,R2,R1
+   \   000000B0   9178               LDRB     R1,[R2, #+2]
+   \   000000B2   D478               LDRB     R4,[R2, #+3]
+   \   000000B4   2406               LSLS     R4,R4,#+24
+   \   000000B6   240C               LSRS     R4,R4,#+16
+   \   000000B8   2143               ORRS     R1,R1,R4
+    905                                RamBit  = 0;
+   \   000000BA   1A00               MOVS     R2,R3
+    906                                
+    907                                for (int i=0; i<BitCount; i++)
+   \   000000BC   1500               MOVS     R5,R2
+   \   000000BE   04E0               B        ??ModBus_MASTER_Return_8
+    908                                { 
+    909                                  if ((modbusframe[CurentByteBufTX]>>CurentBitBufTX)&0x1)
+    910                                  {
+    911                                    ram.VarCom_Word[RamByteTMP] |= 0x1 << RamBit;
+    912                                  }
+    913                                  else
+    914                                  {
+    915                                    ram.VarCom_Word[RamByteTMP] &= ~(0x1 << RamBit);
+    916                                  }   
+    917                                 
+    918                                  if (RamBit<=6) {RamBit++;} else {RamBit=0; RamByteTMP++;}
+    919                                  if (CurentBitBufTX<7) {CurentBitBufTX++;} else {CurentBitBufTX=0; CurentByteBufTX++;}
+   \                     ??ModBus_MASTER_Return_9:
+   \   000000C0   0023               MOVS     R3,#+0
+   \   000000C2   401C               ADDS     R0,R0,#+1
+   \   000000C4   0006               LSLS     R0,R0,#+24
+   \   000000C6   000E               LSRS     R0,R0,#+24
+   \                     ??ModBus_MASTER_Return_10:
+   \   000000C8   6D1C               ADDS     R5,R5,#+1
+   \                     ??ModBus_MASTER_Return_8:
+   \   000000CA   6C46               MOV      R4,SP
+   \   000000CC   2489               LDRH     R4,[R4, #+8]
+   \   000000CE   A542               CMP      R5,R4
+   \   000000D0   27DA               BGE      ??ModBus_MASTER_Return_11
+   \   000000D2   0400               MOVS     R4,R0
+   \   000000D4   049E               LDR      R6,[SP, #+16]
+   \   000000D6   345D               LDRB     R4,[R6, R4]
+   \   000000D8   1C41               ASRS     R4,R4,R3
+   \   000000DA   E407               LSLS     R4,R4,#+31
+   \   000000DC   CC4C               LDR      R4,??ModBus_MASTER_Return_12  ;; ram
+   \   000000DE   08D5               BPL      ??ModBus_MASTER_Return_13
+   \   000000E0   0E00               MOVS     R6,R1
+   \   000000E2   7600               LSLS     R6,R6,#+1
+   \   000000E4   A419               ADDS     R4,R4,R6
+   \   000000E6   2688               LDRH     R6,[R4, #+0]
+   \   000000E8   0127               MOVS     R7,#+1
+   \   000000EA   9740               LSLS     R7,R7,R2
+   \   000000EC   3743               ORRS     R7,R7,R6
+   \   000000EE   2780               STRH     R7,[R4, #+0]
+   \   000000F0   07E0               B        ??ModBus_MASTER_Return_14
+   \                     ??ModBus_MASTER_Return_13:
+   \   000000F2   0E00               MOVS     R6,R1
+   \   000000F4   7600               LSLS     R6,R6,#+1
+   \   000000F6   A419               ADDS     R4,R4,R6
+   \   000000F8   2688               LDRH     R6,[R4, #+0]
+   \   000000FA   0127               MOVS     R7,#+1
+   \   000000FC   9740               LSLS     R7,R7,R2
+   \   000000FE   BE43               BICS     R6,R6,R7
+   \   00000100   2680               STRH     R6,[R4, #+0]
+   \                     ??ModBus_MASTER_Return_14:
+   \   00000102   1204               LSLS     R2,R2,#+16
+   \   00000104   120C               LSRS     R2,R2,#+16
+   \   00000106   072A               CMP      R2,#+7
+   \   00000108   01D2               BCS      ??ModBus_MASTER_Return_15
+   \   0000010A   521C               ADDS     R2,R2,#+1
+   \   0000010C   03E0               B        ??ModBus_MASTER_Return_16
+   \                     ??ModBus_MASTER_Return_15:
+   \   0000010E   0022               MOVS     R2,#+0
+   \   00000110   491C               ADDS     R1,R1,#+1
+   \   00000112   0904               LSLS     R1,R1,#+16
+   \   00000114   090C               LSRS     R1,R1,#+16
+   \                     ??ModBus_MASTER_Return_16:
+   \   00000116   1B06               LSLS     R3,R3,#+24
+   \   00000118   1B0E               LSRS     R3,R3,#+24
+   \   0000011A   072B               CMP      R3,#+7
+   \   0000011C   D0D2               BCS      ??ModBus_MASTER_Return_9
+   \   0000011E   5B1C               ADDS     R3,R3,#+1
+   \   00000120   D2E7               B        ??ModBus_MASTER_Return_10
+    920                                  
+    921                                }
+    922                       
+    923                                ZD_MODBUS[*Current_ZD_MODBUS].Error=0;
+   \                     ??ModBus_MASTER_Return_11:
+   \   00000122   0198               LDR      R0,[SP, #+4]
+   \   00000124   0078               LDRB     R0,[R0, #+0]
+   \   00000126   0D21               MOVS     R1,#+13
+   \   00000128   4843               MULS     R0,R1,R0
+   \   0000012A   0099               LDR      R1,[SP, #+0]
+   \   0000012C   0818               ADDS     R0,R1,R0
+   \   0000012E   0021               MOVS     R1,#+0
+   \   00000130   C172               STRB     R1,[R0, #+11]
+   \   00000132   0173               STRB     R1,[R0, #+12]
+    924                                ZD_MODBUS[*Current_ZD_MODBUS].Confirm=1;
+   \   00000134   0198               LDR      R0,[SP, #+4]
+   \   00000136   0078               LDRB     R0,[R0, #+0]
+   \   00000138   0D21               MOVS     R1,#+13
+   \   0000013A   4843               MULS     R0,R1,R0
+   \   0000013C   0099               LDR      R1,[SP, #+0]
+   \   0000013E   0818               ADDS     R0,R1,R0
+   \   00000140   0121               MOVS     R1,#+1
+   \   00000142   8172               STRB     R1,[R0, #+10]
+    925                                
+    926                      }
+    927                                
+    928                            
+    929                       //Response to question: Read discrete input  (odczyt zmiennych dyskretnych B000-B5FF)
+    930                      if(modbusframe[1]==2)
+   \                     ??ModBus_MASTER_Return_5:
+   \   00000144   0498               LDR      R0,[SP, #+16]
+   \   00000146   4078               LDRB     R0,[R0, #+1]
+   \   00000148   0228               CMP      R0,#+2
+   \   0000014A   66D1               BNE      ??ModBus_MASTER_Return_17
+    931                      {
+    932                                       ByteCount = ((WORD)modbusframe[2]);
+   \   0000014C   0498               LDR      R0,[SP, #+16]
+   \   0000014E   8478               LDRB     R4,[R0, #+2]
+    933                                BitCount =  ((WORD)modbusframe[2])*8;
+   \   00000150   6846               MOV      R0,SP
+   \   00000152   2100               MOVS     R1,R4
+   \   00000154   C900               LSLS     R1,R1,#+3
+   \   00000156   0181               STRH     R1,[R0, #+8]
+    934                                if ((((WORD)modbusframe[ByteCount+3])<<8 | ((WORD)modbusframe[ByteCount+4])) != crc16(modbusframe,ByteCount+3)) return 0;   //sprawdzenie CRC
+   \   00000158   0498               LDR      R0,[SP, #+16]
+   \   0000015A   0019               ADDS     R0,R0,R4
+   \   0000015C   C178               LDRB     R1,[R0, #+3]
+   \   0000015E   0902               LSLS     R1,R1,#+8
+   \   00000160   0579               LDRB     R5,[R0, #+4]
+   \   00000162   0D43               ORRS     R5,R5,R1
+   \   00000164   E41C               ADDS     R4,R4,#+3
+   \   00000166   2100               MOVS     R1,R4
+   \   00000168   0498               LDR      R0,[SP, #+16]
+   \   0000016A   ........           BL       crc16
+   \   0000016E   8542               CMP      R5,R0
+   \   00000170   94D1               BNE      ??ModBus_MASTER_Return_7
+    935          
+    936                                CurentByteBufTX=3;
+   \   00000172   0320               MOVS     R0,#+3
+   \   00000174   0023               MOVS     R3,#+0
+    937                                CurentBitBufTX=0;
+    938          
+    939                                
+    940                                RamByteTMP = ZD_MODBUS[*Current_ZD_MODBUS].Target/8;
+   \   00000176   0199               LDR      R1,[SP, #+4]
+   \   00000178   0978               LDRB     R1,[R1, #+0]
+   \   0000017A   0D22               MOVS     R2,#+13
+   \   0000017C   5143               MULS     R1,R2,R1
+   \   0000017E   009A               LDR      R2,[SP, #+0]
+   \   00000180   5118               ADDS     R1,R2,R1
+   \   00000182   8C78               LDRB     R4,[R1, #+2]
+   \   00000184   CA78               LDRB     R2,[R1, #+3]
+   \   00000186   1206               LSLS     R2,R2,#+24
+   \   00000188   120C               LSRS     R2,R2,#+16
+   \   0000018A   1443               ORRS     R4,R4,R2
+   \   0000018C   2100               MOVS     R1,R4
+   \   0000018E   C908               LSRS     R1,R1,#+3
+    941                                RamBit  = 0;
+   \   00000190   1A00               MOVS     R2,R3
+    942                                
+    943                                for (int i=0; i<BitCount; i++)
+   \   00000192   1500               MOVS     R5,R2
+   \   00000194   04E0               B        ??ModBus_MASTER_Return_18
+    944                                { 
+    945                                  if ((modbusframe[CurentByteBufTX]>>CurentBitBufTX)&0x1)
+    946                                  {
+    947                                    ram.VarCom_Word[RamByteTMP] |= 0x1 << RamBit;
+    948                                  }
+    949                                  else
+    950                                  {
+    951                                    ram.VarCom_Word[RamByteTMP] &= ~(0x1 << RamBit);
+    952                                  }   
+    953                                 
+    954                                  if (RamBit<=6) {RamBit++;} else {RamBit=0; RamByteTMP++;}
+    955                                  if (CurentBitBufTX<7) {CurentBitBufTX++;} else {CurentBitBufTX=0; CurentByteBufTX++;}
+   \                     ??ModBus_MASTER_Return_19:
+   \   00000196   0023               MOVS     R3,#+0
+   \   00000198   401C               ADDS     R0,R0,#+1
+   \   0000019A   0006               LSLS     R0,R0,#+24
+   \   0000019C   000E               LSRS     R0,R0,#+24
+   \                     ??ModBus_MASTER_Return_20:
+   \   0000019E   6D1C               ADDS     R5,R5,#+1
+   \                     ??ModBus_MASTER_Return_18:
+   \   000001A0   6C46               MOV      R4,SP
+   \   000001A2   2489               LDRH     R4,[R4, #+8]
+   \   000001A4   A542               CMP      R5,R4
+   \   000001A6   27DA               BGE      ??ModBus_MASTER_Return_21
+   \   000001A8   0400               MOVS     R4,R0
+   \   000001AA   049E               LDR      R6,[SP, #+16]
+   \   000001AC   345D               LDRB     R4,[R6, R4]
+   \   000001AE   1C41               ASRS     R4,R4,R3
+   \   000001B0   E407               LSLS     R4,R4,#+31
+   \   000001B2   974C               LDR      R4,??ModBus_MASTER_Return_12  ;; ram
+   \   000001B4   08D5               BPL      ??ModBus_MASTER_Return_22
+   \   000001B6   0E00               MOVS     R6,R1
+   \   000001B8   7600               LSLS     R6,R6,#+1
+   \   000001BA   A419               ADDS     R4,R4,R6
+   \   000001BC   2688               LDRH     R6,[R4, #+0]
+   \   000001BE   0127               MOVS     R7,#+1
+   \   000001C0   9740               LSLS     R7,R7,R2
+   \   000001C2   3743               ORRS     R7,R7,R6
+   \   000001C4   2780               STRH     R7,[R4, #+0]
+   \   000001C6   07E0               B        ??ModBus_MASTER_Return_23
+   \                     ??ModBus_MASTER_Return_22:
+   \   000001C8   0E00               MOVS     R6,R1
+   \   000001CA   7600               LSLS     R6,R6,#+1
+   \   000001CC   A419               ADDS     R4,R4,R6
+   \   000001CE   2688               LDRH     R6,[R4, #+0]
+   \   000001D0   0127               MOVS     R7,#+1
+   \   000001D2   9740               LSLS     R7,R7,R2
+   \   000001D4   BE43               BICS     R6,R6,R7
+   \   000001D6   2680               STRH     R6,[R4, #+0]
+   \                     ??ModBus_MASTER_Return_23:
+   \   000001D8   1204               LSLS     R2,R2,#+16
+   \   000001DA   120C               LSRS     R2,R2,#+16
+   \   000001DC   072A               CMP      R2,#+7
+   \   000001DE   01D2               BCS      ??ModBus_MASTER_Return_24
+   \   000001E0   521C               ADDS     R2,R2,#+1
+   \   000001E2   03E0               B        ??ModBus_MASTER_Return_25
+   \                     ??ModBus_MASTER_Return_24:
+   \   000001E4   0022               MOVS     R2,#+0
+   \   000001E6   491C               ADDS     R1,R1,#+1
+   \   000001E8   0904               LSLS     R1,R1,#+16
+   \   000001EA   090C               LSRS     R1,R1,#+16
+   \                     ??ModBus_MASTER_Return_25:
+   \   000001EC   1B06               LSLS     R3,R3,#+24
+   \   000001EE   1B0E               LSRS     R3,R3,#+24
+   \   000001F0   072B               CMP      R3,#+7
+   \   000001F2   D0D2               BCS      ??ModBus_MASTER_Return_19
+   \   000001F4   5B1C               ADDS     R3,R3,#+1
+   \   000001F6   D2E7               B        ??ModBus_MASTER_Return_20
+    956                                  
+    957                                }
+    958                       
+    959                                ZD_MODBUS[*Current_ZD_MODBUS].Error=0;
+   \                     ??ModBus_MASTER_Return_21:
+   \   000001F8   0198               LDR      R0,[SP, #+4]
+   \   000001FA   0078               LDRB     R0,[R0, #+0]
+   \   000001FC   0D21               MOVS     R1,#+13
+   \   000001FE   4843               MULS     R0,R1,R0
+   \   00000200   0099               LDR      R1,[SP, #+0]
+   \   00000202   0818               ADDS     R0,R1,R0
+   \   00000204   0021               MOVS     R1,#+0
+   \   00000206   C172               STRB     R1,[R0, #+11]
+   \   00000208   0173               STRB     R1,[R0, #+12]
+    960                                ZD_MODBUS[*Current_ZD_MODBUS].Confirm=1;
+   \   0000020A   0198               LDR      R0,[SP, #+4]
+   \   0000020C   0078               LDRB     R0,[R0, #+0]
+   \   0000020E   0D21               MOVS     R1,#+13
+   \   00000210   4843               MULS     R0,R1,R0
+   \   00000212   0099               LDR      R1,[SP, #+0]
+   \   00000214   0818               ADDS     R0,R1,R0
+   \   00000216   0121               MOVS     R1,#+1
+   \   00000218   8172               STRB     R1,[R0, #+10]
+    961                        
+    962                      }     
+    963                                
+    964                      //Response to question: Holding Register (odczyt zmiennych analogowych DA00-DDFF)
+    965                      if(modbusframe[1]==3)
+   \                     ??ModBus_MASTER_Return_17:
+   \   0000021A   0498               LDR      R0,[SP, #+16]
+   \   0000021C   4078               LDRB     R0,[R0, #+1]
+   \   0000021E   0328               CMP      R0,#+3
+   \   00000220   48D1               BNE      ??ModBus_MASTER_Return_26
+    966                      {
+    967                          
+    968                                
+    969                                //BitCount =  ((WORD)modbusframe[2]) * 8;
+    970                                ByteCount = (modbusframe[2]);        
+   \   00000222   0498               LDR      R0,[SP, #+16]
+   \   00000224   8478               LDRB     R4,[R0, #+2]
+    971                        
+    972                                if ((((WORD)modbusframe[ByteCount+3])<<8 | ((WORD)modbusframe[ByteCount+4])) != crc16(modbusframe,ByteCount+3)) return 0;   //sprawdzenie CRC
+   \   00000226   2100               MOVS     R1,R4
+   \   00000228   4018               ADDS     R0,R0,R1
+   \   0000022A   C278               LDRB     R2,[R0, #+3]
+   \   0000022C   1202               LSLS     R2,R2,#+8
+   \   0000022E   0579               LDRB     R5,[R0, #+4]
+   \   00000230   1543               ORRS     R5,R5,R2
+   \   00000232   C91C               ADDS     R1,R1,#+3
+   \   00000234   0498               LDR      R0,[SP, #+16]
+   \   00000236   ........           BL       crc16
+   \   0000023A   8542               CMP      R5,R0
+   \   0000023C   00D0               BEQ      .+4
+   \   0000023E   2DE7               B        ??ModBus_MASTER_Return_7
+    973                          
+    974                                WordCount=ByteCount/2;
+   \   00000240   2200               MOVS     R2,R4
+   \   00000242   5208               LSRS     R2,R2,#+1
+    975                                
+    976                                CurentByteBufTX=3;
+   \   00000244   0320               MOVS     R0,#+3
+    977                                
+    978                                RamByteTMP = 0;
+    979                                
+    980                                RamByteTMP = (ZD_MODBUS[*Current_ZD_MODBUS].Target)*2;
+   \   00000246   0199               LDR      R1,[SP, #+4]
+   \   00000248   0978               LDRB     R1,[R1, #+0]
+   \   0000024A   0D23               MOVS     R3,#+13
+   \   0000024C   5943               MULS     R1,R3,R1
+   \   0000024E   009B               LDR      R3,[SP, #+0]
+   \   00000250   5918               ADDS     R1,R3,R1
+   \   00000252   8C78               LDRB     R4,[R1, #+2]
+   \   00000254   CB78               LDRB     R3,[R1, #+3]
+   \   00000256   1B06               LSLS     R3,R3,#+24
+   \   00000258   1B0C               LSRS     R3,R3,#+16
+   \   0000025A   1C43               ORRS     R4,R4,R3
+   \   0000025C   6100               LSLS     R1,R4,#+1
+   \   0000025E   0904               LSLS     R1,R1,#+16
+   \   00000260   090C               LSRS     R1,R1,#+16
+    981                                RamBit  = 0;
+    982                                
+    983                                for (WORD i=0; i<WordCount; i++)
+   \   00000262   0023               MOVS     R3,#+0
+   \   00000264   12E0               B        ??ModBus_MASTER_Return_27
+    984                                { 
+    985                                  ram.VarCom_Byte[RamByteTMP+1]   = modbusframe[CurentByteBufTX];
+   \                     ??ModBus_MASTER_Return_28:
+   \   00000266   6A4C               LDR      R4,??ModBus_MASTER_Return_12  ;; ram
+   \   00000268   0D00               MOVS     R5,R1
+   \   0000026A   6419               ADDS     R4,R4,R5
+   \   0000026C   0500               MOVS     R5,R0
+   \   0000026E   049E               LDR      R6,[SP, #+16]
+   \   00000270   7519               ADDS     R5,R6,R5
+   \   00000272   2E78               LDRB     R6,[R5, #+0]
+   \   00000274   6670               STRB     R6,[R4, #+1]
+    986                                  ram.VarCom_Byte[RamByteTMP] = modbusframe[CurentByteBufTX+1];
+   \   00000276   6D78               LDRB     R5,[R5, #+1]
+   \   00000278   2570               STRB     R5,[R4, #+0]
+    987                                  
+    988                                  CurentByteBufTX +=2;
+   \   0000027A   801C               ADDS     R0,R0,#+2
+   \   0000027C   0006               LSLS     R0,R0,#+24
+   \   0000027E   000E               LSRS     R0,R0,#+24
+    989                                  RamByteTMP      +=2;
+   \   00000280   891C               ADDS     R1,R1,#+2
+   \   00000282   0904               LSLS     R1,R1,#+16
+   \   00000284   090C               LSRS     R1,R1,#+16
+    990                                }            
+   \   00000286   5B1C               ADDS     R3,R3,#+1
+   \   00000288   1B04               LSLS     R3,R3,#+16
+   \   0000028A   1B0C               LSRS     R3,R3,#+16
+   \                     ??ModBus_MASTER_Return_27:
+   \   0000028C   1C00               MOVS     R4,R3
+   \   0000028E   9442               CMP      R4,R2
+   \   00000290   E9D3               BCC      ??ModBus_MASTER_Return_28
+    991                                
+    992                                ZD_MODBUS[*Current_ZD_MODBUS].Error=0;
+   \   00000292   0198               LDR      R0,[SP, #+4]
+   \   00000294   0078               LDRB     R0,[R0, #+0]
+   \   00000296   0D21               MOVS     R1,#+13
+   \   00000298   4843               MULS     R0,R1,R0
+   \   0000029A   0099               LDR      R1,[SP, #+0]
+   \   0000029C   0818               ADDS     R0,R1,R0
+   \   0000029E   0021               MOVS     R1,#+0
+   \   000002A0   C172               STRB     R1,[R0, #+11]
+   \   000002A2   0173               STRB     R1,[R0, #+12]
+    993                                ZD_MODBUS[*Current_ZD_MODBUS].Confirm=1;
+   \   000002A4   0198               LDR      R0,[SP, #+4]
+   \   000002A6   0078               LDRB     R0,[R0, #+0]
+   \   000002A8   0D21               MOVS     R1,#+13
+   \   000002AA   4843               MULS     R0,R1,R0
+   \   000002AC   0099               LDR      R1,[SP, #+0]
+   \   000002AE   0818               ADDS     R0,R1,R0
+   \   000002B0   0121               MOVS     R1,#+1
+   \   000002B2   8172               STRB     R1,[R0, #+10]
+    994                                
+    995                      }
+    996                                
+    997                      //Response to question: Input Register (odczyt analogów wejœciowych A000-A5FF)      
+    998                     if(modbusframe[1]==4)
+   \                     ??ModBus_MASTER_Return_26:
+   \   000002B4   0498               LDR      R0,[SP, #+16]
+   \   000002B6   4078               LDRB     R0,[R0, #+1]
+   \   000002B8   0428               CMP      R0,#+4
+   \   000002BA   4CD1               BNE      ??ModBus_MASTER_Return_29
+    999                      {
+   1000          
+   1001                                //BitCount =  ((WORD)modbusframe[2]) * 8;
+   1002                                ByteCount = (modbusframe[2]);        
+   \   000002BC   0498               LDR      R0,[SP, #+16]
+   \   000002BE   8478               LDRB     R4,[R0, #+2]
+   1003                        
+   1004                                if ((((WORD)modbusframe[ByteCount+3])<<8 | ((WORD)modbusframe[ByteCount+4])) != crc16(modbusframe,ByteCount+3)) return 0;   //sprawdzenie CRC
+   \   000002C0   2100               MOVS     R1,R4
+   \   000002C2   4018               ADDS     R0,R0,R1
+   \   000002C4   C278               LDRB     R2,[R0, #+3]
+   \   000002C6   1202               LSLS     R2,R2,#+8
+   \   000002C8   0579               LDRB     R5,[R0, #+4]
+   \   000002CA   1543               ORRS     R5,R5,R2
+   \   000002CC   C91C               ADDS     R1,R1,#+3
+   \   000002CE   0498               LDR      R0,[SP, #+16]
+   \   000002D0   ........           BL       crc16
+   \   000002D4   8542               CMP      R5,R0
+   \   000002D6   00D0               BEQ      .+4
+   \   000002D8   E0E6               B        ??ModBus_MASTER_Return_7
+   1005                          
+   1006                                WordCount=ByteCount/2;
+   \   000002DA   2200               MOVS     R2,R4
+   \   000002DC   5208               LSRS     R2,R2,#+1
+   1007                                
+   1008                                CurentByteBufTX=3;
+   \   000002DE   0320               MOVS     R0,#+3
+   1009                                
+   1010                                RamByteTMP = 0;
+   1011                                
+   1012                                RamByteTMP = (ZD_MODBUS[*Current_ZD_MODBUS].Target)*2;
+   \   000002E0   0199               LDR      R1,[SP, #+4]
+   \   000002E2   0978               LDRB     R1,[R1, #+0]
+   \   000002E4   0D23               MOVS     R3,#+13
+   \   000002E6   5943               MULS     R1,R3,R1
+   \   000002E8   009B               LDR      R3,[SP, #+0]
+   \   000002EA   5918               ADDS     R1,R3,R1
+   \   000002EC   8C78               LDRB     R4,[R1, #+2]
+   \   000002EE   CB78               LDRB     R3,[R1, #+3]
+   \   000002F0   1B06               LSLS     R3,R3,#+24
+   \   000002F2   1B0C               LSRS     R3,R3,#+16
+   \   000002F4   1C43               ORRS     R4,R4,R3
+   \   000002F6   6100               LSLS     R1,R4,#+1
+   \   000002F8   0904               LSLS     R1,R1,#+16
+   \   000002FA   090C               LSRS     R1,R1,#+16
+   1013                                RamBit  = 0;
+   1014                                
+   1015                                for (WORD i=0; i<WordCount; i++)
+   \   000002FC   0023               MOVS     R3,#+0
+   \   000002FE   16E0               B        ??ModBus_MASTER_Return_30
+   \                     ??ModBus_MASTER_Return_0:
+   \   00000300   ........           DC32     g_Ans_ZD_MODBUS_0
+   \   00000304   ........           DC32     g_US0_Comm_TIMEOUT
+   1016                                { 
+   1017                                  ram.VarCom_Byte[RamByteTMP+1]   = modbusframe[CurentByteBufTX];
+   \                     ??ModBus_MASTER_Return_31:
+   \   00000308   414C               LDR      R4,??ModBus_MASTER_Return_12  ;; ram
+   \   0000030A   0D00               MOVS     R5,R1
+   \   0000030C   6419               ADDS     R4,R4,R5
+   \   0000030E   0500               MOVS     R5,R0
+   \   00000310   049E               LDR      R6,[SP, #+16]
+   \   00000312   7519               ADDS     R5,R6,R5
+   \   00000314   2E78               LDRB     R6,[R5, #+0]
+   \   00000316   6670               STRB     R6,[R4, #+1]
+   1018                                  ram.VarCom_Byte[RamByteTMP] = modbusframe[CurentByteBufTX+1];
+   \   00000318   6D78               LDRB     R5,[R5, #+1]
+   \   0000031A   2570               STRB     R5,[R4, #+0]
+   1019                                  
+   1020                                  CurentByteBufTX +=2;
+   \   0000031C   801C               ADDS     R0,R0,#+2
+   \   0000031E   0006               LSLS     R0,R0,#+24
+   \   00000320   000E               LSRS     R0,R0,#+24
+   1021                                  RamByteTMP      +=2;
+   \   00000322   891C               ADDS     R1,R1,#+2
+   \   00000324   0904               LSLS     R1,R1,#+16
+   \   00000326   090C               LSRS     R1,R1,#+16
+   1022                                }       
+   \   00000328   5B1C               ADDS     R3,R3,#+1
+   \   0000032A   1B04               LSLS     R3,R3,#+16
+   \   0000032C   1B0C               LSRS     R3,R3,#+16
+   \                     ??ModBus_MASTER_Return_30:
+   \   0000032E   1C00               MOVS     R4,R3
+   \   00000330   9442               CMP      R4,R2
+   \   00000332   E9D3               BCC      ??ModBus_MASTER_Return_31
+   1023                                
+   1024                                ZD_MODBUS[*Current_ZD_MODBUS].Error=0;
+   \   00000334   0198               LDR      R0,[SP, #+4]
+   \   00000336   0078               LDRB     R0,[R0, #+0]
+   \   00000338   0D21               MOVS     R1,#+13
+   \   0000033A   4843               MULS     R0,R1,R0
+   \   0000033C   0099               LDR      R1,[SP, #+0]
+   \   0000033E   0818               ADDS     R0,R1,R0
+   \   00000340   0021               MOVS     R1,#+0
+   \   00000342   C172               STRB     R1,[R0, #+11]
+   \   00000344   0173               STRB     R1,[R0, #+12]
+   1025                                ZD_MODBUS[*Current_ZD_MODBUS].Confirm=1;
+   \   00000346   0198               LDR      R0,[SP, #+4]
+   \   00000348   0078               LDRB     R0,[R0, #+0]
+   \   0000034A   0D21               MOVS     R1,#+13
+   \   0000034C   4843               MULS     R0,R1,R0
+   \   0000034E   0099               LDR      R1,[SP, #+0]
+   \   00000350   0818               ADDS     R0,R1,R0
+   \   00000352   0121               MOVS     R1,#+1
+   \   00000354   8172               STRB     R1,[R0, #+10]
+   1026                                
+   1027                      }
+   1028                                
+   1029                      //Response to question: Read Coil Status  (odczyt zmiennych dwustanowych do DA00-DDFF)
+   1030                      if(modbusframe[1]==5)
+   \                     ??ModBus_MASTER_Return_29:
+   \   00000356   0498               LDR      R0,[SP, #+16]
+   \   00000358   4078               LDRB     R0,[R0, #+1]
+   \   0000035A   0528               CMP      R0,#+5
+   \   0000035C   31D1               BNE      ??ModBus_MASTER_Return_32
+   1031                      {
+   1032                        
+   1033                            if ((((WORD)modbusframe[6])<<8 | ((WORD)modbusframe[7])) != crc16(modbusframe,6)) return 0;   //sprawdzenie CRC
+   \   0000035E   0498               LDR      R0,[SP, #+16]
+   \   00000360   8079               LDRB     R0,[R0, #+6]
+   \   00000362   0002               LSLS     R0,R0,#+8
+   \   00000364   0499               LDR      R1,[SP, #+16]
+   \   00000366   CC79               LDRB     R4,[R1, #+7]
+   \   00000368   0443               ORRS     R4,R4,R0
+   \   0000036A   0621               MOVS     R1,#+6
+   \   0000036C   0498               LDR      R0,[SP, #+16]
+   \   0000036E   ........           BL       crc16
+   \   00000372   8442               CMP      R4,R0
+   \   00000374   00D0               BEQ      .+4
+   \   00000376   91E6               B        ??ModBus_MASTER_Return_7
+   1034                            if (ZD_MODBUS[*Current_ZD_MODBUS].Target!=(((WORD)modbusframe[2])<<8 | ((WORD)modbusframe[3]))) return 0; //sprawdzenie poprawnoœci adresu
+   \   00000378   0198               LDR      R0,[SP, #+4]
+   \   0000037A   0078               LDRB     R0,[R0, #+0]
+   \   0000037C   0D21               MOVS     R1,#+13
+   \   0000037E   4843               MULS     R0,R1,R0
+   \   00000380   0099               LDR      R1,[SP, #+0]
+   \   00000382   0818               ADDS     R0,R1,R0
+   \   00000384   8278               LDRB     R2,[R0, #+2]
+   \   00000386   C178               LDRB     R1,[R0, #+3]
+   \   00000388   0906               LSLS     R1,R1,#+24
+   \   0000038A   090C               LSRS     R1,R1,#+16
+   \   0000038C   0A43               ORRS     R2,R2,R1
+   \   0000038E   0498               LDR      R0,[SP, #+16]
+   \   00000390   8078               LDRB     R0,[R0, #+2]
+   \   00000392   0002               LSLS     R0,R0,#+8
+   \   00000394   0499               LDR      R1,[SP, #+16]
+   \   00000396   C978               LDRB     R1,[R1, #+3]
+   \   00000398   0143               ORRS     R1,R1,R0
+   \   0000039A   8A42               CMP      R2,R1
+   \   0000039C   00D0               BEQ      .+4
+   \   0000039E   7DE6               B        ??ModBus_MASTER_Return_7
+   1035          
+   1036                            ZD_MODBUS[*Current_ZD_MODBUS].Error=0;
+   \   000003A0   0198               LDR      R0,[SP, #+4]
+   \   000003A2   0078               LDRB     R0,[R0, #+0]
+   \   000003A4   0D21               MOVS     R1,#+13
+   \   000003A6   4843               MULS     R0,R1,R0
+   \   000003A8   0099               LDR      R1,[SP, #+0]
+   \   000003AA   0818               ADDS     R0,R1,R0
+   \   000003AC   0021               MOVS     R1,#+0
+   \   000003AE   C172               STRB     R1,[R0, #+11]
+   \   000003B0   0173               STRB     R1,[R0, #+12]
+   1037                            ZD_MODBUS[*Current_ZD_MODBUS].Confirm=1;
+   \   000003B2   0198               LDR      R0,[SP, #+4]
+   \   000003B4   0078               LDRB     R0,[R0, #+0]
+   \   000003B6   0D21               MOVS     R1,#+13
+   \   000003B8   4843               MULS     R0,R1,R0
+   \   000003BA   0099               LDR      R1,[SP, #+0]
+   \   000003BC   0818               ADDS     R0,R1,R0
+   \   000003BE   0121               MOVS     R1,#+1
+   \   000003C0   8172               STRB     R1,[R0, #+10]
+   1038                            
+   1039                        
+   1040                      }
+   1041                      //Response to question: Write Single Register  (zapis zmiennych analogowych - pojedynczo DA00-DDFF)
+   1042                      if(modbusframe[1]==6)
+   1043                      {
+   1044                        
+   1045                      }
+   1046                                
+   1047                      //Response to question: Write Multiple Status  (zapis zmiennych dwustanowych - grupowo DA00-DDFF)
+   1048                      if(modbusframe[1]==15)
+   \                     ??ModBus_MASTER_Return_32:
+   \   000003C2   0498               LDR      R0,[SP, #+16]
+   \   000003C4   4078               LDRB     R0,[R0, #+1]
+   \   000003C6   0F28               CMP      R0,#+15
+   \   000003C8   10D1               BNE      ??ModBus_MASTER_Return_33
+   1049                      {
+   1050                                 
+   1051                              ZD_MODBUS[*Current_ZD_MODBUS].Confirm=1;
+   \   000003CA   0198               LDR      R0,[SP, #+4]
+   \   000003CC   0078               LDRB     R0,[R0, #+0]
+   \   000003CE   0D21               MOVS     R1,#+13
+   \   000003D0   4843               MULS     R0,R1,R0
+   \   000003D2   0099               LDR      R1,[SP, #+0]
+   \   000003D4   0818               ADDS     R0,R1,R0
+   \   000003D6   0121               MOVS     R1,#+1
+   \   000003D8   8172               STRB     R1,[R0, #+10]
+   1052                              ZD_MODBUS[*Current_ZD_MODBUS].Error=0;
+   \   000003DA   0198               LDR      R0,[SP, #+4]
+   \   000003DC   0078               LDRB     R0,[R0, #+0]
+   \   000003DE   0D21               MOVS     R1,#+13
+   \   000003E0   4843               MULS     R0,R1,R0
+   \   000003E2   0099               LDR      R1,[SP, #+0]
+   \   000003E4   0818               ADDS     R0,R1,R0
+   \   000003E6   0021               MOVS     R1,#+0
+   \   000003E8   C172               STRB     R1,[R0, #+11]
+   \   000003EA   0173               STRB     R1,[R0, #+12]
+   1053                        
+   1054                      } 
+   1055                        
+   1056                      //Response to question: Write Single Register  (zapis zmiennych analogowych - pojedynczo DA00-DDFF)
+   1057                      if(modbusframe[1]==16)
+   \                     ??ModBus_MASTER_Return_33:
+   \   000003EC   0498               LDR      R0,[SP, #+16]
+   \   000003EE   4078               LDRB     R0,[R0, #+1]
+   \   000003F0   1028               CMP      R0,#+16
+   \   000003F2   07D1               BNE      ??ModBus_MASTER_Return_34
+   1058                      {
+   1059           
+   1060                              ZD_MODBUS[*Current_ZD_MODBUS].Confirm=1;
+   \   000003F4   0198               LDR      R0,[SP, #+4]
+   \   000003F6   0078               LDRB     R0,[R0, #+0]
+   \   000003F8   0D21               MOVS     R1,#+13
+   \   000003FA   4843               MULS     R0,R1,R0
+   \   000003FC   0099               LDR      R1,[SP, #+0]
+   \   000003FE   0818               ADDS     R0,R1,R0
+   \   00000400   0121               MOVS     R1,#+1
+   \   00000402   8172               STRB     R1,[R0, #+10]
+   1061                        
+   1062                        
+   1063                          
+   1064                    }
+   1065              return 1; 
+   \                     ??ModBus_MASTER_Return_34:
+   \   00000404   0120               MOVS     R0,#+1
+   \                     ??ModBus_MASTER_Return_4:
+   \   00000406   05B0               ADD      SP,SP,#+20
+   \   00000408   F0BC               POP      {R4-R7}
+   \   0000040A   02BC               POP      {R1}
+   \   0000040C   0847               BX       R1               ;; return
+   \   0000040E   C046               Nop      
+   \                     ??ModBus_MASTER_Return_12:
+   \   00000410   ........           DC32     ram
+   1066              
+   1067          }//_________________ Koniec funkcji ModBus_MASTER_Return  __________________
+
+   \                                 In section Debug.txt, align 4, keep-with-next
+   \                     ??DataTable2:
+   \   00000000   ........           DC32     ram
+   1068          
+   1069          
+
+   Maximum stack usage in bytes:
+
+     Function                .cstack
+     --------                -------
+     AT91F_PDC_IsNextTxEmpty      0
+     AT91F_PDC_IsTxEmpty          0
+     AT91F_PDC_SendFrame         24
+     AT91F_PDC_SetNextTx          0
+     AT91F_PDC_SetTx              0
+     AT91F_US_SendFrame          16
+     ModBus_CommS                64
+     ModBus_MASTER_Return        40
+     ModBus_MASTER_TX            32
+     SetWordToBytes               0
+     crc16                       16
+
+
+   Section sizes:
+
+     Function/Label          Bytes
+     --------------          -----
+     AT91F_PDC_SetNextTx        6
+     AT91F_PDC_SetTx            6
+     AT91F_PDC_IsTxEmpty       10
+     AT91F_PDC_IsNextTxEmpty   10
+     AT91F_PDC_SendFrame       70
+     AT91F_US_SendFrame        26
+     US0_MasterMODBUS_ENABLE    1
+     US1_MasterMODBUS_ENABLE    1
+     bCRC_Hi                  512
+     crc16                     60
+     SetWordToBytes            10
+     ModBus_CommS            1352
+     g_Ans_ZD_MODBUS_0       1124
+     g_ERR_ZD_MODBUS_0          1
+     g_ERR_ZD_MODBUS_1          1
+     g_Ans_ZD_MODBUS_1          1
+     ModBus_MASTER_TX         476
+     ModBus_MASTER_Return    1044
+     ??DataTable2               4
+
+ 
+ 1 128 bytes in section .bss
+     1 byte  in section .data
+   512 bytes in section .rodata
+ 3 074 bytes in section Debug.txt
+ 
+ 2 946 bytes of CODE  memory (+ 128 bytes shared)
+   512 bytes of CONST memory
+ 1 129 bytes of DATA  memory
+
+Errors: none
+Warnings: 4

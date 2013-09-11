@@ -1,0 +1,36 @@
+GET /test/putgate.php HTTP/1.1
+User-Agent: CEURON
+Host: www.ceuron.pl
+---------------------------------------------------------------------
+POST /Test/putgate.php HTTP/1.1
+User-Agent: CEURON
+Host: www.ceuron.pl
+Content-Length: 55
+Content-Type: application/x-www-form-urlencoded
+
+NodeID=1234567&Order=1&Content=;
+b01;1
+b02;0
+b03;1
+---------------------------------------------------------------------
+GET /Test/DataIn_1234567.csv HTTP/1.1
+User-Agent: CEURON
+Host: www.ceuron.pl
+---------------------------------------------------------------------
+POST /test/putgate.php HTTP/1.1
+User-Agent: Fiddler
+Host: www.ceuron.pl
+Content-Length: 52
+Content-Type: application/x-www-form-urlencoded
+
+NodeID=1234567&Key=987654321&Order=3&Content=
+v01=1
+--------------------------------------------------------------------
+POST /test/putgate.php HTTP/1.1
+User-Agent: Fiddler
+Host: www.ceuron.pl
+Content-Length: 52
+Content-Type: application/x-www-form-urlencoded
+
+NodeID=1234567&Key=987654321&Order=2&Content=
+v01=1
